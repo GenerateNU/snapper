@@ -5,17 +5,34 @@ import { config } from './config/config';
 
 const router = express();
 
+async function initializeRoutes() {
+    /** Routes */
+
+    /** Healthcheck */
+    router.get('/ping', (_req, res) => res.status(200).json({ hello: 'world' }));
+}
+
 mongoose
     .connect(config.mongo.url)
     .then(() => {
         console.log('connected');
-        StartServer();
+        startServer();
     })
     .catch(() => {
         console.log('error');
     });
 
-const StartServer = () => {
+const startServer = () => {
+    initializeLogging();
+
+    initializeRoutes();
+
+    handleErrors();
+
+    createServer();
+};
+
+async function initializeLogging() {
     router.use((req, res, next) => {
         console.info(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
@@ -40,13 +57,9 @@ const StartServer = () => {
 
         next();
     });
+}
 
-    /** Routes */
-
-    /** Healthcheck */
-    router.get('/ping', (_req, res) => res.status(200).json({ hello: 'world' }));
-
-    /** Error handling */
+async function handleErrors() {
     router.use((_req, res) => {
         const error = new Error('Not found');
 
@@ -56,6 +69,8 @@ const StartServer = () => {
             message: error.message
         });
     });
+}
 
+async function createServer() {
     http.createServer(router).listen(config.server.port, () => console.info(`Server is running on port ${config.server.port}`));
-};
+}
