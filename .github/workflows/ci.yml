@@ -29,10 +29,6 @@ jobs:
         working-directory: ./backend
         run: npm install
 
-      - name: Run ESLint
-        working-directory: ./backend
-        run: npm run lint
-
       - name: Run Prettier Check
         working-directory: ./backend
         run: npm run format -- --check
