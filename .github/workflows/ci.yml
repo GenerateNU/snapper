@@ -40,13 +40,3 @@ jobs:
       - name: Run tests
         working-directory: ./backend
         run: npm test
-
-      - name: Upload coverage to Codecov
-        if: success()
-        working-directory: ./backend
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
