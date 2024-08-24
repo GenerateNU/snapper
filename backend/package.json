@@ -6,6 +6,8 @@
     "scripts": {
         "test": "jest",
         "start": "node build/server.js",
+        "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
+        "format:check": "prettier --check \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
         "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
         "build": "rm -rf build/ && tsc",
         "postinstall": "npm run build"
