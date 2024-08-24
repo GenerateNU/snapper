@@ -2,15 +2,9 @@ import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import { config } from './config/config';
+import routes from './routes';
 
 const router = express();
-
-async function initializeRoutes() {
-    /** Routes */
-
-    /** Healthcheck */
-    router.get('/ping', (_req, res) => res.status(200).json({ hello: 'world' }));
-}
 
 mongoose
     .connect(config.mongo.url)
@@ -25,7 +19,7 @@ mongoose
 const startServer = () => {
     initializeLogging();
 
-    initializeRoutes();
+    router.use('/', routes());
 
     handleErrors();
 
