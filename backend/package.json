@@ -1,41 +1,42 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/server.ts",
-  "scripts": {
-    "test": "jest",
-    "start": "node build/server.js",
-    "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
-    "build": "rm -rf build/ && tsc",
-    "postinstall": "npm run build"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^22.4.0",
-    "@typescript-eslint/eslint-plugin": "^8.1.0",
-    "@typescript-eslint/parser": "^8.1.0",
-    "eslint": "^9.9.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.3.3",
-    "ts-jest": "^29.2.5",
-    "tsc-watch": "^6.2.0",
-    "typescript": "^5.5.4"
-  },
-  "dependencies": {
-    "@types/supertest": "^6.0.2",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "jest": "^29.7.0",
-    "mongodb": "^6.8.0",
-    "mongodb-memory-server": "^10.0.0",
-    "mongoose": "^8.5.3",
-    "nodemon": "^3.1.4",
-    "supertest": "^7.0.0"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/server.ts",
+    "scripts": {
+        "test": "jest",
+        "lint": "eslint",
+        "start": "node build/server.js",
+        "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
+        "build": "rm -rf build/ && tsc",
+        "postinstall": "npm run build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "@types/jest": "^29.5.12",
+        "@types/node": "^22.4.0",
+        "@typescript-eslint/eslint-plugin": "^8.1.0",
+        "@typescript-eslint/parser": "^8.1.0",
+        "eslint": "^9.9.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "prettier": "^3.3.3",
+        "ts-jest": "^29.2.5",
+        "tsc-watch": "^6.2.0",
+        "typescript": "^5.5.4"
+    },
+    "dependencies": {
+        "@types/supertest": "^6.0.2",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "jest": "^29.7.0",
+        "mongodb": "^6.8.0",
+        "mongodb-memory-server": "^10.0.0",
+        "mongoose": "^8.5.3",
+        "nodemon": "^3.1.4",
+        "supertest": "^7.0.0"
+    }
 }
