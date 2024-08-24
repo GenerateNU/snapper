@@ -16,7 +16,7 @@ mongoose
         console.log('error');
     });
 
-const startServer = () => {
+export const startServer = () => {
     initializeLogging();
 
     router.use('/', routes());
