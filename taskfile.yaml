@@ -113,7 +113,7 @@ tasks:
 
   format:
     desc: "Format both frontend and backend code"
-    deps: [frontend:format, backend:format
+    deps: [frontend:format, backend:format]
     
   format-check:
     desc: "Check formatting for both frontend and backend"
