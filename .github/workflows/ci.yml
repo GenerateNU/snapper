@@ -35,11 +35,8 @@ jobs:
             - name: Install dependencies (frontend)
               run: task --dir ./frontend frontend:install
 
-            - name: Run Prettier Check (backend)
-              run: task backend:format-check
-
             - name: Run Prettier Check (frontend)
-              run: task frontend:format-check
+              run: task format-check
 
             - name: Run tests
               run: task backend:test

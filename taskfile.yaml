@@ -25,6 +25,7 @@ tasks:
     desc: "Run backend tests"
     cmds:
       - cd backend && npm run test
+
   frontend:start:
     desc: "Start the frontend development server"
     cmds:
@@ -109,3 +110,11 @@ tasks:
   test:
     desc: "Run backend tests"
     deps: [backend:test]
+
+  format:
+    desc: "Format both frontend and backend code"
+    deps: [frontend:format, backend:format
+    
+  format-check:
+    desc: "Check formatting for both frontend and backend"
+    deps: [frontend:format-check, backend:format-check]
