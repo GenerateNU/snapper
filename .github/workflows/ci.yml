@@ -25,22 +25,21 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
+            - name: Install Task
+              run: |
+                sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
             - name: Install dependencies (backend)
-              working-directory: ./backend
-              run: npm install
+              run: task --dir ./backend backend:install
 
             - name: Install dependencies (frontend)
-              working-directory: ./frontend
-              run: npm install
+              run: task --dir ./frontend frontend:install
 
             - name: Run Prettier Check (backend)
-              working-directory: ./backend
-              run: npm run format -- --check
+              run: task backend:format-check
 
             - name: Run Prettier Check (frontend)
-              working-directory: ./frontend
-              run: npm run format -- --check
+              run: task frontend:format-check
 
             - name: Run tests
-              working-directory: ./backend
-              run: npm test
+              run: task backend:test

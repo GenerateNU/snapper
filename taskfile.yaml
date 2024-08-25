@@ -1,0 +1,111 @@
+version: '3'
+
+tasks:
+  frontend:install:
+    desc: "Install frontend dependencies"
+    cmds:
+      - cd frontend && npm install
+
+  backend:install:
+    desc: "Install backend dependencies"
+    cmds:
+      - cd backend && npm install
+
+  frontend:format-check:
+    desc: "Check frontend code formatting"
+    cmds:
+      - cd frontend && npm run format:check
+
+  backend:format-check:
+    desc: "Check backend code formatting"
+    cmds:
+      - cd backend && npm run format:check
+
+  backend:test:
+    desc: "Run backend tests"
+    cmds:
+      - cd backend && npm run test
+  frontend:start:
+    desc: "Start the frontend development server"
+    cmds:
+      - cd frontend && npm run start
+
+  frontend:android:
+    desc: "Start the frontend development server for Android"
+    cmds:
+      - cd frontend && npm run android
+
+  frontend:ios:
+    desc: "Start the frontend development server for iOS"
+    cmds:
+      - cd frontend && npm run ios
+
+  frontend:web:
+    desc: "Start the frontend development server for Web"
+    cmds:
+      - cd frontend && npm run web
+
+  frontend:format:
+    desc: "Format frontend code"
+    cmds:
+      - cd frontend && npm run format
+
+  frontend:format-check:
+    desc: "Check frontend code formatting"
+    cmds:
+      - cd frontend && npm run format:check
+
+  backend:start:
+    desc: "Start the backend server"
+    cmds:
+      - cd backend && npm run start
+
+  backend:dev:
+    desc: "Start the backend server in development mode"
+    cmds:
+      - cd backend && npm run dev
+
+  backend:test:
+    desc: "Run backend tests"
+    cmds:
+      - cd backend && npm run test
+
+  backend:build:
+    desc: "Build the backend"
+    cmds:
+      - cd backend && npm run build
+
+  backend:format:
+    desc: "Format backend code"
+    cmds:
+      - cd backend && npm run format
+
+  backend:format-check:
+    desc: "Check backend code formatting"
+    cmds:
+      - cd backend && npm run format:check
+
+  mongo:start:
+    desc: "Start MongoDB with Nodemon"
+    cmds:
+      - cd backend && nodemon --exec 'mongodb-memory-server'
+
+  format:
+    desc: "Format both frontend and backend code"
+    deps: [frontend:format, backend:format]
+
+  format-check:
+    desc: "Check formatting for both frontend and backend"
+    deps: [frontend:format-check, backend:format-check]
+
+  build:
+    desc: "Build the backend"
+    deps: [backend:build]
+
+  start:
+    desc: "Start both frontend and backend servers"
+    deps: [frontend:start, backend:start]
+
+  test:
+    desc: "Run backend tests"
+    deps: [backend:test]
