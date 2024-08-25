@@ -4,7 +4,7 @@ import healthcheck from './healthcheck';
 
 const router = express.Router();
 export default (): express.Router => {
-    authentification(router);
-    healthcheck(router);
-    return router;
+  authentification(router);
+  healthcheck(router);
+  return router;
 };

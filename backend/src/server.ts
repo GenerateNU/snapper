@@ -7,64 +7,78 @@ import routes from './routes';
 const router = express();
 
 mongoose
-    .connect(config.mongo.url)
-    .then(() => {
-        console.log('connected');
-        startServer();
-    })
-    .catch(() => {
-        console.log('error');
-    });
+  .connect(config.mongo.url)
+  .then(() => {
+    console.log('connected');
+    startServer();
+  })
+  .catch(() => {
+    console.log('error');
+  });
 
 export const startServer = () => {
-    initializeLogging();
+  initializeLogging();
 
-    router.use('/', routes());
+  router.use('/', routes());
 
-    handleErrors();
+  handleErrors();
 
-    createServer();
+  createServer();
 };
 
 async function initializeLogging() {
-    router.use((req, res, next) => {
-        console.info(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
+  router.use((req, res, next) => {
+    console.info(
+      `Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`,
+    );
 
-        res.on('finish', () => {
-            console.info(`Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`);
-        });
-
-        next();
+    res.on('finish', () => {
+      console.info(
+        `Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`,
+      );
     });
 
-    router.use(express.urlencoded({ extended: true }));
-    router.use(express.json());
+    next();
+  });
 
-    router.use((req, res, next) => {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  router.use(express.urlencoded({ extended: true }));
+  router.use(express.json());
 
-        if (req.method == 'OPTIONS') {
-            res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-            return res.status(200).json({});
-        }
+  router.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    );
 
-        next();
-    });
+    if (req.method == 'OPTIONS') {
+      res.header(
+        'Access-Control-Allow-Methods',
+        'PUT, POST, PATCH, DELETE, GET',
+      );
+      return res.status(200).json({});
+    }
+
+    next();
+  });
 }
 
 async function handleErrors() {
-    router.use((_req, res) => {
-        const error = new Error('Not found');
+  router.use((_req, res) => {
+    const error = new Error('Not found');
 
-        console.error(error);
+    console.error(error);
 
-        res.status(404).json({
-            message: error.message
-        });
+    res.status(404).json({
+      message: error.message,
     });
+  });
 }
 
 async function createServer() {
-    http.createServer(router).listen(config.server.port, () => console.info(`Server is running on port ${config.server.port}`));
+  http
+    .createServer(router)
+    .listen(config.server.port, () =>
+      console.info(`Server is running on port ${config.server.port}`),
+    );
 }
