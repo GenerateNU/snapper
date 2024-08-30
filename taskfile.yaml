@@ -107,6 +107,10 @@ tasks:
     desc: "Start both frontend and backend servers"
     deps: [frontend:start, backend:start]
 
+  install:
+    desc: "Install frontend and backend dependencies"
+    deps: [frontend:install, backend:install]
+
   test:
     desc: "Run backend tests"
     deps: [backend:test]
