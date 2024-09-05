@@ -40,6 +40,14 @@ describe('POST /auth/register', () => {
     expect(response.status).toBe(400);
   });
 
+  it('should return 400 if email is invalid', async () => {
+    const response = await request(app)
+      .post('/auth/register')
+      .send({ email: 'testexample.com' });
+
+    expect(response.status).toBe(400);
+  });
+
   it('should return 400 if user already exists', async () => {
     await request(app)
       .post('/auth/register')
