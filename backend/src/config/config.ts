@@ -4,11 +4,14 @@ dotenv.config();
 
 const MONGO_USERNAME = process.env.MONGO_USERNAME || '';
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
-const MONGO_URL = `mongodb+srv://user:dbUserPassword@snappercluster.i3fur.mongodb.net/?retryWrites=true&w=majority&appName=SnapperCluster`;
+const MONGO_URL = process.env.MONGO_URL || '';
 
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
   : 1337;
+
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || '';
 
 export const config = {
   mongo: {
@@ -18,5 +21,9 @@ export const config = {
   },
   server: {
     port: SERVER_PORT,
+  },
+  supabase: {
+    url: SUPABASE_URL,
+    key: SUPABASE_KEY,
   },
 };

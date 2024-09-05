@@ -1,8 +1,16 @@
+import 'express-session';
+
+declare module 'express-session' {
+  interface SessionData {
+    userId?: string;
+  }
+}
 import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import { config } from './config/config';
 import routes from './routes';
+import { sessionMiddleware } from './config/sessionConfig';
 
 const router = express();
 
@@ -18,6 +26,8 @@ mongoose
 
 export const startServer = () => {
   initializeLogging();
+
+  router.use(sessionMiddleware);
 
   router.use('/', routes());
 

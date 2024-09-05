@@ -46,3 +46,6 @@ coverage-final.json
 
 #Build output
 build/
+
+# MongoDB data directory
+/data/
