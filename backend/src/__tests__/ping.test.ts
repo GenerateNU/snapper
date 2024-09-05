@@ -1,6 +1,7 @@
 import request from 'supertest';
 import express from 'express';
-import pingRoute from '../routes/healthcheck'; // Adjust to the correct file path
+import pingRoute from '../routes/healthcheck';
+import { isAuthenticated } from '../middlewares/authMiddleware';
 
 jest.mock('../middlewares/authMiddleware', () => ({
   isAuthenticated: (
@@ -14,12 +15,19 @@ jest.mock('../middlewares/authMiddleware', () => ({
 
 const app = express();
 const router = express.Router();
+
+app.use(isAuthenticated);
+
 pingRoute(router);
 app.use(router);
 
 describe('GET /ping', () => {
   it('should return 200 with "hello: world"', async () => {
     const res = await request(app).get('/ping');
+
+    console.log('Response Status:', res.status);
+    console.log('Response Body:', res.body);
+
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ hello: 'world' });
   });
