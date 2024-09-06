@@ -1,20 +1,143 @@
-# Snapper
-Snapper's purpose is to connect and educate Scuba Divers through virtual dive logging, real time marine life reporting and fish identification through a mobile app. It designed to be social, so you can see what your friends and people are the area are seeing.
+# Snapper Project Setup
 
-## Set Up Your Development Environment
-First, understand the tech stack:
+## Prerequisites
 
-- The back end is written in [Typescript](https://www.typescriptlang.org) and uses [Express.js](https://expressjs.com) for routes.
-- The database is [MongoDB]([https://www.postgresql.org/](https://www.mongodb.com)), and it simply stores data and gives it to the back end upon request
-- The front end is [React Native](https://reactnative.dev/) written with [TypeScript](https://www.typescriptlang.org/) and uses [Expo](https://expo.dev/) as a build tool. Users on iOS and Android will use the mobile app to interact with our core service while the app makes requests to our back end
+Before you begin, ensure you have the following installed on your system:
 
-Before we can compile and run our application, we need to install several languages, package managers, and various tools.
-The installation process can vary by tool and operating system, so follow the provided installation instructions for each item below
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Docker](https://www.docker.com/)
+- [Task](https://taskfile.dev/)
+- MongoDB (optional if using Docker)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (for running the frontend on mobile devices)
 
-## Development
-Use `task` to check, test, build, and execute the project locally, as targets have already been defined for efficient development. Consider investigating the Taskfiles to learn how everything works! To get started, run `task install` to download all frontend/backend dependencies.
+Ensure you have environment variables set up for development by creating a `.env` file.
 
-# Environment Setup
-This guide assumes that you are using Linux/MacOS. If you are using Windows, please install [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
-Clone the repository by running `git clone https://github.com/GenerateNU/platnm.git`.
+## Project Structure
+
+The project is divided into two main parts:
+
+1. **Frontend** (located in the `frontend` directory):
+   - Built using React Native + Expo.
+   - Cross-platform support for iOS, Android, and web.
+
+2. **Backend** (located in the `backend` directory):
+   - Built using Node.js + Express.
+   - MongoDB for database operations.
+   - Supabase for authentication.
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-repo/snapper.git
+cd snapper
+```
+
+### 2. Install Dependencies
+We use Taskfile to streamline setting up the project.
+
+```bash
+task install
+```
+This command will install dependencies for both frontend and backend.
+
+### 3. Running the Application
+You can start the frontend and backend simultaneously by running:
+
+```bash
+task start
+```
+
+Or, you can start each service separately:
+
+- Frontend (React Native):
+```bash
+task frontend:start
+```
+
+- Backend (Express):
+```bash
+task backend:start
+```
+
+### 4. Running in Development Mode
+For development, where you may want auto-reload features:
+
+```bash
+task backend:dev
+```
+
+### 5. MongoDB with Docker
+We are using Docker to run MongoDB locally. To start MongoDB, run:
+
+```bash
+docker-compose up
+```
+Mongo Express is available at http://localhost:3000 for database management.
+
+### 6. Testing
+To run the backend tests, use:
+
+```bash
+task backend:test
+```
+We use Jest for testing the backend.
+
+#### Code Formatting
+We follow strict formatting rules for both frontend and backend. Ensure that your code is properly formatted before pushing:
+
+```bash
+task format-check
+```
+
+To auto-format the code, use:
+
+```bash
+task format
+```
+
+#### MongoDB Debugging
+You can start MongoDB with Nodemon for hot-reloading the database:
+
+```bash
+task mongo:start
+```
+
+#### Backend Routes Overview
+Here’s an overview of the important backend routes:
+
+Auth Routes:
+POST /auth/register: Register a new user.
+POST /auth/login: Log in an existing user.
+POST /auth/logout: Log out the user.
+Healthcheck:
+GET /ping: Check server status, requires authentication.
+Task Commands Overview
+Here are some additional Task commands that you might find useful:
+
+#### Install Dependencies:
+
+task install: Installs all necessary dependencies for both frontend and backend.
+
+Frontend-specific Tasks:
+
+task frontend:start: Starts the frontend development server.
+task frontend:ios: Runs the frontend on an iOS simulator.
+task frontend:android: Runs the frontend on an Android emulator.
+task frontend:web: Runs the frontend in a web browser.
+Backend-specific Tasks:
+
+task backend:start: Starts the backend server.
+task backend:build: Builds the backend for production.
+task backend:test: Runs backend tests.
+
+#### Contribution Guidelines
+
+Please make sure to create a new branch for every feature you work on, and always create a pull request for code review. Ensure that all tests pass locally before submitting your PR.
+
+#### Questions or Issues?
+If you run into any problems, feel free to slack me!
+
+Happy coding! 🐠
