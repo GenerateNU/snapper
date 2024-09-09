@@ -7,7 +7,7 @@ Before you begin, ensure you have the following installed on your system:
 - [Node.js](https://nodejs.org/) (v16 or higher)
 - [Docker](https://www.docker.com/)
 - [Task](https://taskfile.dev/)
-- MongoDB (optional if using Docker)
+- [MongoDB](https://www.mongodb.com/docs/manual/installation/)
 - [Expo CLI](https://docs.expo.dev/get-started/installation/) (for running the frontend on mobile devices)
 
 Ensure you have environment variables set up for development by creating a `.env` file.
@@ -82,14 +82,6 @@ For development, where you may want auto-reload features:
 ```bash
 task backend:dev
 ```
-
-### 6. MongoDB with Docker
-We are using Docker to run MongoDB locally. To start MongoDB, run:
-
-```bash
-docker-compose up
-```
-Mongo Express is available at http://localhost:3000 for database management.
 
 ### 7. Testing
 To run the backend tests, use:
