@@ -84,54 +84,19 @@ To run the backend tests, use:
 task backend:test
 ```
 We use Jest for testing the backend.
-
-#### Code Formatting
-We follow strict formatting rules for both frontend and backend. Ensure that your code is properly formatted before pushing:
-
-```bash
-task format-check
-```
-
-To auto-format the code, use:
-
-```bash
-task format
-```
-
-#### MongoDB Debugging
-You can start MongoDB with Nodemon for hot-reloading the database:
-
-```bash
-task mongo:start
-```
-
 #### Backend Routes Overview
 Here’s an overview of the important backend routes:
 
 Auth Routes:
 POST /auth/register: Register a new user.
+
 POST /auth/login: Log in an existing user.
+
 POST /auth/logout: Log out the user.
+
 Healthcheck:
+
 GET /ping: Check server status, requires authentication.
-Task Commands Overview
-Here are some additional Task commands that you might find useful:
-
-#### Install Dependencies:
-
-task install: Installs all necessary dependencies for both frontend and backend.
-
-Frontend-specific Tasks:
-
-task frontend:start: Starts the frontend development server.
-task frontend:ios: Runs the frontend on an iOS simulator.
-task frontend:android: Runs the frontend on an Android emulator.
-task frontend:web: Runs the frontend in a web browser.
-Backend-specific Tasks:
-
-task backend:start: Starts the backend server.
-task backend:build: Builds the backend for production.
-task backend:test: Runs backend tests.
 
 #### Contribution Guidelines
 
