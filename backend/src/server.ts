@@ -11,6 +11,10 @@ import mongoose from 'mongoose';
 import { config } from './config/config';
 import routes from './routes';
 import { sessionMiddleware } from './config/sessionConfig';
+import { resolve } from 'path';
+import dotenv from 'dotenv'
+
+dotenv.config({ path: resolve(__dirname, '../.env') });
 
 const router = express();
 
