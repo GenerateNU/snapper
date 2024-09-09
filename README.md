@@ -43,7 +43,21 @@ task install
 ```
 This command will install dependencies for both frontend and backend.
 
-### 3. Running the Application
+### 3. Set up your .env
+Create a .env in the root directory containing the following:
+
+```
+NODE_ENV=development
+SERVER_PORT=3000
+MONGO_URL=mongodb+srv://user:dbUserPassword@snappercluster.i3fur.mongodb.net/?retryWrites=true&w=majority&appName=SnapperCluster;
+MONGO_USERNAME="user"
+MONGO_PASSWORD="dbUserPassword"
+SUPABASE_PASSWORD="9waZ2NQKum6FmP$"
+SUPABASE_URL="https://xcgzrcnpyoxwxbjwnfnn.supabase.co"
+SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjZ3pyY25weW94d3hianduZm5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU1NTMxOTUsImV4cCI6MjA0MTEyOTE5NX0.NgMdOTtSCbMdxkrzCgNYCyKBSLpzPuyARB8qnn3NKNo"
+```
+
+### 4. Running the Application
 You can start the frontend and backend simultaneously by running:
 
 ```bash
@@ -62,14 +76,14 @@ task frontend:start
 task backend:start
 ```
 
-### 4. Running in Development Mode
+### 5. Running in Development Mode
 For development, where you may want auto-reload features:
 
 ```bash
 task backend:dev
 ```
 
-### 5. MongoDB with Docker
+### 6. MongoDB with Docker
 We are using Docker to run MongoDB locally. To start MongoDB, run:
 
 ```bash
@@ -77,7 +91,7 @@ docker-compose up
 ```
 Mongo Express is available at http://localhost:3000 for database management.
 
-### 6. Testing
+### 7. Testing
 To run the backend tests, use:
 
 ```bash
