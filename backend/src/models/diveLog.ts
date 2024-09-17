@@ -1,0 +1,27 @@
+import mongoose from "mongoose";
+
+const DiveLogSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    fishTags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Fish' }],
+    location: {
+        type: {
+          type: String, 
+          enum: ['Point'],
+          required: true
+        },
+        coordinates: {
+          type: [Number],
+          required: true
+        }
+      },
+    date: { type: Date, required: true },
+    time: { type: String }, 
+    duration: { type: Number }, 
+    depth: { type: Number }, 
+    photos: [{ type: String }], // aws s3 urls
+    description: { type: String },
+}) 
+
+DiveLogSchema.index({ location: '2dsphere' });
+
+export const DiveLog = mongoose.model('DiveLog', DiveLogSchema);
