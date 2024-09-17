@@ -8,7 +8,8 @@ const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
 const MONGO_URL = process.env.MONGO_URL || '';
 
 const SERVER_PORT = process.env.SERVER_PORT
-  ? Number(process.env.SERVER_PORT) : 3000;
+  ? Number(process.env.SERVER_PORT)
+  : 3000;
 
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || '';

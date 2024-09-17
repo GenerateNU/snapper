@@ -23,7 +23,7 @@ export const register = async (req: express.Request, res: express.Response) => {
 
     const user = data.user;
     if (!user) {
-      console.error('User creation failed: no user returned from Supabase');
+      console.error('User.ts creation failed: no user returned from Supabase');
       return res
         .status(500)
         .json({ error: 'Internal error during user creation.' });
@@ -35,7 +35,7 @@ export const register = async (req: express.Request, res: express.Response) => {
 
     return res
       .status(200)
-      .json({ message: 'User registered successfully.', user });
+      .json({ message: 'User.ts registered successfully.', user });
   } catch (err) {
     console.error('Registration error:', err);
     return res
