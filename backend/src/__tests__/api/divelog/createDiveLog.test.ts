@@ -143,5 +143,31 @@ describe('POST /divelog', () => {
         expect(response.status).toBe(400);
         // TODO: check the error message here
     });
+
+    
+    test('404 user not found', async () => {
+        const payload = {
+            user: new mongoose.Types.ObjectId(),
+            location: {
+                type: "Point",
+                coordinates: [40.712776, -74.005974]
+            },
+            date: "2024-09-17T15:12:46Z",
+            time: "15:30",
+            duration: 60,
+            depth: 30,
+            photos: [
+                "https://example.com/salmon.jpg",
+                "https://example.com/tuna.jpg"
+            ],
+            description: "A great dive at the reef with lots of colorful fish."
+        };
+    
+        const response = await request(app)
+            .post('/divelog')
+            .send(payload);
+    
+        expect(response.status).toBe(404);
+    })
 });
 

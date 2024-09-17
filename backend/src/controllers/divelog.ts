@@ -1,14 +1,22 @@
 import { DiveLogService, DiveLogServiceImpl } from "../services/divelogService";
 const { validationResult } = require('express-validator');
 import express from "express";
+import { UserService, UserServiceImpl } from "../services/userService";
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
+const userService: UserService = new UserServiceImpl();
 
 export const DiveLogController = {
     createDiveLog: async (req: express.Request, res: express.Response): Promise<void> => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(400).json({ errors: errors.array() });
+            return;
+        }
+        console.log(req.body.user);
+        const user = await userService.getUserById(req.body.user);
+        if (user == null) {
+            res.status(404).json({message: 'User not found'});
             return;
         }
 
