@@ -30,7 +30,6 @@ export const createDiveLogValidation = [
 
 
 export const updateDiveLogValidation = [
-    body('user').optional().isMongoId().withMessage('Invalid user ID'),
     body('date').optional().isISO8601().withMessage('Invalid date format'),
     body('location.type').optional().equals('Point').withMessage('Location type must be "Point"'),
     body('location.coordinates')

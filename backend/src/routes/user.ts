@@ -1,8 +1,9 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../services/userService';
+import { isAuthenticated } from '../middlewares/authMiddleware';
 
 export default (router: express.Router) => {
-    router.get('/user/:supabaseId', async (req, res) => {
+    router.get('/user/:supabaseId', isAuthenticated, async (req, res) => {
         const { supabaseId } = req.params;
         try {
             const user = await findUserBySupabaseId(supabaseId);

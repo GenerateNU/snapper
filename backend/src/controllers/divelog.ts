@@ -6,7 +6,6 @@ const diveLogService: DiveLogService = new DiveLogServiceImpl();
 
 export const DiveLogController = {
     createDiveLog: async (req: express.Request, res: express.Response): Promise<void> => {
-        console.log('Hello');
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(400).json({ errors: errors.array() });
@@ -14,6 +13,7 @@ export const DiveLogController = {
         }
 
         try {
+            console.log(req.body);
             const diveLog = await diveLogService.createDiveLog(req.body);
             res.status(201).json(diveLog);
         } catch (error) {
