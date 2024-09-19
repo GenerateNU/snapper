@@ -1,8 +1,10 @@
-const { body, param } = require('express-validator');
+const { body, param, check } = require('express-validator');
 
 export const createDiveLogValidation = [
     body('user').notEmpty().withMessage('User is required').isMongoId().withMessage('Invalid user ID'),
+    body('date').notEmpty().withMessage('Date is required'),
     body('date').isISO8601().withMessage('Invalid date format'),
+    body('location').notEmpty().withMessage('Location is required'),
     body('location.type').equals('Point').withMessage('Location type must be "Point"'),
     body('location.coordinates')
         .isArray({ min: 2, max: 2 }).withMessage('Coordinates must be an array of two numbers')
@@ -30,6 +32,13 @@ export const createDiveLogValidation = [
 
 
 export const updateDiveLogValidation = [
+    // @ts-ignore
+    check('user').custom((_value, { req }) => {
+        if (req.body.hasOwnProperty('user')) {
+            throw new Error('User field cannot be updated');
+        }
+        return true;
+    }),
     body('date').optional().isISO8601().withMessage('Invalid date format'),
     body('location.type').optional().equals('Point').withMessage('Location type must be "Point"'),
     body('location.coordinates')

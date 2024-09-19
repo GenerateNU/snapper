@@ -14,7 +14,7 @@ export const findUserBySupabaseId = async (supabaseId: string) => {
   return UserModel.findOne({ supabaseId });
 };
 
-
+// TODO: remove this when there is getUser
 export interface UserService {
   getUserById(id: string): Promise<Document | null>;
 }

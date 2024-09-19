@@ -33,10 +33,10 @@ describe('POST /divelog', () => {
         try {
             await mongoose.connect(config.mongo.url);
             const user = await UserModel.create({
-                email: 'testuser@example.com',
+                email: 'testuser1@example.com',
                 password: 'testpassword123',
                 supabaseId: 'e49be72b-ab52-48d8-b7c4-7f4242dd6e92',
-                username: 'testuser'
+                username: 'testuser1'
             });
             testUserId = user._id;
         } catch (error) {
@@ -113,7 +113,8 @@ describe('POST /divelog', () => {
             .send(payload);
 
         expect(response.status).toBe(400);
-        // TODO: check the error message here
+        const errorMessages = response.body.errors.map((error: any) => error.msg);
+        expect(errorMessages).toContain(message);
     });
     
     test.each(missingFieldCasesDiveLog)('400 for missing required %s', async ({ field, value, message }) => {
@@ -141,7 +142,8 @@ describe('POST /divelog', () => {
             .send(payload);
     
         expect(response.status).toBe(400);
-        // TODO: check the error message here
+        const errorMessages = response.body.errors.map((error: any) => error.msg);
+        expect(errorMessages).toContain(message);
     });
 
     

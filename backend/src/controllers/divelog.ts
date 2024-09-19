@@ -11,8 +11,11 @@ export const DiveLogController = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(400).json({ errors: errors.array() });
+            console.log(errors.array());
             return;
         }
+
+        // TODO: replace this with actual getUserById method
         console.log(req.body.user);
         const user = await userService.getUserById(req.body.user);
         if (user == null) {
@@ -34,6 +37,7 @@ export const DiveLogController = {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(400).json({ errors: errors.array() });
+            console.log(errors.array());
             return;
         }
 
