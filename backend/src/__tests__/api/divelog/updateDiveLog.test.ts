@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import { UserModel } from '../../../models/users';
 import { DiveLog } from '../../../models/diveLog';
 import { config } from '../../../config/config';
-import { invalidCasesDiveLog, invalidUpdateCasesDiveLog, missingFieldCasesDiveLog, validSingleFieldUpdate } from '../../../consts/testConstant';
+import { invalidUpdateCasesDiveLog, validSingleFieldUpdate } from '../../../consts/testConstant';
 
 jest.mock('../../../middlewares/authMiddleware', () => ({
     isAuthenticated: (
