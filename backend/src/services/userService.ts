@@ -12,3 +12,4 @@ export const createUser = async (userData: {
 export const findUserBySupabaseId = async (supabaseId: string) => {
   return UserModel.findOne({ supabaseId });
 };
+
