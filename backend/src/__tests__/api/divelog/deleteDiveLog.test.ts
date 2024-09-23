@@ -1,12 +1,3 @@
-import request from 'supertest';
-import express from 'express';
-import divelog from '../../../routes/divelog';
-import { isAuthenticated } from '../../../middlewares/authMiddleware';
-import mongoose from 'mongoose';
-import { UserModel } from '../../../models/users';
-import { DiveLog } from '../../../models/diveLog';
-import { config } from '../../../config/config';
-
 jest.mock('../../../middlewares/authMiddleware', () => ({
   isAuthenticated: (
     req: express.Request,
@@ -16,6 +7,16 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
     next();
   },
 }));
+
+import request from 'supertest';
+import express from 'express';
+import divelog from '../../../routes/divelog';
+import { isAuthenticated } from '../../../middlewares/authMiddleware';
+import mongoose from 'mongoose';
+import { UserModel } from '../../../models/users';
+import { DiveLog } from '../../../models/diveLog';
+import { config } from '../../../config/config';
+
 
 const app = express();
 const router = express.Router();
