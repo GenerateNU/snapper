@@ -3,5 +3,5 @@ import { getAllDiveLogsSortedPaginated } from '../controllers/divelogs/get';
 import { isAuthenticated } from '../middlewares/authMiddleware';
 
 export default (router: express.Router) => {
-  router.get('/divelogs', getAllDiveLogsSortedPaginated, isAuthenticated);
+  router.get('/divelogs', isAuthenticated, getAllDiveLogsSortedPaginated);
 };
