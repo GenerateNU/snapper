@@ -17,7 +17,6 @@ import { UserModel } from '../../../models/users';
 import { DiveLog } from '../../../models/diveLog';
 import { config } from '../../../config/config';
 
-
 const app = express();
 const router = express.Router();
 
