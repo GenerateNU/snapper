@@ -7,9 +7,11 @@ jest.mock('../middlewares/authMiddleware', () => ({
     return next();
   },
 }));
+
 import request from 'supertest';
 import express from 'express';
 import pingRoute from '../routes/healthcheck';
+
 const app = express();
 const router = express.Router();
 pingRoute(router);

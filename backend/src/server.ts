@@ -55,6 +55,7 @@ async function initializeLogging() {
     next();
   });
 
+//TODO decouple middleware from server logic
   router.use(express.urlencoded({ extended: true }));
   router.use(express.json());
 

@@ -36,10 +36,10 @@ describe("GET /Fish", () => {
 
     // it('Gets a specific fish id', async () => {
     //     const id = new mongoose.Types.ObjectId().toString();
-    //     const fish = { _id : id,  commonName : "Stonefish"};
-    //     const query = `/fish/${id}`
-    //     const res = await request(app).get(query);
-    //     expect(res.status).toBe(200);
+    //     const fish = { _id: id, commonName: "Stonefish" };
+    //     Fish.create(fish);
+    //     const newFish = Fish.findById(id);
+    //     expect(newFish).toBeDefined();
     // })
 
 })
