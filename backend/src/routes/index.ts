@@ -3,6 +3,7 @@ import authentification from './authentification';
 import healthcheck from './healthcheck';
 import divelog from './divelog';
 import user from './user';
+import fish from './fish';
 
 const router = express.Router();
 export default (): express.Router => {
@@ -10,5 +11,6 @@ export default (): express.Router => {
   healthcheck(router);
   divelog(router);
   user(router);
+  fish(router);
   return router;
 };

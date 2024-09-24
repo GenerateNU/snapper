@@ -1,4 +1,6 @@
 import { isAuthenticated } from './../middlewares/authMiddleware';
+import { getAllDiveLogsSortedPaginated } from '../controllers/divelogs/get';
+
 import express from 'express';
 import {
   createDiveLogValidation,
@@ -32,4 +34,5 @@ export default (router: express.Router) => {
     idFormatValidation,
     DiveLogController.deleteDiveLog,
   );
+  router.get('/divelogs', isAuthenticated, getAllDiveLogsSortedPaginated);
 };
