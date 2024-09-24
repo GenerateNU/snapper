@@ -49,7 +49,7 @@ Create a .env in the root directory containing the following:
 ```
 NODE_ENV=development
 SERVER_PORT=3000
-MONGO_URL=mongodb+srv://user:dbUserPassword@snappercluster.i3fur.mongodb.net/?retryWrites=true&w=majority&appName=SnapperCluster;
+MONGO_URL=mongodb://user:dbUserPassword@0.0.0.0:27017/
 MONGO_USERNAME="user"
 MONGO_PASSWORD="dbUserPassword"
 SUPABASE_PASSWORD="9waZ2NQKum6FmP$"
