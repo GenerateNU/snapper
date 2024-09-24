@@ -1,7 +1,7 @@
-//Does not work :(
-
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
+import { editUSerBySupabaseId, findUserBySupabaseId } from '../../services/userService';
+import user from '../../routes/User';
+import { UserModel } from '../../models/users';
 
 //Will get the user by the given ID
 export const createUser = async (
@@ -9,24 +9,37 @@ export const createUser = async (
   res: express.Response,
 ) => {
   try {
-    //Get the ID from the body of the request
-    const { id } = req.body;
+    const userId = req.session.userId;
+    if(!userId){
+      return res.status(400)
+        .json({ error: 'User is not present in the current session!' });
+    }
+    const userFields = ["username", "email", "supabaseId", "badges"
+    , "diveLogs", "fishCollected", "followers", "following", "profilePicture"];
 
-    //Check to make sure that the id is defined
-    if (!id) {
-      return res.status(400).json({ error: 'ID is a required argument' });
+    //TODO: Will not change with schema
+    //Check if each field is already present in the schema
+    for(const key in req.body) {
+      if(!userFields.includes(key)){
+        res.status(400)
+          .json({ error: 'That field does not exist in the schema!' });
+      }
     }
 
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(id);
+    const foundUser =
+      await findUserBySupabaseId(userId);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {
       //Error if not
       return res
         .status(400)
-        .json({ error: 'Unable to find user of ID: ' + id });
+        .json({ error: 'Unable to find user of ID: ' + userId });
     }
+
+    //Should mutate the id with the given request
+    await editUSerBySupabaseId(userId, req.body);
 
     //Return the OK status
     return res
@@ -34,13 +47,12 @@ export const createUser = async (
       .json({
         fish: foundUser.fishCollected,
         message:
-          'Successfully found fish for user:' + id
-      });
+          'Successfully updated user:' + userId + '. With: ' + req.body});
   } catch (err) {
     //Handle error
-    console.error('Error while searching for User\'s fish:\n', err);
+    console.error('Error updating the user data:\n', err);
     return res
       .status(500)
-      .json({ error: 'Internal server error while searching for the user\'s fish.\n' + err });
+      .json({ error: 'Internal server error while updating user data.\n' + err });
   }
 };
