@@ -7,6 +7,7 @@ export const getUserDiveLogs = async (
 ) => {
 
 
+
     try {
         //Get the ID from the body of the request
         const userID = req.session.userId
