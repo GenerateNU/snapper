@@ -24,7 +24,7 @@ import request from 'supertest';
 import divelog from '../../../routes/divelog';
 import { isAuthenticated } from '../../../middlewares/authMiddleware';
 import mongoose from 'mongoose';
-import { invalidIdCases } from '../../consts/testConstant';
+import { invalidIdCases } from '../../../consts/testConstant';
 
 const app = express();
 const router = express.Router();
@@ -56,18 +56,21 @@ describe('DELETE /divelog/:id', () => {
     mockExec.mockResolvedValue(payload);
 
     const response = await request(app).delete(`/divelog/${diveLogId}`);
-    
+
     expect(response.status).toBe(200);
     expect(mockFindByIdAndDelete).toHaveBeenCalledWith(diveLogId.toString());
     expect(mockExec).toHaveBeenCalled();
   });
 
-  it.each(invalidIdCases)('should return 400 for invalid diveLogId: %s', async (invalidId) => {
-    const response = await request(app).delete(`/divelog/${invalidId}`);
+  it.each(invalidIdCases)(
+    'should return 400 for invalid diveLogId: %s',
+    async (invalidId) => {
+      const response = await request(app).delete(`/divelog/${invalidId}`);
 
-    expect(response.status).toBe(400);
-    expect(mockFindByIdAndDelete).not.toHaveBeenCalled();
-  });
+      expect(response.status).toBe(400);
+      expect(mockFindByIdAndDelete).not.toHaveBeenCalled();
+    },
+  );
 
   it('should return 404 when dive log is not found', async () => {
     mockExec.mockResolvedValue(null);

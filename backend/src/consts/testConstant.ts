@@ -73,10 +73,9 @@ export const invalidUpdateCasesDiveLog = [
   { field: 'description', value: 123, message: 'Description must be a string' },
 ];
 
-
 export const invalidIdCases = [
   ['invalid ID format (short string)', 'hello', 400],
-  ['empty string ID', '', 404],                
-  ['non-string ID (number)', 12345, 400],         
-  ['special characters ID', '!@#$%', 400],   
+  ['empty string ID', '', 404],
+  ['non-string ID (number)', 12345, 400],
+  ['special characters ID', '!@#$%', 400],
 ];

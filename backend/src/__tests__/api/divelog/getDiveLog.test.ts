@@ -24,7 +24,7 @@ import express from 'express';
 import divelog from '../../../routes/divelog';
 import { isAuthenticated } from '../../../middlewares/authMiddleware';
 import mongoose from 'mongoose';
-import { invalidIdCases } from '../../consts/testConstant';
+import { invalidIdCases } from '../../../consts/testConstant';
 
 const app = express();
 const router = express.Router();
@@ -54,8 +54,8 @@ describe('GET /divelog/:id', () => {
 
   it('200 with authentication and valid diveLogId', async () => {
     mockExec.mockResolvedValue({
-        ...payload,
-        _id: diveLogId,
+      ...payload,
+      _id: diveLogId,
     });
 
     const response = await request(app).get(`/divelog/${diveLogId}`);
@@ -65,11 +65,13 @@ describe('GET /divelog/:id', () => {
     expect(response.body.user).toBe(testUserId.toString());
     expect(response.body.location).toEqual(payload.location);
 
-    const normalizedResponseDate = new Date(response.body.date).toISOString().slice(0, -5) + 'Z';
-    const normalizedPayloadDate = new Date(payload.date).toISOString().slice(0, -5) + 'Z';
+    const normalizedResponseDate =
+      new Date(response.body.date).toISOString().slice(0, -5) + 'Z';
+    const normalizedPayloadDate =
+      new Date(payload.date).toISOString().slice(0, -5) + 'Z';
 
     expect(normalizedResponseDate).toBe(normalizedPayloadDate);
-    
+
     expect(response.body.time).toBe(payload.time);
     expect(response.body.duration).toBe(payload.duration);
     expect(response.body.depth).toBe(payload.depth);
@@ -82,7 +84,7 @@ describe('GET /divelog/:id', () => {
 
     const testId = new mongoose.Types.ObjectId();
     const response = await request(app).get(`/divelog/${testId}`);
-    
+
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty('message', 'Dive log not found');
   });
@@ -93,6 +95,6 @@ describe('GET /divelog/:id', () => {
       mockExec.mockResolvedValue(null);
       const response = await request(app).get(`/divelog/${invalidId}`);
       expect(response.status).toBe(expectedStatus);
-    }
+    },
   );
 });

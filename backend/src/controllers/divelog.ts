@@ -19,7 +19,6 @@ export const DiveLogController = {
     }
 
     // TODO: replace this with actual getUserById method
-    console.log(req.body.user);
     const user = await userService.getUserById(req.body.user);
     if (user == null) {
       res.status(404).json({ message: 'User not found' });

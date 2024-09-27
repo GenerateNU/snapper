@@ -8,25 +8,13 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
   },
 }));
 
-import request from 'supertest';
-import express from 'express';
-import divelog from '../../../routes/divelog';
-import { isAuthenticated } from '../../../middlewares/authMiddleware';
-import mongoose from 'mongoose';
-import { UserModel } from '../../../models/users';
-import { DiveLog } from '../../../models/diveLog';
-import {
-  invalidCasesDiveLog,
-  missingFieldCasesDiveLog,
-} from '../../consts/testConstant';
-
 const mockExec = jest.fn();
-const mockFindById = jest.fn().mockImplementation(() => ({ exec: mockExec }));
+const mockFindById = jest.fn(() => ({ exec: mockExec }));
 
 jest.mock('../../../models/users', () => ({
   UserModel: {
     create: jest.fn(),
-    findById: jest.fn(() => ({ exec: mockExec })),
+    findById: mockFindById,
   },
 }));
 
@@ -37,19 +25,34 @@ jest.mock('../../../models/diveLog', () => ({
   },
 }));
 
+import request from 'supertest';
+import express from 'express';
+import divelog from '../../../routes/divelog';
+import mongoose from 'mongoose';
+import { UserModel } from '../../../models/users';
+import {
+  invalidCasesDiveLog,
+  missingFieldCasesDiveLog,
+} from '../../../consts/testConstant';
+import { DiveLog } from '../../../models/diveLog';
+
 const app = express();
 const router = express.Router();
 
 app.use(express.json());
-app.use(isAuthenticated);
 divelog(router);
 app.use(router);
 
 describe('POST /divelog', () => {
   let testUserId: mongoose.Types.ObjectId;
 
-  beforeAll(async () => {
+  beforeAll(() => {
     testUserId = new mongoose.Types.ObjectId();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
     (UserModel.create as jest.Mock).mockResolvedValue({
       _id: testUserId,
       email: 'testuser1@example.com',
@@ -59,13 +62,7 @@ describe('POST /divelog', () => {
     });
   });
 
-  // test('201 with authentication and valid JSON payload', async () => {
-  //   mockFindById.mockResolvedValue({
-  //     _id: testUserId,
-  //     email: 'testuser1@example.com',
-  //     username: 'testuser1',
-  //   });
-
+  // it('201 with authentication and valid JSON payload', async () => {
   //   const payload = {
   //     user: testUserId,
   //     location: {
@@ -82,16 +79,22 @@ describe('POST /divelog', () => {
   //     ],
   //     description: 'A great dive at the reef with lots of colorful fish.',
   //   };
-    
-  //   (DiveLog.create as jest.Mock).mockResolvedValue({ _id: new mongoose.Types.ObjectId(),
-  //     ...payload});
+
+  //   const mockDiveLog = {
+  //     _id: new mongoose.Types.ObjectId(),
+  //     ...payload,
+  //   };
+
+  //   (DiveLog.create as jest.Mock).mockResolvedValue(mockDiveLog);
 
   //   const response = await request(app).post('/divelog').send(payload);
 
   //   expect(response.status).toBe(201);
   //   expect(response.body).toHaveProperty('_id');
+  //   expect(response.body._id).toEqual(mockDiveLog._id.toString());
   //   expect(response.body.user).toBe(testUserId.toString());
   //   expect(response.body.location).toEqual(payload.location);
+  //   expect(response.body.date).toBe(payload.date);
   //   expect(response.body.time).toBe(payload.time);
   //   expect(response.body.duration).toBe(payload.duration);
   //   expect(response.body.depth).toBe(payload.depth);
@@ -99,7 +102,7 @@ describe('POST /divelog', () => {
   //   expect(response.body.description).toBe(payload.description);
   // });
 
-  test.each(invalidCasesDiveLog)(
+  it.each(invalidCasesDiveLog)(
     '400 for invalid %s',
     async ({ field, value, message }) => {
       const payload = {
@@ -127,7 +130,7 @@ describe('POST /divelog', () => {
     },
   );
 
-  test.each(missingFieldCasesDiveLog)(
+  it.each(missingFieldCasesDiveLog)(
     '400 for missing required %s',
     async ({ field, value, message }) => {
       const payload = {
@@ -155,7 +158,7 @@ describe('POST /divelog', () => {
     },
   );
 
-  test('404 user not found', async () => {
+  it('404 user not found', async () => {
     const payload = {
       user: new mongoose.Types.ObjectId(),
       location: {

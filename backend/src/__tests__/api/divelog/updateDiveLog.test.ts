@@ -30,7 +30,7 @@ import mongoose from 'mongoose';
 import {
   invalidUpdateCasesDiveLog,
   validSingleFieldUpdate,
-} from '../../consts/testConstant';
+} from '../../../consts/testConstant';
 
 const app = express();
 const router = express.Router();
@@ -83,8 +83,12 @@ describe('PUT /divelog/:id', () => {
 
       (payload as any)[field] = value;
 
-      mockFindById.mockReturnValueOnce({ exec: jest.fn().mockResolvedValueOnce({ _id: diveLogId }) });
-      mockUpdate.mockReturnValueOnce({ exec: jest.fn().mockResolvedValueOnce({ ...payload, _id: diveLogId }) });
+      mockFindById.mockReturnValueOnce({
+        exec: jest.fn().mockResolvedValueOnce({ _id: diveLogId }),
+      });
+      mockUpdate.mockReturnValueOnce({
+        exec: jest.fn().mockResolvedValueOnce({ ...payload, _id: diveLogId }),
+      });
 
       const response = await request(app)
         .put(`/divelog/${diveLogId}`)
@@ -122,7 +126,9 @@ describe('PUT /divelog/:id', () => {
 
       (payload as any)[field] = value;
 
-      mockFindById.mockReturnValueOnce({ exec: jest.fn().mockResolvedValueOnce({ _id: diveLogId }) });
+      mockFindById.mockReturnValueOnce({
+        exec: jest.fn().mockResolvedValueOnce({ _id: diveLogId }),
+      });
 
       const response = await request(app)
         .put(`/divelog/${diveLogId}`)
