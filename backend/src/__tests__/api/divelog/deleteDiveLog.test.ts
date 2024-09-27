@@ -8,14 +8,23 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
   },
 }));
 
-import request from 'supertest';
+const mockExec = jest.fn();
+const mockFindByIdAndDelete = jest.fn(() => ({ exec: mockExec }));
+
+jest.mock('../../../models/diveLog', () => ({
+  DiveLog: {
+    create: jest.fn(),
+    deleteMany: jest.fn(),
+    findByIdAndDelete: mockFindByIdAndDelete,
+  },
+}));
+
 import express from 'express';
+import request from 'supertest';
 import divelog from '../../../routes/divelog';
 import { isAuthenticated } from '../../../middlewares/authMiddleware';
 import mongoose from 'mongoose';
-import { UserModel } from '../../../models/users';
-import { DiveLog } from '../../../models/diveLog';
-import { config } from '../../../config/config';
+import { invalidIdCases } from '../../consts/testConstant';
 
 const app = express();
 const router = express.Router();
@@ -26,67 +35,47 @@ divelog(router);
 app.use(router);
 
 describe('DELETE /divelog/:id', () => {
-  let testUserId: mongoose.Types.ObjectId;
-  let diveLogId: mongoose.Types.ObjectId;
-  let payload: any;
+  const testUserId = new mongoose.Types.ObjectId();
+  const diveLogId = new mongoose.Types.ObjectId();
+  const payload = {
+    user: testUserId.toString(),
+    location: 'Great Barrier Reef',
+    date: new Date().toISOString(),
+    time: '10:00',
+    duration: 30,
+    depth: 18,
+    photos: ['photo1.jpg', 'photo2.jpg'],
+    description: 'Fun dive!',
+  };
 
-  beforeAll(async () => {
-    try {
-      await mongoose.connect(config.mongo.url);
-      const user = await UserModel.create({
-        email: 'testuser2@example.com',
-        password: 'testpassword123',
-        supabaseId: 'cd3ac6a6-73cb-4407-b247-5bf6b6be9283',
-        username: 'testuser2',
-      });
-      testUserId = user._id;
-
-      payload = {
-        user: testUserId,
-        location: {
-          type: 'Point',
-          coordinates: [40.712776, -74.005974],
-        },
-        date: '2024-09-17T15:12:46Z',
-        time: '15:30',
-        duration: 60,
-        depth: 30,
-        photos: [
-          'https://example.com/salmon.jpg',
-          'https://example.com/tuna.jpg',
-        ],
-        description: 'Initial dive log',
-      };
-      const diveLog = await DiveLog.create(payload);
-      diveLogId = diveLog._id;
-    } catch (error) {
-      console.error(
-        'Error connecting to MongoDB or creating test user:',
-        error,
-      );
-    }
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await DiveLog.deleteMany({ user: testUserId });
-    await UserModel.deleteOne({ _id: testUserId });
-    await mongoose.connection.close();
-  });
+  it('should return 200 for valid diveLogId and successful deletion', async () => {
+    mockExec.mockResolvedValue(payload);
 
-  test('200 deletion with valid diveLogId', async () => {
     const response = await request(app).delete(`/divelog/${diveLogId}`);
+    
     expect(response.status).toBe(200);
+    expect(mockFindByIdAndDelete).toHaveBeenCalledWith(diveLogId.toString());
+    expect(mockExec).toHaveBeenCalled();
   });
 
-  test('400 invalid diveLogId', async () => {
-    const invalidId = '1';
+  it.each(invalidIdCases)('should return 400 for invalid diveLogId: %s', async (invalidId) => {
     const response = await request(app).delete(`/divelog/${invalidId}`);
+
     expect(response.status).toBe(400);
+    expect(mockFindByIdAndDelete).not.toHaveBeenCalled();
   });
 
-  test('404 diveLog not found', async () => {
-    const testId = new mongoose.Types.ObjectId();
-    const response = await request(app).delete(`/divelog/${testId}`);
+  it('should return 404 when dive log is not found', async () => {
+    mockExec.mockResolvedValue(null);
+
+    const response = await request(app).delete(`/divelog/${diveLogId}`);
+
     expect(response.status).toBe(404);
+    expect(mockFindByIdAndDelete).toHaveBeenCalledWith(diveLogId.toString());
+    expect(mockExec).toHaveBeenCalled();
   });
 });

@@ -8,14 +8,23 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
   },
 }));
 
+const mockExec = jest.fn();
+const mockFindById = jest.fn(() => ({ exec: mockExec }));
+
+jest.mock('../../../models/diveLog', () => ({
+  DiveLog: {
+    create: jest.fn(),
+    deleteMany: jest.fn(),
+    findById: mockFindById,
+  },
+}));
+
 import request from 'supertest';
 import express from 'express';
 import divelog from '../../../routes/divelog';
 import { isAuthenticated } from '../../../middlewares/authMiddleware';
 import mongoose from 'mongoose';
-import { UserModel } from '../../../models/users';
-import { DiveLog } from '../../../models/diveLog';
-import { config } from '../../../config/config';
+import { invalidIdCases } from '../../consts/testConstant';
 
 const app = express();
 const router = express.Router();
@@ -26,54 +35,29 @@ divelog(router);
 app.use(router);
 
 describe('GET /divelog/:id', () => {
-  let testUserId: mongoose.Types.ObjectId;
-  let diveLogId: mongoose.Types.ObjectId;
-  let payload: any;
+  const testUserId = new mongoose.Types.ObjectId();
+  const diveLogId = new mongoose.Types.ObjectId();
+  const payload = {
+    user: testUserId.toString(),
+    location: 'Great Barrier Reef',
+    date: new Date().toISOString(),
+    time: '10:00',
+    duration: 30,
+    depth: 18,
+    photos: ['photo1.jpg', 'photo2.jpg'],
+    description: 'Fun dive!',
+  };
 
-  beforeAll(async () => {
-    try {
-      await mongoose.connect(config.mongo.url);
-      const user = await UserModel.create({
-        email: 'testuser3@example.com',
-        password: 'testpassword123',
-        supabaseId: '7a9bf692-2b81-464a-8415-01024eab39e0',
-        username: 'testuser3',
-      });
-      testUserId = user._id;
-
-      payload = {
-        user: testUserId,
-        location: {
-          type: 'Point',
-          coordinates: [40.712776, -74.005974],
-        },
-        date: '2024-09-17T15:12:46Z',
-        time: '15:30',
-        duration: 60,
-        depth: 30,
-        photos: [
-          'https://example.com/salmon.jpg',
-          'https://example.com/tuna.jpg',
-        ],
-        description: 'Initial dive log',
-      };
-      const diveLog = await DiveLog.create(payload);
-      diveLogId = diveLog._id;
-    } catch (error) {
-      console.error(
-        'Error connecting to MongoDB or creating test user:',
-        error,
-      );
-    }
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await DiveLog.deleteMany({ user: testUserId });
-    await UserModel.deleteOne({ _id: testUserId });
-    await mongoose.connection.close();
-  });
+  it('200 with authentication and valid diveLogId', async () => {
+    mockExec.mockResolvedValue({
+        ...payload,
+        _id: diveLogId,
+    });
 
-  test('200 with authentication and valid diveLogId', async () => {
     const response = await request(app).get(`/divelog/${diveLogId}`);
 
     expect(response.status).toBe(200);
@@ -81,10 +65,11 @@ describe('GET /divelog/:id', () => {
     expect(response.body.user).toBe(testUserId.toString());
     expect(response.body.location).toEqual(payload.location);
 
-    const normalizedResponseDate =
-      new Date(response.body.date).toISOString().slice(0, -5) + 'Z';
-    expect(normalizedResponseDate).toBe(payload.date);
+    const normalizedResponseDate = new Date(response.body.date).toISOString().slice(0, -5) + 'Z';
+    const normalizedPayloadDate = new Date(payload.date).toISOString().slice(0, -5) + 'Z';
 
+    expect(normalizedResponseDate).toBe(normalizedPayloadDate);
+    
     expect(response.body.time).toBe(payload.time);
     expect(response.body.duration).toBe(payload.duration);
     expect(response.body.depth).toBe(payload.depth);
@@ -92,15 +77,22 @@ describe('GET /divelog/:id', () => {
     expect(response.body.description).toBe(payload.description);
   });
 
-  test('400 invalid diveLogId', async () => {
-    const invalidId = '1';
-    const response = await request(app).get(`/divelog/${invalidId}`);
-    expect(response.status).toBe(400);
-  });
+  it('404 diveLog not found', async () => {
+    mockExec.mockResolvedValue(null);
 
-  test('404 diveLog not found', async () => {
     const testId = new mongoose.Types.ObjectId();
     const response = await request(app).get(`/divelog/${testId}`);
+    
     expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'Dive log not found');
   });
+
+  it.each(invalidIdCases)(
+    'should return %s and status %i',
+    async (_, invalidId, expectedStatus) => {
+      mockExec.mockResolvedValue(null);
+      const response = await request(app).get(`/divelog/${invalidId}`);
+      expect(response.status).toBe(expectedStatus);
+    }
+  );
 });
