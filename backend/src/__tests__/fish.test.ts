@@ -7,23 +7,24 @@ jest.mock('../middlewares/authMiddleware', () => ({
     return next();
   },
 }));
-jest.mock('../models/fish');
 import { Fish } from '../models/fish';
 import request from 'supertest';
 import express from 'express';
 import fish from '../routes/fish';
 import mongoose from 'mongoose';
-
+jest.mock('../models/fish');
 Fish.aggregate = jest.fn();
 
 const app = express();
 const router = express.Router();
 fish(router);
+
 app.use(router);
+const fishMock = Fish.findById as jest.Mock;
 
 describe('GET /Fish', () => {
   beforeEach(() => {
-    (Fish.aggregate as jest.Mock).mockReset();
+    fishMock.mockReset();
   });
 
   it('No fish with this id', async () => {
@@ -33,11 +34,12 @@ describe('GET /Fish', () => {
     expect(res.status).toBe(404);
   });
 
-  // it('Gets a specific fish id', async () => {
-  //     const id = new mongoose.Types.ObjectId().toString();
-  //     const fish = { _id: id, commonName: "Stonefish" };
-  //     Fish.create(fish);
-  //     const newFish = Fish.findById(id);
-  //     expect(newFish).toBeDefined();
-  // })
+  it('Gets a specific fish id', async () => {
+    const id = new mongoose.Types.ObjectId().toString();
+    const fish = { _id: id, commonName: 'Stonefish' };
+    fishMock.mockResolvedValue(fish);
+    const res = await request(app).get(`/fish/${id}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(fish);
+  });
 });
