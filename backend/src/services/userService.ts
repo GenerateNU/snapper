@@ -21,6 +21,6 @@ export interface UserService {
 
 export class UserServiceImpl implements UserService {
   async getUserById(id: string): Promise<Document | null> {
-    return UserModel.findById(id).exec();
+    return UserModel.findById(id);
   }
 }

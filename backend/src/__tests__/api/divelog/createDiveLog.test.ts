@@ -19,24 +19,6 @@ import {
 } from '../../../consts/testConstant';
 import { DiveLog } from '../../../models/diveLog';
 
-
-const mockExec = jest.fn();
-const mockFindById = jest.fn(UserModel.findById);
-
-jest.mock('../../../models/users', () => ({
-  UserModel: {
-    create: jest.fn(),
-    findById: jest.fn(UserModel.findById)
-  },
-}));
-
-jest.mock('../../../models/diveLog', () => ({
-  DiveLog: {
-    create: jest.fn(),
-    deleteMany: jest.fn(),
-  },
-}));
-
 const app = express();
 const router = express.Router();
 
@@ -54,7 +36,15 @@ describe('POST /divelog', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (UserModel.create as jest.Mock).mockResolvedValue({
+    UserModel.create = jest.fn().mockResolvedValue({
+      _id: testUserId,
+      email: 'testuser1@example.com',
+      password: 'testpassword123',
+      supabaseId: 'e49be72b-ab52-48d8-b7c4-7f4242dd6e92',
+      username: 'testuser1',
+    });
+
+    UserModel.findById = jest.fn().mockResolvedValue({
       _id: testUserId,
       email: 'testuser1@example.com',
       password: 'testpassword123',
@@ -86,7 +76,7 @@ describe('POST /divelog', () => {
       ...payload,
     };
 
-    (DiveLog.create as jest.Mock).mockResolvedValue(mockDiveLog);
+    DiveLog.create = jest.fn().mockResolvedValue(mockDiveLog);
 
     const response = await request(app).post('/divelog').send(payload);
 
@@ -177,7 +167,7 @@ describe('POST /divelog', () => {
       description: 'A great dive at the reef with lots of colorful fish.',
     };
 
-    mockExec.mockResolvedValue(null);
+    UserModel.findById = jest.fn().mockResolvedValue(null);
     const response = await request(app).post('/divelog').send(payload);
     expect(response.status).toBe(404);
   });

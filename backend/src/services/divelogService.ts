@@ -1,5 +1,6 @@
 import { DiveLog } from '../models/diveLog';
 import { Document } from 'mongoose';
+import divelog from '../routes/divelog';
 
 export interface DiveLogService {
   createDiveLog(data: Partial<Document>): Promise<Document>;
@@ -10,8 +11,7 @@ export interface DiveLogService {
 
 export class DiveLogServiceImpl implements DiveLogService {
   async createDiveLog(data: Partial<Document>): Promise<Document> {
-    const diveLog = new DiveLog(data);
-    return await diveLog.save();
+    return DiveLog.create(data);
   }
 
   async getDiveLogById(id: string): Promise<Document | null> {
