@@ -14,7 +14,6 @@ export const DiveLogController = {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
-      console.log(errors.array());
       return;
     }
 
@@ -26,11 +25,9 @@ export const DiveLogController = {
     }
 
     try {
-      console.log(req.body);
       const diveLog = await diveLogService.createDiveLog(req.body);
       res.status(201).json(diveLog);
     } catch (error) {
-      console.error('Create dive log error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
@@ -42,7 +39,6 @@ export const DiveLogController = {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
-      console.log(errors.array());
       return;
     }
 
@@ -54,7 +50,6 @@ export const DiveLogController = {
       }
       res.status(200).json(diveLog);
     } catch (error) {
-      console.error('Get dive log by ID error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
@@ -80,7 +75,6 @@ export const DiveLogController = {
       }
       res.status(200).json(updatedDiveLog);
     } catch (error) {
-      console.error('Update dive log error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
@@ -103,7 +97,6 @@ export const DiveLogController = {
       }
       res.status(200).json({ message: 'Dive log deleted successfully' });
     } catch (error) {
-      console.error('Delete dive log error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
