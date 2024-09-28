@@ -13,6 +13,8 @@ import routes from './routes';
 import { sessionMiddleware } from './config/sessionConfig';
 import { resolve } from 'path';
 import dotenv from 'dotenv';
+import { serve, setup } from 'swagger-ui-express';
+import swaggerJsDoc from 'swagger-jsdoc';
 
 dotenv.config({ path: resolve(__dirname, '../.env') });
 
@@ -28,10 +30,25 @@ mongoose
     console.log('error');
   });
 
+const options = {
+  definition: {
+    swagger: '2.0',
+    info: {
+      title: 'Snapper API',
+      version: '1.0.0',
+    },
+  },
+  apis: ['src/routes/*.ts'],
+};
+
+const spec = swaggerJsDoc(options);
+
 export const startServer = () => {
   initializeLogging();
 
   router.use(sessionMiddleware);
+
+  router.use('/api-docs', serve, setup(spec));
 
   router.use('/', routes());
 
