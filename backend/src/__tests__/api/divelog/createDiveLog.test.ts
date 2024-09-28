@@ -8,23 +8,6 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
   },
 }));
 
-const mockExec = jest.fn();
-const mockFindById = jest.fn(() => ({ exec: mockExec }));
-
-jest.mock('../../../models/users', () => ({
-  UserModel: {
-    create: jest.fn(),
-    findById: mockFindById,
-  },
-}));
-
-jest.mock('../../../models/diveLog', () => ({
-  DiveLog: {
-    create: jest.fn(),
-    deleteMany: jest.fn(),
-  },
-}));
-
 import request from 'supertest';
 import express from 'express';
 import divelog from '../../../routes/divelog';
@@ -35,6 +18,24 @@ import {
   missingFieldCasesDiveLog,
 } from '../../../consts/testConstant';
 import { DiveLog } from '../../../models/diveLog';
+
+
+const mockExec = jest.fn();
+const mockFindById = jest.fn(UserModel.findById);
+
+jest.mock('../../../models/users', () => ({
+  UserModel: {
+    create: jest.fn(),
+    findById: jest.fn(UserModel.findById)
+  },
+}));
+
+jest.mock('../../../models/diveLog', () => ({
+  DiveLog: {
+    create: jest.fn(),
+    deleteMany: jest.fn(),
+  },
+}));
 
 const app = express();
 const router = express.Router();
@@ -62,45 +63,45 @@ describe('POST /divelog', () => {
     });
   });
 
-  // it('201 with authentication and valid JSON payload', async () => {
-  //   const payload = {
-  //     user: testUserId,
-  //     location: {
-  //       type: 'Point',
-  //       coordinates: [40.712776, -74.005974],
-  //     },
-  //     date: '2024-09-17T15:12:46Z',
-  //     time: '15:30',
-  //     duration: 60,
-  //     depth: 30,
-  //     photos: [
-  //       'https://example.com/salmon.jpg',
-  //       'https://example.com/tuna.jpg',
-  //     ],
-  //     description: 'A great dive at the reef with lots of colorful fish.',
-  //   };
+  it('201 with authentication and valid JSON payload', async () => {
+    const payload = {
+      user: testUserId,
+      location: {
+        type: 'Point',
+        coordinates: [40.712776, -74.005974],
+      },
+      date: '2024-09-17T15:12:46Z',
+      time: '15:30',
+      duration: 60,
+      depth: 30,
+      photos: [
+        'https://example.com/salmon.jpg',
+        'https://example.com/tuna.jpg',
+      ],
+      description: 'A great dive at the reef with lots of colorful fish.',
+    };
 
-  //   const mockDiveLog = {
-  //     _id: new mongoose.Types.ObjectId(),
-  //     ...payload,
-  //   };
+    const mockDiveLog = {
+      _id: new mongoose.Types.ObjectId(),
+      ...payload,
+    };
 
-  //   (DiveLog.create as jest.Mock).mockResolvedValue(mockDiveLog);
+    (DiveLog.create as jest.Mock).mockResolvedValue(mockDiveLog);
 
-  //   const response = await request(app).post('/divelog').send(payload);
+    const response = await request(app).post('/divelog').send(payload);
 
-  //   expect(response.status).toBe(201);
-  //   expect(response.body).toHaveProperty('_id');
-  //   expect(response.body._id).toEqual(mockDiveLog._id.toString());
-  //   expect(response.body.user).toBe(testUserId.toString());
-  //   expect(response.body.location).toEqual(payload.location);
-  //   expect(response.body.date).toBe(payload.date);
-  //   expect(response.body.time).toBe(payload.time);
-  //   expect(response.body.duration).toBe(payload.duration);
-  //   expect(response.body.depth).toBe(payload.depth);
-  //   expect(response.body.photos).toEqual(payload.photos);
-  //   expect(response.body.description).toBe(payload.description);
-  // });
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('_id');
+    expect(response.body._id).toEqual(mockDiveLog._id.toString());
+    expect(response.body.user).toBe(testUserId.toString());
+    expect(response.body.location).toEqual(payload.location);
+    expect(response.body.date).toBe(payload.date);
+    expect(response.body.time).toBe(payload.time);
+    expect(response.body.duration).toBe(payload.duration);
+    expect(response.body.depth).toBe(payload.depth);
+    expect(response.body.photos).toEqual(payload.photos);
+    expect(response.body.description).toBe(payload.description);
+  });
 
   it.each(invalidCasesDiveLog)(
     '400 for invalid %s',

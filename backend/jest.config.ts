@@ -16,6 +16,7 @@ const config: Config = {
   clearMocks: true,
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  rootDir: 'src/',
 };
 
 export default config;

@@ -2,6 +2,7 @@ import express from 'express';
 import authentification from './authentification';
 import healthcheck from './healthcheck';
 import divelog from './divelog';
+import swagger from './swagger';
 import user from './user';
 import fish from './fish';
 
@@ -12,5 +13,6 @@ export default (): express.Router => {
   divelog(router);
   user(router);
   fish(router);
+  swagger(router);
   return router;
 };
