@@ -1,42 +1,42 @@
 name: Node.js CI
 
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                node-version: [18.x]
+    strategy:
+      matrix:
+        node-version: [18.x]
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ matrix.node-version }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-            - name: Install Task
-              run: |
-                sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+      - name: Install Task
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 
-            - name: Install dependencies (backend)
-              run: task --dir ./backend backend:install
+      - name: Install dependencies (backend)
+        run: task --dir ./backend backend:install
 
-            - name: Install dependencies (frontend)
-              run: task --dir ./frontend frontend:install
+      - name: Install dependencies (frontend)
+        run: task --dir ./frontend frontend:install
 
-            - name: Run Prettier Check (frontend)
-              run: task format-check
+      - name: Run Prettier Check (frontend)
+        run: task format-check
 
-            - name: Run tests
-              run: task backend:test
+      - name: Run tests
+        run: task backend:test

@@ -12,8 +12,8 @@ import request from 'supertest';
 import express from 'express';
 import fish from '../routes/fish';
 import mongoose from 'mongoose';
+
 jest.mock('../models/fish');
-Fish.aggregate = jest.fn();
 
 const app = express();
 const router = express.Router();

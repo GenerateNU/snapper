@@ -8,16 +8,18 @@ Before you begin, ensure you have the following installed on your system:
 - [Docker](https://www.docker.com/)
 - [Task](https://taskfile.dev/)
 - [MongoDB](https://www.mongodb.com/docs/manual/installation/)
-- [Expo CLI](https://docs.expo.dev/get-started/installation/) (for running the frontend on mobile devices)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (for running the
+  frontend on mobile devices)
 
-Ensure you have environment variables set up for development by creating a `.env` file.
-
+Ensure you have environment variables set up for development by creating a
+`.env` file.
 
 ## Project Structure
 
 The project is divided into two main parts:
 
 1. **Frontend** (located in the `frontend` directory):
+
    - Built using React Native + Expo.
    - Cross-platform support for iOS, Android, and web.
 
@@ -36,14 +38,17 @@ cd snapper
 ```
 
 ### 2. Install Dependencies
+
 We use Taskfile to streamline setting up the project.
 
 ```bash
 task install
 ```
+
 This command will install dependencies for both frontend and backend.
 
 ### 3. Set up your .env
+
 Create a .env in the root directory containing the following:
 
 ```
@@ -58,6 +63,7 @@ SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 ```
 
 ### 4. Running the Application
+
 You can start the frontend and backend simultaneously by running:
 
 ```bash
@@ -68,16 +74,19 @@ task start
 Or, you can start each service separately:
 
 - Frontend (React Native):
+
 ```bash
 task frontend:start
 ```
 
 - Backend (Express):
+
 ```bash
 task backend:start
 ```
 
 ### 5. Running in Development Mode
+
 For development, where you may want auto-reload features:
 
 ```bash
@@ -85,17 +94,20 @@ task backend:dev
 ```
 
 ### 7. Testing
+
 To run the backend tests, use:
 
 ```bash
 task backend:test
 ```
+
 We use Jest for testing the backend.
+
 #### Backend Routes Overview
+
 Here’s an overview of the important backend routes:
 
-Auth Routes:
-POST /auth/register: Register a new user.
+Auth Routes: POST /auth/register: Register a new user.
 
 POST /auth/login: Log in an existing user.
 
@@ -107,9 +119,12 @@ GET /ping: Check server status, requires authentication.
 
 #### Contribution Guidelines
 
-Please make sure to create a new branch for every feature you work on, and always create a pull request for code review. Ensure that all tests pass locally before submitting your PR.
+Please make sure to create a new branch for every feature you work on, and
+always create a pull request for code review. Ensure that all tests pass locally
+before submitting your PR.
 
 #### Questions or Issues?
+
 If you run into any problems, feel free to slack me!
 
 Happy coding! 🐠
