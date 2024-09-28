@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundlerIdentifier" : "com.generate.snapper"
+      "bundlerIdentifier": "com.generate.snapper"
     },
     "android": {
       "adaptiveIcon": {
