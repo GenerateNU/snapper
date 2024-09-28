@@ -5,9 +5,6 @@ export const getUserDiveLogs = async (
     req: express.Request,
     res: express.Response,
 ) => {
-
-
-
     try {
         //Get the ID from the body of the request
         const userID = req.session.userId

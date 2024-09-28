@@ -1,8 +1,3 @@
-import request from 'supertest';
-import express from 'express';
-import pingRoute from '../routes/healthcheck';
-import { isAuthenticated } from '../middlewares/authMiddleware';
-
 jest.mock('../middlewares/authMiddleware', () => ({
   isAuthenticated: (
     req: express.Request,
@@ -12,6 +7,13 @@ jest.mock('../middlewares/authMiddleware', () => ({
     return next();
   },
 }));
+
+import request from 'supertest';
+import express from 'express';
+import pingRoute from '../routes/healthcheck';
+import { isAuthenticated } from '../middlewares/authMiddleware';
+
+
 
 const app = express();
 const router = express.Router();
