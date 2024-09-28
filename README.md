@@ -61,6 +61,7 @@ SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 You can start the frontend and backend simultaneously by running:
 
 ```bash
+docker compose up
 task start
 ```
 
