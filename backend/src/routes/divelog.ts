@@ -76,7 +76,7 @@ import { DiveLogController } from '../controllers/divelog';
  *         description: User not found
  *       500:
  *         description: Internal server error
- * 
+ *
  * /divelog/{id}:
  *   get:
  *     summary: Retrieve a dive log by ID
@@ -97,7 +97,7 @@ import { DiveLogController } from '../controllers/divelog';
  *         description: Dive log not found
  *       500:
  *         description: Internal server error
- * 
+ *
  *   put:
  *     summary: Update a dive log by ID
  *     description: Updates an existing dive log entry using its unique ID.
@@ -147,7 +147,7 @@ import { DiveLogController } from '../controllers/divelog';
  *                 description: Array of IDs referencing fish tags
  *               photos:
  *                 type: array
- *                 items: 
+ *                 items:
  *                   type: string
  *                 description: AWS S3 url of photos
  *               description:
@@ -162,7 +162,7 @@ import { DiveLogController } from '../controllers/divelog';
  *         description: Dive log not found
  *       500:
  *         description: Internal server error
- * 
+ *
  *   delete:
  *     summary: Delete a dive log by ID
  *     description: Deletes a dive log entry using its unique ID.
@@ -181,7 +181,6 @@ import { DiveLogController } from '../controllers/divelog';
  *       500:
  *         description: Internal server error
  */
-
 
 /**
  * @swagger
