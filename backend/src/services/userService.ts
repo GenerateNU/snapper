@@ -1,4 +1,5 @@
 import { UserModel } from '../models/users';
+import { Document } from 'mongodb';
 
 export const createUser = async (userData: {
   email: string;
@@ -17,3 +18,13 @@ export const editUSerBySupabaseId = async (supabaseId: string, updatedJson: JSON
   return UserModel.updateOne({ supabaseId }, {$set: { updatedJson } });
 }
 
+// TODO: remove this when there is getUser
+export interface UserService {
+  getUserById(id: string): Promise<Document | null>;
+}
+
+export class UserServiceImpl implements UserService {
+  async getUserById(id: string): Promise<Document | null> {
+    return UserModel.findById(id);
+  }
+}

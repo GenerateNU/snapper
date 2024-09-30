@@ -1,10 +1,9 @@
 import express from 'express';
 import { editUSerBySupabaseId, findUserBySupabaseId } from '../../services/userService';
-import user from '../../routes/User';
 import { UserModel } from '../../models/users';
 
 //Will get the user by the given ID
-export const createUser = async (
+export const PutUser = async (
   req: express.Request,
   res: express.Response,
 ) => {
@@ -40,14 +39,12 @@ export const createUser = async (
 
     //Should mutate the id with the given request
     await editUSerBySupabaseId(userId, req.body);
-
     //Return the OK status
     return res
       .status(200)
       .json({
-        fish: foundUser.fishCollected,
         message:
-          'Successfully updated user:' + userId + '. With: ' + req.body});
+          'Successfully updated user:' + userId});
   } catch (err) {
     //Handle error
     console.error('Error updating the user data:\n', err);

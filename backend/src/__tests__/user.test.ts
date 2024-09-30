@@ -35,9 +35,8 @@ jest.mock('../middlewares/authMiddleware', () => ({
   import express from 'express';
   import { UserModel } from '../models/users';
   import request from 'supertest';
-  import userRoute from '../routes/User';
+  import userRoute from '../routes/user'
   import mongoose from 'mongoose';
-  
   jest.mock('../models/users');
 
   UserModel.findOne = jest.fn();
@@ -71,7 +70,6 @@ jest.mock('../middlewares/authMiddleware', () => ({
       userMock.mockResolvedValue(user);
       const res = await request(app).get(`/user/${id}`);
       expect(res.status).toBe(200);
-
       expect(res.body).toEqual({
         "user": {
           "diveLogs": [],
@@ -86,18 +84,16 @@ jest.mock('../middlewares/authMiddleware', () => ({
         },
         "message": "Successfully found the user ID:9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
       });
-    });
+    }); 
   });
 
-  /**
-   * divelogs endpoint
-   */
-  describe('GET /user/divelogs', () => {
+  
+  describe('GET /user/items/fish', () => {
     beforeEach(() => {
       userMock.mockReset();
     });
   
-    it('Gets specific divelogs by id', async () => {
+    it('Gets specific fish by id', async () => {
       const id = "9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
       const user =  {
             "diveLogs": [],
@@ -112,15 +108,71 @@ jest.mock('../middlewares/authMiddleware', () => ({
         }
         
       userMock.mockResolvedValue(user);
-      const res = await request(app).get(`/user/divelogs`);
+      const res = await request(app).get(`/user/items/fish`);
       expect(res.status).toBe(200);
-
-      console.log("ACTUAL: \n" + JSON.stringify(res.body))
       expect(res.body).toEqual({
-        "user": {
-          "diveLogs": []
-        },
-        "message": "Successfully found the user ID:9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
+        "fish": [],
+        "message": "Successfully found fish for user:9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
       });
-    });
-  });
+    })});
+
+    describe('GET /user/items/divelogs', () => {
+      beforeEach(() => {
+        userMock.mockReset();
+      });
+    
+      it('Gets specific divelogs by id', async () => {
+        const id = "9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
+        const user =  {
+              "diveLogs": [],
+              "fishCollected": [],
+              "followers": [],
+              "following": [],
+              "_id": "66e357c93572d39e66a0ba31",
+              "username": "zainab_i",
+              "email": "zainab.imadulla@icloud.com",
+              "supabaseId": "9f824f26-59b7-4f7f-a1b4-fef456b69bdf",
+              "__v": 0
+          }
+          
+        userMock.mockResolvedValue(user);
+        const res = await request(app).get(`/user/items/divelogs`);
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({
+          "divelogs": [],
+          "message": "Successfully found dive logs for user:9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
+        });
+      })});
+
+
+    describe('PUT /user/actions/edit', () => {
+      beforeEach(() => {
+        userMock.mockReset();
+      });
+    
+      it('edits user', async () => {
+        const id = "9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
+        const updatedUser = {
+          "username" : "zainabimadulla"
+        }
+        const user =  {
+              "diveLogs": [],
+              "fishCollected": [],
+              "followers": [],
+              "following": [],
+              "_id": "66e357c93572d39e66a0ba31",
+              "username": "zainab_i",
+              "email": "zainab.imadulla@icloud.com",
+              "supabaseId": "9f824f26-59b7-4f7f-a1b4-fef456b69bdf",
+              "__v": 0
+          }
+          
+        userMock.mockResolvedValue(user);
+        const res = await request(app).put(`/user/actions/edit`).send(updatedUser);
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({
+          "message": "Successfully updated user:9f824f26-59b7-4f7f-a1b4-fef456b69bdf"
+        });
+      })});
+
+  
