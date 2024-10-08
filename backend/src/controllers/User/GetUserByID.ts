@@ -9,7 +9,6 @@ export const getUserByID = async (
   try {
     //Get the ID from the body of the request
     const id  = req.session.userId;
-    console.log(`ID#&: ${id}`);
 
     //Check to make sure that the id is defined
     if (!id) {
