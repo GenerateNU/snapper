@@ -4,21 +4,21 @@ import {
   StyleSheet,
   Keyboard,
   KeyboardAvoidingView,
-  Pressable,
   Platform,
+  Pressable,
 } from 'react-native';
-import LoginForm from './components/login-form';
+import SignUpForm from './components/register-form';
 
-const Login = () => {
+const Register = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <Pressable style={styles.container} onPress={() => Keyboard.dismiss()}>
-        <Text style={styles.welcomeText}>Login</Text>
-        <Text>Dive in</Text>
-        <LoginForm />
+        <Text>Create your account</Text>
+        <Text>Dive in - Start Your Ocean Adventure</Text>
+        <SignUpForm />
       </Pressable>
     </KeyboardAvoidingView>
   );
@@ -27,15 +27,11 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 30,
-    paddingTop: 120,
-  },
-  welcomeText: {
-    fontSize: 24,
-    marginBottom: 20,
+    paddingHorizontal: 30,
   },
 });
 
-export default Login;
+export default Register;
