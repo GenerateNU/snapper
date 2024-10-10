@@ -91,6 +91,4 @@ describe('GET /divelogs', () => {
       error: expect.any(Object),
     });
   });
-
-  
 });

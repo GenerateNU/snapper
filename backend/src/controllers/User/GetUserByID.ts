@@ -8,7 +8,7 @@ export const getUserByID = async (
 ) => {
   try {
     //Get the ID from the body of the request
-    const id  = req.session.userId;
+    const id = req.session.userId;
 
     //Check to make sure that the id is defined
     if (!id) {
@@ -28,13 +28,10 @@ export const getUserByID = async (
     }
 
     //Return the OK status
-    return res
-      .status(200)
-      .json({
-        user: foundUser,
-        message:
-          'Successfully found the user ID:' + id,
-      });
+    return res.status(200).json({
+      user: foundUser,
+      message: 'Successfully found the user ID:' + id,
+    });
   } catch (err) {
     //Handle error
     console.error('Error while searching for user ID', err);

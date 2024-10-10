@@ -14,9 +14,12 @@ export const findUserBySupabaseId = async (supabaseId: string) => {
   return UserModel.findOne({ supabaseId });
 };
 
-export const editUSerBySupabaseId = async (supabaseId: string, updatedJson: JSON) => {
-  return UserModel.updateOne({ supabaseId }, {$set: { updatedJson } });
-}
+export const editUSerBySupabaseId = async (
+  supabaseId: string,
+  updatedJson: JSON,
+) => {
+  return UserModel.updateOne({ supabaseId }, { $set: { updatedJson } });
+};
 
 // TODO: remove this when there is getUser
 export interface UserService {

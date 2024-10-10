@@ -8,11 +8,13 @@ export const getUserFish = async (
 ) => {
   try {
     //Get the ID from the body of the request
-    const userID = req.session.userId
+    const userID = req.session.userId;
 
     //Check to make sure that the id is defined
     if (!userID) {
-      return res.status(400).json({ error: 'User is not present in the current session!' });
+      return res
+        .status(400)
+        .json({ error: 'User is not present in the current session!' });
     }
 
     //Query the given ID on the database and save the result
@@ -27,18 +29,18 @@ export const getUserFish = async (
     }
 
     //Return the OK status
-    return res
-      .status(200)
-      .json({
-        fish: foundUser.fishCollected,
-        message:
-          'Successfully found fish for user:' + userID
-      });
+    return res.status(200).json({
+      fish: foundUser.fishCollected,
+      message: 'Successfully found fish for user:' + userID,
+    });
   } catch (err) {
     //Handle error
-    console.error('Error while searching for User\'s fish:\n', err);
+    console.error("Error while searching for User's fish:\n", err);
     return res
       .status(500)
-      .json({ error: 'Internal server error while searching for the user\'s fish.\' + err' })
+      .json({
+        error:
+          "Internal server error while searching for the user's fish.' + err",
+      });
   }
 };
