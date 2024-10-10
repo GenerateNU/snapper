@@ -16,7 +16,7 @@ type RegisterFormData = {
 
 const REGISTER_SCHEMA = z.object({
   name: z.string().min(2, {
-    message: 'First name must be at least 2 characters long',
+    message: 'Name must be at least 2 characters long',
   }),
   email: z.string().email({ message: 'Must be a valid email' }),
   password: z
@@ -40,7 +40,7 @@ const RegisterForm = () => {
     resolver: zodResolver(REGISTER_SCHEMA),
     mode: 'onTouched',
   });
-  
+
   const { mutate: handleRegister, isPending, error } = useRegister();
 
   const onSignUpPress = async (signupData: RegisterFormData) => {
@@ -58,7 +58,10 @@ const RegisterForm = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{ gap: 8, flexDirection: 'column' }}
+      className="w-full justify-center items-center"
+    >
       <Controller
         name="name"
         control={control}
@@ -114,17 +117,11 @@ const RegisterForm = () => {
           </>
         )}
       />
-      <Button text="Sign up" onPress={handleSubmit(onSignUpPress)} />
+      <View className="w-full pt-[5%]">
+        <Button text="Sign up" onPress={handleSubmit(onSignUpPress)} />
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default RegisterForm;

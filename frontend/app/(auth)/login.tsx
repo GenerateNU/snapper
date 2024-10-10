@@ -6,36 +6,38 @@ import {
   KeyboardAvoidingView,
   Pressable,
   Platform,
+  View,
 } from 'react-native';
 import LoginForm from './components/login-form';
+import Button from '../../components/button';
+import { router } from 'expo-router';
 
 const Login = () => {
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      className="flex-1 bg-white"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <Pressable style={styles.container} onPress={() => Keyboard.dismiss()}>
-        <Text style={styles.welcomeText}>Login</Text>
+      <Pressable
+        className="flex-1 flex-col bg-white justify-center items-center p-[8%]"
+        onPress={() => Keyboard.dismiss()}
+      >
+        <Text className="text-lg font-bold">Login</Text>
         <Text>Dive in</Text>
         <LoginForm />
+        <View className="w-full justify-center items-center">
+          <View className="w-full flex-start pt-[3%]">
+            <Button textOnly text="Forgot password?" />
+          </View>
+          {/* <Button
+            onPress={() => router.push('/(auth)/register')}
+            textOnly
+            text="Don't have account? Sign up."
+          /> */}
+        </View>
       </Pressable>
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 30,
-    paddingTop: 120,
-  },
-  welcomeText: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-});
 
 export default Login;

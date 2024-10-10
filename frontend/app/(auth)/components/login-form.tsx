@@ -38,7 +38,7 @@ const LoginForm = () => {
     try {
       const validData = LOGIN_SCHEMA.parse(loginData);
       setLoginError(null);
-      await handleLogin(validData); 
+      await handleLogin(validData);
     } catch (err: any) {
       console.error('Login error:', err);
       if (err instanceof ZodError) {
@@ -51,15 +51,15 @@ const LoginForm = () => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
+      <View>
         <Text>Logging in...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {isError && <Text style={styles.errorText}>{error.message}</Text>}
+    <View style={{ gap: 8, flexDirection: 'column' }} className="w-full">
+      {isError && <Text className="text-red">{error.message}</Text>}
       <Controller
         name="email"
         control={control}
@@ -93,21 +93,15 @@ const LoginForm = () => {
           />
         )}
       />
-      <Button text="Log in" onPress={handleSubmit(onLoginPress)} disabled={isPending} />
+      <View className="w-full pt-[5%]">
+        <Button
+          text="Log in"
+          onPress={handleSubmit(onLoginPress)}
+          disabled={isPending}
+        />
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorText: {
-    color: 'red',
-    marginTop: 10,
-  },
-});
 
 export default LoginForm;

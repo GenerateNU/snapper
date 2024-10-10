@@ -11,6 +11,7 @@ const Layout = () => {
           headerShown: false,
           headerTitle: '',
           headerTransparent: true,
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
@@ -19,6 +20,7 @@ const Layout = () => {
           headerShown: false,
           headerTitle: '',
           headerTransparent: true,
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
@@ -27,6 +29,7 @@ const Layout = () => {
           headerShown: false,
           headerTitle: '',
           headerTransparent: true,
+          gestureEnabled: false,
         }}
       />
     </Stack>

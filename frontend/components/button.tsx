@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 
 interface ButtonProps {
   text?: string;
@@ -7,21 +7,47 @@ interface ButtonProps {
   backgroundColor?: string;
   color?: string;
   disabled?: boolean;
-  type?: 'text' | 'full';
+  textOnly?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
   text,
   onPress,
-  backgroundColor = '#007BFF',
-  color = '#FFFFFF',
-  disabled,
-  type = 'full',
+  backgroundColor,
+  color,
+  disabled = false,
+  textOnly = false,
 }) => {
   return (
-    <TouchableOpacity disabled={disabled} onPress={onPress}>
-      <Text>{text}</Text>
-    </TouchableOpacity>
+    <>
+      {!textOnly && (
+        <TouchableOpacity
+          className={`items-center justify-center w-full h-14 rounded-full ${disabled ? 'bg-gray-400' : 'bg-ocean'}`}
+          style={{
+            backgroundColor: backgroundColor || '#4899cf',
+          }}
+          disabled={disabled}
+          onPress={onPress}
+        >
+          <Text
+            className={`font-bold ${disabled ? 'text-gray-300' : ''}`}
+            style={{ color: color || 'white' }}
+          >
+            {text}
+          </Text>
+        </TouchableOpacity>
+      )}
+      {textOnly && (
+        <TouchableOpacity disabled={disabled} onPress={onPress}>
+          <Text
+            className={`${disabled ? 'text-gray-400' : ''}`}
+            style={{ color: color || 'black' }}
+          >
+            {text}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </>
   );
 };
 

@@ -1,22 +1,31 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
 
 interface ArrowProps {
+  direction: 'left' | 'right';
   onPress: () => void;
   backgroundColor?: string;
-  color?: string;
 }
 
 const Arrow: React.FC<ArrowProps> = ({
+  direction,
   onPress,
-  backgroundColor = 'white',
-  color = 'black',
+  backgroundColor = 'bg-white',
 }) => {
+  const icon = direction === 'left' ? faChevronLeft : faChevronRight;
+
   return (
     <TouchableOpacity onPress={onPress}>
-      <FontAwesomeIcon icon={faChevronRight} size={16} color={color} />
+      <View
+        className={`w-10 h-10 rounded-full ${backgroundColor} flex items-center justify-center`}
+      >
+        <FontAwesomeIcon icon={icon} size={16} color="black" />
+      </View>
     </TouchableOpacity>
   );
 };

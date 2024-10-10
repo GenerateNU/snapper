@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { TextInput, View, Text, StyleSheet } from 'react-native';
+import { TextInput, View, Text } from 'react-native';
 
 interface TextInputProps {
   title?: string;
@@ -7,79 +7,48 @@ interface TextInputProps {
   error?: string;
   autoFocus?: boolean;
   readOnly?: boolean;
-  inputMode?: 'text' | 'numeric' | 'tel' | 'search' | 'email';
+  inputMode?: 'text' | 'numeric';
   onChangeText?: (value: string) => void;
   value?: string;
   maxLength?: number;
   secureTextEntry?: boolean;
-  children?: React.ReactNode;
 }
 
-const Input = forwardRef<TextInput, TextInputProps>(
-  (
-    {
-      title,
-      placeholder,
-      error,
-      autoFocus,
-      readOnly,
-      inputMode,
-      onChangeText,
-      value,
-      maxLength,
-      secureTextEntry,
-    },
-    ref,
-  ) => {
-    return (
-      <View style={styles.container}>
-        {title && <Text style={styles.title}>{title}</Text>}
-        <TextInput
-          ref={ref}
-          style={[styles.input, error ? styles.error : {}]}
-          placeholder={placeholder}
-          onChangeText={onChangeText}
-          value={value}
-          maxLength={maxLength}
-          secureTextEntry={secureTextEntry}
-          autoFocus={autoFocus}
-          editable={!readOnly}
-          keyboardType={inputMode === 'numeric' ? 'numeric' : 'default'}
-        />
-        {error && <Text style={styles.errorText}>{error}</Text>}
-      </View>
-    );
-  },
-);
+const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
+  const {
+    title,
+    placeholder,
+    error,
+    autoFocus,
+    readOnly,
+    inputMode = 'text',
+    onChangeText,
+    value,
+    maxLength,
+    secureTextEntry,
+  } = props;
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
-  title: {
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-  },
-  error: {
-    borderColor: 'red',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  helperText: {
-    color: '#666',
-    fontSize: 12,
-    marginTop: 4,
-  },
+  return (
+    <View className="w-full">
+      {title && <Text className="text-sm mb-1 font-bold">{title}</Text>}
+      <TextInput
+        ref={ref}
+        placeholder={placeholder}
+        placeholderTextColor="#a09b9b"
+        className={`h-14 border rounded-full px-[5%] bg-gray-200 ${
+          error ? 'border-red-500' : 'border-gray-200'
+        }`}
+        onChangeText={onChangeText}
+        value={value}
+        maxLength={maxLength}
+        secureTextEntry={secureTextEntry}
+        autoFocus={autoFocus}
+        editable={!readOnly}
+        keyboardType={inputMode === 'numeric' ? 'numeric' : 'default'}
+      />
+      {error && <Text className="text-red-500 text-xs mt-1">{error}</Text>}
+    </View>
+  );
 });
 
 export default Input;
