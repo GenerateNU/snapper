@@ -56,10 +56,8 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
   } catch (err) {
     //Handle error
     console.error('Error updating the user data:\n', err);
-    return res
-      .status(500)
-      .json({
-        error: 'Internal server error while updating user data.\n' + err,
-      });
+    return res.status(500).json({
+      error: 'Internal server error while updating user data.\n' + err,
+    });
   }
 };

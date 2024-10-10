@@ -36,11 +36,9 @@ export const getUserFish = async (
   } catch (err) {
     //Handle error
     console.error("Error while searching for User's fish:\n", err);
-    return res
-      .status(500)
-      .json({
-        error:
-          "Internal server error while searching for the user's fish.' + err",
-      });
+    return res.status(500).json({
+      error:
+        "Internal server error while searching for the user's fish.' + err",
+    });
   }
 };

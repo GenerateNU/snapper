@@ -33,12 +33,10 @@ export const getUserDiveLogs = async (
   } catch (err) {
     //Handle error
     console.error("Error while searching for User's dive logs:\n", err);
-    return res
-      .status(500)
-      .json({
-        error:
-          "Internal server error while searching for the user's dive logs.\n" +
-          err,
-      });
+    return res.status(500).json({
+      error:
+        "Internal server error while searching for the user's dive logs.\n" +
+        err,
+    });
   }
 };
