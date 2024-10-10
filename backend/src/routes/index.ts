@@ -8,6 +8,7 @@ import fish from './fish';
 
 const router = express.Router();
 export default (): express.Router => {
+  console.log();
   authentification(router);
   healthcheck(router);
   divelog(router);

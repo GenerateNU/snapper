@@ -1,19 +1,13 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../services/userService';
 import { isAuthenticated } from '../middlewares/authMiddleware';
+import { getUserByID } from '../controllers/User/GetUserByID';
+import { getUserDiveLogs } from '../controllers/User/GetUserDivelog';
+import { getUserFish } from '../controllers/User/GetUserFish';
+import { PutUser } from '../controllers/User/PutUser';
 
 export default (router: express.Router) => {
-  router.get('/user/:supabaseId', isAuthenticated, async (req, res) => {
-    const { supabaseId } = req.params;
-    try {
-      const user = await findUserBySupabaseId(supabaseId);
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ message: 'User not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ message: 'Internal server error', error });
-    }
-  });
+  router.get('/user/:userid', isAuthenticated, getUserByID);
+  router.get('/user/items/fish', isAuthenticated, getUserFish);
+  router.get('/user/items/divelogs', isAuthenticated, getUserDiveLogs);
+  router.put('/user/actions/edit', isAuthenticated, PutUser); //user put route
 };
