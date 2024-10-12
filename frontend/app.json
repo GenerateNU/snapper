@@ -11,6 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "snapper",
     "ios": {
       "supportsTablet": true,
       "bundlerIdentifier": "com.generate.snapper"

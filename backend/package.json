@@ -9,7 +9,7 @@
     "format": "prettier --write \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,ts,jsx,tsx,json,css,md}\"",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
-    "build": "tsc",
+    "build": "rm -rf build/ && tsc",
     "postinstall": "npm run build"
   },
   "keywords": [],
