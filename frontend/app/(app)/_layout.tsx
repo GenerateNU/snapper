@@ -5,16 +5,13 @@ import { Stack } from 'expo-router';
 const Layout = () => {
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
-        name="event"
+        name="index"
         options={{
+          headerShown: false,
           headerTitle: '',
           headerTransparent: true,
-          headerShown: false,
-          headerTitleStyle: {
-            color: 'white',
-          },
+          gestureEnabled: false,
         }}
       />
     </Stack>
