@@ -1,54 +1,47 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, ImageBackground, ScrollView, Dimensions } from 'react-native';
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import {
+  View,
+  Text,
+  ImageBackground,
+  ScrollView,
+  Dimensions,
+  Animated,
+} from 'react-native';
 import Button from '../../components/button';
 import { router } from 'expo-router';
 import Arrow from '../../components/arrow';
-
-const ONBOARDING_DATA = [
-  {
-    title: 'Track and enhance your dives',
-    image: require('../../assets/Onboarding.png'),
-  },
-  {
-    title: 'Log your dives',
-    description: 'Track your dive locations, conditions, and more—so you can relive every adventure.',
-    image: require('../../assets/Onboarding - v2.png'),
-  },
-  {
-    title: 'Spot a fish?',
-    description: 'Explore our database and tag species from your dives.',
-    image: require('../../assets/Onboarding - v3.png'),
-  },
-  {
-    title: "Let's dive in!",
-    description: 'Explore our database and tag species from your dives.',
-    image: require('../../assets/Onboarding - v4.png'),
-  },
-];
+import { ProgressContext } from './_layout';
+import { ONBOARDING_DATA } from '../../consts/onboarding';
 
 const Welcome = () => {
   const scrollViewRef = useRef<ScrollView>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const { width } = Dimensions.get('window');
-  
+  // keep track of which page is on
+  const [currentIndex, setCurrentIndex] = useState(0);
+  // set the progress bar in the layout
+  const { setProgress } = useContext(ProgressContext);
+
+  // if user clicks arrow, update to next index and scroll view position
   const handleNext = () => {
     if (currentIndex < ONBOARDING_DATA.length - 1) {
       const nextIndex = currentIndex + 1;
+      // scroll to a specific position
       scrollViewRef.current?.scrollTo({ x: width * nextIndex, animated: true });
       setCurrentIndex(nextIndex);
     }
   };
 
-  const progressWidth = ((currentIndex + 1) / ONBOARDING_DATA.length) * 100;
+  // when currentIndex is updated, will set the progress
+  useEffect(() => {
+    const newProgress = ((currentIndex + 1) / ONBOARDING_DATA.length) * 100;
+    setProgress(newProgress);
+  }, [currentIndex]);
 
   return (
-    <View className='flex-1 justify-center'>
-      
-
+    <View className="flex-1 justify-center">
       <ScrollView
         ref={scrollViewRef}
         horizontal
-        pagingEnabled
         showsHorizontalScrollIndicator={false}
         scrollEnabled={false}
         contentContainerStyle={{ width: width * ONBOARDING_DATA.length }}
@@ -62,20 +55,30 @@ const Welcome = () => {
           >
             <View className="w-full mt-[100%] flex-1 flex-col justify-start items-center px-[8%]">
               <View className="w-full items-center pb-[8%] flex-gap">
-                <Text className="text-center text-2xl font-bold text-black">{item.title}</Text>
+                <Text className="text-center text-2xl font-bold text-black">
+                  {item.title}
+                </Text>
                 {item.description && (
-                  <Text className="text-center text-base text-black">{item.description}</Text>
+                  <Text className="text-center px-[10%] text-base text-black">
+                    {item.description}
+                  </Text>
                 )}
               </View>
               {index === ONBOARDING_DATA.length - 1 && (
-                <View className="w-full" style={{ gap: 20, flexDirection: 'column' }}>
+                <View
+                  className="w-full"
+                  style={{ gap: 20, flexDirection: 'column' }}
+                >
                   <Button
                     color="black"
                     backgroundColor="white"
                     text="Sign Up"
                     onPress={() => router.push('/register')}
                   />
-                  <Button text="Sign In" onPress={() => router.push('/login')} />
+                  <Button
+                    text="Sign In"
+                    onPress={() => router.push('/login')}
+                  />
                 </View>
               )}
             </View>

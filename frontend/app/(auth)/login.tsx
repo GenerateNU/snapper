@@ -15,8 +15,6 @@ import Button from '../../components/button';
 import { router } from 'expo-router';
 
 const Login = () => {
-  const { width } = useWindowDimensions();
-
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-white"
@@ -27,10 +25,11 @@ const Login = () => {
         onPress={() => Keyboard.dismiss()}
       >
         <View className="flex justify-start items-center">
-          <View
-            className="bg-water p-[15%] rounded-full overflow-hidden items-center justify-center"
-          >
-            <Image className="w-32 h-32 object-cover" source={require('../../assets/🐠.png')} />
+          <View className="bg-water p-[15%] rounded-full overflow-hidden items-center justify-center">
+            <Image
+              className="w-32 h-32 object-cover"
+              source={require('../../assets/🐠.png')}
+            />
           </View>
         </View>
         <View className="w-full py-[5%] flex-start pt-[10%]">
