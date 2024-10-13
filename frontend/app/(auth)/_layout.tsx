@@ -34,12 +34,14 @@ const Layout = () => {
           name="register"
           options={{
             headerShown: false,
+            gestureEnabled: false,
           }}
         />
         <Stack.Screen
           name="login"
           options={{
             headerShown: false,
+            gestureEnabled: false,
           }}
         />
       </Stack>

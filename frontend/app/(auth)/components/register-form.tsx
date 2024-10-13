@@ -48,6 +48,7 @@ const RegisterForm = () => {
       const validData = REGISTER_SCHEMA.parse(signupData);
       console.log({ validData });
       await handleRegister(validData);
+      router.push('/(app)');
     } catch (err: any) {
       if (err instanceof ZodError) {
         Alert.alert(err.errors[0].message);
@@ -119,7 +120,9 @@ const RegisterForm = () => {
         )}
       />
       <View className="w-full pt-[5%]">
-        <Button disabled={isPending} text="Sign up" onPress={handleSubmit(onSignUpPress)} />
+        <Button disabled={isPending} 
+                text={isPending ? "Logging in..." : "Log In" }
+                onPress={handleSubmit(onSignUpPress)} />
       </View>
     </View>
   );

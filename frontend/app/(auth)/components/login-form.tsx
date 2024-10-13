@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert, Text } from 'react-native';
+import { View, StyleSheet, Alert, Text, ActivityIndicator } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '../../../components/input';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -80,12 +80,12 @@ const LoginForm = () => {
         )}
       />
       <View className="w-full pt-[5%]">
-        <Button
-          text="Log in"
-          onPress={handleSubmit(onLoginPress)}
-          disabled={isPending}
-        />
-      </View>
+          <Button
+            text={isPending ? "Logging in..." : "Log In" }
+            onPress={handleSubmit(onLoginPress)}
+            disabled={isPending}
+          />
+        </View>
     </View>
   );
 };
