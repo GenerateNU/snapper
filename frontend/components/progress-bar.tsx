@@ -19,7 +19,7 @@ const ProgressBar = ({ progress }: ProgressBarProps) => {
   return (
     <View className="w-full bg-white rounded-lg overflow-hidden">
       <Animated.View
-        className="h-1 bg-gray-600"
+        className="h-2 bg-gray-600"
         style={{
           width: animatedWidth.interpolate({
             inputRange: [0, 100],

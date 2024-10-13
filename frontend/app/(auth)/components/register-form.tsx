@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, Text } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '../../../components/input';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -41,18 +41,15 @@ const RegisterForm = () => {
     mode: 'onTouched',
   });
 
-  const { mutate: handleRegister, isPending, error } = useRegister();
+  const { mutateAsync: handleRegister, isPending, isError } = useRegister();
 
   const onSignUpPress = async (signupData: RegisterFormData) => {
     try {
       const validData = REGISTER_SCHEMA.parse(signupData);
       console.log({ validData });
       await handleRegister(validData);
-      router.push('/(app)');
     } catch (err: any) {
       if (err instanceof ZodError) {
-        Alert.alert(err.errors[0].message);
-      } else {
         Alert.alert(err.errors[0].message);
       }
     }
@@ -63,6 +60,7 @@ const RegisterForm = () => {
       style={{ gap: 10, flexDirection: 'column' }}
       className="w-full justify-center items-center"
     >
+      {isError && <Text className="text-red-500">Signup failed. Please try again.</Text>}
       <Controller
         name="name"
         control={control}
@@ -121,7 +119,7 @@ const RegisterForm = () => {
         )}
       />
       <View className="w-full pt-[5%]">
-        <Button text="Sign up" onPress={handleSubmit(onSignUpPress)} />
+        <Button disabled={isPending} text="Sign up" onPress={handleSubmit(onSignUpPress)} />
       </View>
     </View>
   );

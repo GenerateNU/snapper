@@ -5,7 +5,6 @@ import {
   ImageBackground,
   ScrollView,
   Dimensions,
-  Animated,
 } from 'react-native';
 import Button from '../../components/button';
 import { router } from 'expo-router';

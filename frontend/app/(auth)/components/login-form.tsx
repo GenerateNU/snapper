@@ -19,7 +19,6 @@ const LOGIN_SCHEMA = z.object({
 });
 
 const LoginForm = () => {
-  const [loginError, setLoginError] = useState<string | null>(null);
   const {
     control,
     handleSubmit,
@@ -30,30 +29,23 @@ const LoginForm = () => {
     mode: 'onTouched',
   });
 
-  const { mutate: handleLogin, isPending, isError, error } = useLogin();
+  const { mutateAsync: handleLogin, isPending, isError, error } = useLogin();
 
   const onLoginPress = async (loginData: LoginFormData) => {
     try {
       const validData = LOGIN_SCHEMA.parse(loginData);
-      setLoginError(null);
       await handleLogin(validData);
       router.push('/(app)');
     } catch (err: any) {
-      console.error('Login error:', err);
       if (err instanceof ZodError) {
         Alert.alert(err.errors[0].message);
-      } else if (isError && error) {
-        Alert.alert(
-          'Login Error',
-          error.message || 'Login failed. Please try again.',
-        );
       }
     }
   };
 
   return (
     <View style={{ gap: 10, flexDirection: 'column' }} className="w-full">
-      {loginError && <Text className="text-red">{loginError}</Text>}
+      {isError && <Text className="text-red-500">Login failed. Please try again.</Text>}
       <Controller
         name="email"
         control={control}

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoginRequestBody, RegisterRequestBody } from '../types/auth';
 import { login, register } from '../api/auth';
+import { router } from 'expo-router';
 
 export function useRegister() {
   const queryClient = useQueryClient();
