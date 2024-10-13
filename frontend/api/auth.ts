@@ -1,8 +1,12 @@
 import { LoginRequestBody, RegisterRequestBody } from '../types/auth';
 
-export async function register(userData: RegisterRequestBody): Promise<void> {
+interface AuthResponse {
+  user: any; 
+  token: string;
+}
+
+export async function register(userData: RegisterRequestBody): Promise<AuthResponse> {
   const requestBody = JSON.stringify(userData);
-  console.log(requestBody);
   try {
     const response = await fetch(`http://192.168.1.154:3000/auth/register`, {
       method: 'POST',
@@ -13,21 +17,23 @@ export async function register(userData: RegisterRequestBody): Promise<void> {
     });
 
     const data = await response.json();
-    console.log('Status:', response.status);
-    console.log('Response data:', data);
+    
     if (!response.ok) {
       throw new Error(data.message || 'Failed to create user.');
     }
-    console.log('User created successfully:', data);
+
+    // Assuming `data` contains `{ user, token }`
+    return {
+      user: data.user,  // Replace with actual structure if different
+      token: data.token,
+    };
   } catch (error) {
-    console.error('Error during user registration:', error);
     throw error;
   }
 }
 
-export async function login(userData: LoginRequestBody): Promise<void> {
+export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
   const requestBody = JSON.stringify(userData);
-  console.log(requestBody);
   try {
     const response = await fetch('http://192.168.1.154:3000/auth/login', {
       method: 'POST',
@@ -39,17 +45,15 @@ export async function login(userData: LoginRequestBody): Promise<void> {
 
     const data = await response.json();
 
-    console.log('Status:', response.status);
-    console.log('Response data:', data);
-
     if (response.ok) {
-      console.log('User logged in successfully:', data);
-      return;
+      return {
+        user: data.user,
+        token: data.token,
+      };
     } else {
       throw new Error(data.message || 'Login failed. Please try again.');
     }
   } catch (error) {
-    console.error('Error during login:', error);
     throw new Error('An unexpected error occurred.');
   }
 }

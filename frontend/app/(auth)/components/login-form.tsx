@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '../../../components/button';
 import { z, ZodError } from 'zod';
 import { router } from 'expo-router';
-import { useLogin } from '../../../hooks/auth';
+import { useAuthStore } from '../../../auth/authStore';
 
 type LoginFormData = {
   email: string;
@@ -29,13 +29,16 @@ const LoginForm = () => {
     mode: 'onTouched',
   });
 
-  const { mutateAsync: handleLogin, isPending, isError, error } = useLogin();
+  const { login, loading, error: authError } = useAuthStore();
 
   const onLoginPress = async (loginData: LoginFormData) => {
     try {
       const validData = LOGIN_SCHEMA.parse(loginData);
-      await handleLogin(validData);
-      router.push('/(app)');
+      await login(validData);
+      const isAuthenticated = useAuthStore.getState().isAuthenticated;
+      if (isAuthenticated) {
+        router.push('/(app)');
+      }
     } catch (err: any) {
       if (err instanceof ZodError) {
         Alert.alert(err.errors[0].message);
@@ -45,7 +48,7 @@ const LoginForm = () => {
 
   return (
     <View style={{ gap: 10, flexDirection: 'column' }} className="w-full">
-      {isError && <Text className="text-red-500">Login failed. Please try again.</Text>}
+      {authError && <Text className="text-red-500">Login failed. Please try again.</Text>}
       <Controller
         name="email"
         control={control}
@@ -81,9 +84,9 @@ const LoginForm = () => {
       />
       <View className="w-full pt-[5%]">
           <Button
-            text={isPending ? "Logging in..." : "Log In" }
+            text={loading ? "Logging in..." : "Log In" }
             onPress={handleSubmit(onLoginPress)}
-            disabled={isPending}
+            disabled={loading}
           />
         </View>
     </View>

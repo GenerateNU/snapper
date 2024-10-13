@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Alert, Text } from 'react-native';
+import { View, Alert, Text } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '../../../components/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '../../../components/button';
 import { z, ZodError } from 'zod';
 import { router } from 'expo-router';
-import { useRegister } from '../../../hooks/auth';
+import { useAuthStore } from '../../../auth/authStore';
 
 type RegisterFormData = {
   name: string;
@@ -41,14 +41,16 @@ const RegisterForm = () => {
     mode: 'onTouched',
   });
 
-  const { mutateAsync: handleRegister, isPending, isError } = useRegister();
+  const { register, loading, error: authError } = useAuthStore();
 
   const onSignUpPress = async (signupData: RegisterFormData) => {
     try {
       const validData = REGISTER_SCHEMA.parse(signupData);
-      console.log({ validData });
-      await handleRegister(validData);
-      router.push('/(app)');
+      await register(validData);
+      const isAuthenticated = useAuthStore.getState().isAuthenticated;
+      if (isAuthenticated) {
+        router.push('/(app)');
+      }
     } catch (err: any) {
       if (err instanceof ZodError) {
         Alert.alert(err.errors[0].message);
@@ -61,7 +63,7 @@ const RegisterForm = () => {
       style={{ gap: 10, flexDirection: 'column' }}
       className="w-full justify-center items-center"
     >
-      {isError && <Text className="text-red-500">Signup failed. Please try again.</Text>}
+      {authError && <Text className="text-red-500">Signup failed. Please try again.</Text>}
       <Controller
         name="name"
         control={control}
@@ -120,8 +122,9 @@ const RegisterForm = () => {
         )}
       />
       <View className="w-full pt-[5%]">
-        <Button disabled={isPending} 
-                text={isPending ? "Logging in..." : "Log In" }
+        <Button 
+            disabled={loading} 
+                text={loading ? "Logging in..." : "Log In" }
                 onPress={handleSubmit(onSignUpPress)} />
       </View>
     </View>
