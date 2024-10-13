@@ -31,35 +31,29 @@ const LoginForm = () => {
   });
 
   const { mutate: handleLogin, isPending, isError, error } = useLogin();
-  const [loading, setLoading] = useState(false);
 
   const onLoginPress = async (loginData: LoginFormData) => {
-    setLoading(true);
     try {
       const validData = LOGIN_SCHEMA.parse(loginData);
       setLoginError(null);
       await handleLogin(validData);
+      router.push('/(app)');
     } catch (err: any) {
       console.error('Login error:', err);
       if (err instanceof ZodError) {
         Alert.alert(err.errors[0].message);
+      } else if (isError && error) {
+        Alert.alert(
+          'Login Error',
+          error.message || 'Login failed. Please try again.',
+        );
       }
-    } finally {
-      setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <View>
-        <Text>Logging in...</Text>
-      </View>
-    );
-  }
-
   return (
-    <View style={{ gap: 8, flexDirection: 'column' }} className="w-full">
-      {isError && <Text className="text-red">{error.message}</Text>}
+    <View style={{ gap: 10, flexDirection: 'column' }} className="w-full">
+      {loginError && <Text className="text-red">{loginError}</Text>}
       <Controller
         name="email"
         control={control}

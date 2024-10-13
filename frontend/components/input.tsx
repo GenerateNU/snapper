@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { TextInput, View, Text } from 'react-native';
+import { TextInput, View, Text, ReturnKeyTypeOptions } from 'react-native';
 
 interface TextInputProps {
   title?: string;
@@ -12,6 +12,8 @@ interface TextInputProps {
   value?: string;
   maxLength?: number;
   secureTextEntry?: boolean;
+  onSubmitEditing?: () => void;
+  returnKeyType?: ReturnKeyTypeOptions;
 }
 
 const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
@@ -26,11 +28,13 @@ const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
     value,
     maxLength,
     secureTextEntry,
+    onSubmitEditing,
+    returnKeyType,
   } = props;
 
   return (
     <View className="w-full">
-      {title && <Text className="text-sm mb-1 font-bold">{title}</Text>}
+      {title && <Text className="text-sm mb-2 font-bold">{title}</Text>}
       <TextInput
         ref={ref}
         placeholder={placeholder}
@@ -38,9 +42,11 @@ const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
         className={`h-14 border rounded-full px-[5%] bg-gray-200 ${
           error ? 'border-red-500' : 'border-gray-200'
         }`}
+        onSubmitEditing={onSubmitEditing}
         onChangeText={onChangeText}
         value={value}
         maxLength={maxLength}
+        returnKeyType={returnKeyType}
         secureTextEntry={secureTextEntry}
         autoFocus={autoFocus}
         editable={!readOnly}

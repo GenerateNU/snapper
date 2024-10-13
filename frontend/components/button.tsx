@@ -22,10 +22,7 @@ const Button: React.FC<ButtonProps> = ({
     <>
       {!textOnly && (
         <TouchableOpacity
-          className={`items-center justify-center w-full h-14 rounded-full ${disabled ? 'bg-gray-400' : 'bg-ocean'}`}
-          style={{
-            backgroundColor: backgroundColor || '#4899cf',
-          }}
+          className={`items-center justify-center w-full ${disabled ? 'bg-slate-400' : backgroundColor ? `bg-${backgroundColor}` : 'bg-ocean'} h-14 rounded-full`}
           disabled={disabled}
           onPress={onPress}
         >
