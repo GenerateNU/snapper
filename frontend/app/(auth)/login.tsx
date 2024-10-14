@@ -8,11 +8,9 @@ import {
   Platform,
   View,
   Image,
-  useWindowDimensions,
 } from 'react-native';
 import LoginForm from './components/login-form';
 import Button from '../../components/button';
-import { router } from 'expo-router';
 
 const Login = () => {
   return (

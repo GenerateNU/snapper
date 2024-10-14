@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Alert, Text, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Alert, Text } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '../../../components/input';
 import { zodResolver } from '@hookform/resolvers/zod';
