@@ -19,15 +19,12 @@ export default function FishSearch() {
 
   const updateBoolAtIndex = (index: number, value: boolean) => {
     const newVisibility = [...visibility];
-
     newVisibility[index] = value;
-
     if(value){
         setValue('tags', [data[index], ...tags]);
     } else {
         setValue('tags', tags.filter((tag: string) => tag !== data[index]))
     }
-
     setVisibility(newVisibility);
   };
 

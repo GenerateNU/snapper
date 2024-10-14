@@ -18,16 +18,18 @@ export default function FishTags() {
 
     
     return (
-        <ScrollView className = "h-[5vh] border border-[#d2d9e2] rounded-[12px]" horizontal>
-            <View className = "flex flex-row items-center space-x-2 mx-2">
-             {tags.map((item, index) => {
-                return (
-                    <View key = {index}> 
-                        <Tag fish={item} onPress = {() => removeFish(index)}/>
-                    </View>
-                )
-             })}
-             </View>
-        </ScrollView>
+        <View className = "h-[5vh] max-w-full">
+            <ScrollView className = "h-full max-w-full border border-[#d2d9e2] rounded-[12px]" horizontal>
+                <View className = "flex flex-row items-center space-x-2 mx-2">
+                {tags.map((item, index) => {
+                    return (
+                        <View key = {index}> 
+                            <Tag fish={item} onPress = {() => removeFish(index)}/>
+                        </View>
+                    )
+                })}
+                </View>
+            </ScrollView>
+        </View>
     )
 }
