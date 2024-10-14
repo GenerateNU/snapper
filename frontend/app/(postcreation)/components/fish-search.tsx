@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextInput, View, Image, Text, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useState, useEffect, useRef} from 'react';
 
 export default function FishSearch() {
   let data: string[] = ['Anemone', 'Angelfish', 'Barnacle', 'Clown Fish'];
@@ -12,14 +13,21 @@ export default function FishSearch() {
     false,
   ]);
 
+  const { setValue, watch} = useFormContext();
+  const tags = watch('tags') || [];
+
+
   const updateBoolAtIndex = (index: number, value: boolean) => {
-    // Create a new array by spreading the existing array
     const newVisibility = [...visibility];
 
-    // Set the specific index to the new value
     newVisibility[index] = value;
 
-    // Update the state
+    if(value){
+        setValue('tags', [data[index], ...tags]);
+    } else {
+        setValue('tags', tags.filter((tag: string) => tag !== data[index]))
+    }
+
     setVisibility(newVisibility);
   };
 
