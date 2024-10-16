@@ -59,11 +59,11 @@ export default function DatePicker() {
     }
 
     return (
-        <View className="h-[5vh] max-w-full">
+        <View className="h-[5vh] max-w-full justify-center items-center">
             <Input
                 value={enteredDate}
                 inputMode="text"
-                title="Date"
+                title={"Dive Date"}
                 placeholder={dateHint}
                 onChangeText={dateChanged}
                 error={dateError === null ? "": dateError}
