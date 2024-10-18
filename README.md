@@ -57,9 +57,9 @@ SERVER_PORT=3000
 MONGO_URL=mongodb://user:dbUserPassword@0.0.0.0:27017/
 MONGO_USERNAME="user"
 MONGO_PASSWORD="dbUserPassword"
-SUPABASE_PASSWORD="9waZ2NQKum6FmP$"
-SUPABASE_URL="https://xcgzrcnpyoxwxbjwnfnn.supabase.co"
-SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjZ3pyY25weW94d3hianduZm5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU1NTMxOTUsImV4cCI6MjA0MTEyOTE5NX0.NgMdOTtSCbMdxkrzCgNYCyKBSLpzPuyARB8qnn3NKNo"
+SUPABASE_PASSWORD="p4JeQ2sCH3OXC1jP"
+SUPABASE_URL="https://npyvbmfnusakklalqxcz.supabase.co"
+SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5weXZibWZudXNha2tsYWxxeGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkyODg2MTgsImV4cCI6MjA0NDg2NDYxOH0.P_gUi5uPuALkeXtHeWKYrPDVaIyESW5BQS_NvdvRkNs"
 ```
 
 ### 4. Running the Application
