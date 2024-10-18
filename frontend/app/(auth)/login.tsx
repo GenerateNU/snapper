@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Text,
-  StyleSheet,
   Keyboard,
   KeyboardAvoidingView,
   Pressable,
@@ -39,11 +38,6 @@ const Login = () => {
           <View className="w-full flex-start pt-[3%]">
             <Button textOnly text="Forgot password?" />
           </View>
-          {/* <Button
-            onPress={() => router.push('/(auth)/register')}
-            textOnly
-            text="Don't have account? Sign up."
-          /> */}
         </View>
       </Pressable>
     </KeyboardAvoidingView>

@@ -124,7 +124,7 @@ const RegisterForm = () => {
       <View className="w-full pt-[5%]">
         <Button 
             disabled={loading} 
-                text={loading ? "Logging in..." : "Log In" }
+                text={loading ? "Signing up..." : "Sign Up" }
                 onPress={handleSubmit(onSignUpPress)} />
       </View>
     </View>
