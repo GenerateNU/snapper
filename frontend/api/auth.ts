@@ -1,7 +1,9 @@
 import { AuthResponse, LoginRequestBody, RegisterRequestBody } from '../types/auth';
 
+const API_BASE_URL = "http://localhost:3000";
+
 export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
-  const response = await fetch('http://192.168.1.154:3000/auth/login', {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
@@ -12,23 +14,14 @@ export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
     throw new Error(errorData.error || 'Login failed');
   }
 
-  const data = await response.json();
-  return {
-    user: data.data.user,
-    session: {
-      access_token: data.data.session.access_token,
-      token_type: data.data.session.token_type,
-      expires_in: data.data.session.expires_in,
-      expires_at: data.data.session.expires_at,
-      refresh_token: data.data.session.refresh_token,
-      user: data.data.session.user,
-    },
-  };
+  const data: AuthResponse = await response.json();
+  console.log(data);
+  return data;
 }
 
 export async function register(userData: RegisterRequestBody): Promise<AuthResponse> {
   const requestBody = JSON.stringify(userData);
-  const response = await fetch('http://192.168.1.154:3000/auth/register', {
+  const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,27 +29,19 @@ export async function register(userData: RegisterRequestBody): Promise<AuthRespo
     body: requestBody,
   });
 
+  console.log(response);
+
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.error || 'Failed to create user.');
   }
 
-  const data = await response.json();
-  return {
-    user: data.data.user,
-    session: {
-      access_token: data.data.session.access_token,
-      token_type: data.data.session.token_type,
-      expires_in: data.data.session.expires_in,
-      expires_at: data.data.session.expires_at,
-      refresh_token: data.data.session.refresh_token,
-      user: data.data.session.user,
-    },
-  };
+  const data: AuthResponse = await response.json();
+  return data;
 }
 
 export async function logout(): Promise<void> {
-  const response = await fetch('http://192.168.1.154:3000/auth/logout', {
+  const response = await fetch(`${API_BASE_URL}/auth/logout`, {
     method: 'POST',
   });
 

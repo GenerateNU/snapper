@@ -29,21 +29,20 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await login(userData);
-      const { user, session } = response;
 
       set({
-        user,
-        token: session.access_token,
-        refreshToken: session.refresh_token,
-        expirationTime: Date.now() + session.expires_in * 1000,
+        // user,
+        // token: session.access_token,
+        // refreshToken: session.refresh_token,
+        // expirationTime: Date.now() + session.expires_in * 1000,
         isAuthenticated: true,
         loading: false,
         error: null,
       });
 
-      localStorage.setItem('token', session.access_token);
-      localStorage.setItem('refreshToken', session.refresh_token);
-      localStorage.setItem('expirationTime', (Date.now() + session.expires_in * 1000).toString());
+      // localStorage.setItem('token', session.access_token);
+      // localStorage.setItem('refreshToken', session.refresh_token);
+      // localStorage.setItem('expirationTime', (Date.now() + session.expires_in * 1000).toString());
     } catch (error: any) {
       set({ loading: false, error: error.message || 'Login failed' });
     }
@@ -53,22 +52,22 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await register(userData);
-      const { user, session } = response;
 
       set({
-        user,
-        token: session.access_token,
-        refreshToken: session.refresh_token,
-        expirationTime: Date.now() + session.expires_in * 1000,
+        // user,
+        // token: session.access_token,
+        // refreshToken: session.refresh_token,
+        // expirationTime: Date.now() + session.expires_in * 1000,
         isAuthenticated: true,
         loading: false,
         error: null,
       });
 
-      localStorage.setItem('token', session.access_token);
-      localStorage.setItem('refreshToken', session.refresh_token);
-      localStorage.setItem('expirationTime', (Date.now() + session.expires_in * 1000).toString());
+      // localStorage.setItem('token', session.access_token);
+      // localStorage.setItem('refreshToken', session.refresh_token);
+      // localStorage.setItem('expirationTime', (Date.now() + session.expires_in * 1000).toString());
     } catch (error: any) {
+      console.log(error);
       set({ loading: false, error: error.message || 'Registration failed' });
     }
   },

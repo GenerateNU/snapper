@@ -9,14 +9,14 @@ import { router } from 'expo-router';
 import { useAuthStore } from '../../../auth/authStore';
 
 type RegisterFormData = {
-  name: string;
+  username: string;
   email: string;
   password: string;
 };
 
 const REGISTER_SCHEMA = z.object({
-  name: z.string().min(2, {
-    message: 'Name must be at least 2 characters long',
+  username: z.string().min(2, {
+    message: 'Username must be at least 2 characters long',
   }),
   email: z.string().email({ message: 'Must be a valid email' }),
   password: z
@@ -65,19 +65,19 @@ const RegisterForm = () => {
     >
       {authError && <Text className="text-red-500">Signup failed. Please try again.</Text>}
       <Controller
-        name="name"
+        name="username"
         control={control}
         render={({ field: { onChange, value } }) => (
           <>
             <Input
               onChangeText={(text: string) => {
                 onChange(text);
-                trigger('name');
+                trigger('username');
               }}
               value={value}
-              title="Name"
-              placeholder="Enter your name"
-              error={errors.name && errors.name.message}
+              title="Username"
+              placeholder="Enter your username"
+              error={errors.username && errors.username.message}
             />
           </>
         )}
