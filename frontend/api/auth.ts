@@ -1,4 +1,4 @@
-import { AuthResponse, LoginRequestBody, RegisterRequestBody } from '../types/auth';
+import { AuthResponse, LoginRequestBody, RegisterRequestBody, SessionResponse } from '../types/auth';
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -49,4 +49,27 @@ export async function logout(): Promise<void> {
     const errorData = await response.json();
     throw new Error(errorData.error || 'Failed to create user.');
   }
+}
+
+export async function getSession(): Promise<SessionResponse | null> {
+  const response = await fetch(`${API_BASE_URL}/auth/session`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to retrieve session.');
+  }
+
+  const data = await response.json();
+
+  const sessionResponse: SessionResponse = {
+    access_token: data.access_token,
+    refresh_token: data.refresh_token,
+    expires_in: data.expires_in,
+    user: data.user,
+  };
+
+  return sessionResponse;
 }
