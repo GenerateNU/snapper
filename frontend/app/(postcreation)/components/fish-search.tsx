@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 
 export default function FishSearch() {
   let data: string[] = ['Anemone', 'Angelfish', 'Barnacle', 'Clown Fish'];
+
   const [visibility, setVisibility] = useState<boolean[]>([
     false,
     false,
@@ -13,7 +14,7 @@ export default function FishSearch() {
     false,
   ]);
 
-  const { setValue, watch} = useFormContext();
+  const {setValue, watch} = useFormContext();
   const tags = watch('tags') || [];
 
   

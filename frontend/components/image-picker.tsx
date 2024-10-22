@@ -23,8 +23,7 @@ export default function ImagePicker() {
   return (
     <View className="h-96 w-96">
       <TouchableOpacity
-        className="w-full h-full flex items-center justify-center rounded-lg"
-        style={{ backgroundColor: '#EEF1F5' }}
+        className="w-full h-full flex items-center justify-center rounded-lg bg-gray-200"
         onPress={pickImage}
       >
         <Image source={require('../assets/Frame.png')} />

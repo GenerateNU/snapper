@@ -11,6 +11,7 @@ import Input from '../../../components/input';
 
 type FormFields = {
     tags: string[],
+    image: string,
 }
 
 export default function PostCreation() {
@@ -23,7 +24,7 @@ export default function PostCreation() {
                     <Text className="font-normal text-[12px] leading-[18px]"> Ready to capture your underwater adventure?</Text>
                     <Text className="font-normal text-[12px] leading-[18px]"> Fill out the details below to log your dive experience!</Text>
                 </View>
-                <View className="h-fit w-full flex flex-row justify-between items-center">
+                <View className="h-fit w-full flex flex-row justify-between items-center mb-4">
                     <DatePicker />
                     <View className="w-fit">
                         <Input
@@ -42,7 +43,7 @@ export default function PostCreation() {
                 </View>
                 <Text className="font-semibold text-[14px] pt-[2vh]">Dive Description</Text>
                 <Text className="font-normal text-[12px] leading-[18px]">Highlight memorable moments or explorations</Text>
-                <View>
+                <View className = "mb-4">
                     <BigText placeholder="Your description..." />
                 </View>
             </ScrollView>
