@@ -1,22 +1,22 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Alert, Text } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import Input from '../../../components/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '../../../components/button';
 import { z, ZodError } from 'zod';
 import { router } from 'expo-router';
-import { useRegister } from '../../../hooks/auth';
+import { useAuthStore } from '../../../auth/authStore';
 
 type RegisterFormData = {
-  name: string;
+  username: string;
   email: string;
   password: string;
 };
 
 const REGISTER_SCHEMA = z.object({
-  name: z.string().min(2, {
-    message: 'Name must be at least 2 characters long',
+  username: z.string().min(2, {
+    message: 'Username must be at least 2 characters long',
   }),
   email: z.string().email({ message: 'Must be a valid email' }),
   password: z
@@ -41,17 +41,18 @@ const RegisterForm = () => {
     mode: 'onTouched',
   });
 
-  const { mutate: handleRegister, isPending, error } = useRegister();
+  const { register, loading, error: authError } = useAuthStore();
 
   const onSignUpPress = async (signupData: RegisterFormData) => {
     try {
       const validData = REGISTER_SCHEMA.parse(signupData);
-      console.log({ validData });
-      await handleRegister(validData);
+      await register(validData);
+      const isAuthenticated = useAuthStore.getState().isAuthenticated;
+      if (isAuthenticated) {
+        router.push('/(app)');
+      }
     } catch (err: any) {
       if (err instanceof ZodError) {
-        Alert.alert(err.errors[0].message);
-      } else {
         Alert.alert(err.errors[0].message);
       }
     }
@@ -59,23 +60,26 @@ const RegisterForm = () => {
 
   return (
     <View
-      style={{ gap: 8, flexDirection: 'column' }}
+      style={{ gap: 10, flexDirection: 'column' }}
       className="w-full justify-center items-center"
     >
+      {authError && (
+        <Text className="text-red-500">Signup failed. Please try again.</Text>
+      )}
       <Controller
-        name="name"
+        name="username"
         control={control}
         render={({ field: { onChange, value } }) => (
           <>
             <Input
               onChangeText={(text: string) => {
                 onChange(text);
-                trigger('name');
+                trigger('username');
               }}
               value={value}
-              title="Name"
-              placeholder="Enter your name"
-              error={errors.name && errors.name.message}
+              title="Username"
+              placeholder="Enter your username"
+              error={errors.username && errors.username.message}
             />
           </>
         )}
@@ -113,12 +117,18 @@ const RegisterForm = () => {
               title="Password"
               placeholder="Enter your password"
               error={errors.password && errors.password.message}
+              onSubmitEditing={handleSubmit(onSignUpPress)}
+              returnKeyType="done"
             />
           </>
         )}
       />
       <View className="w-full pt-[5%]">
-        <Button text="Sign up" onPress={handleSubmit(onSignUpPress)} />
+        <Button
+          disabled={loading}
+          text={loading ? 'Signing up...' : 'Sign Up'}
+          onPress={handleSubmit(onSignUpPress)}
+        />
       </View>
     </View>
   );

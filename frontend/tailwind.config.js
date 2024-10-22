@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         ocean: '#4899cf',
+        water: '#d0e2ee',
       },
     },
   },

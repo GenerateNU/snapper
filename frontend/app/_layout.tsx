@@ -1,14 +1,26 @@
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { StatusBar } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AuthProvider, useAuth } from '../auth/authProvider';
+import { useEffect } from 'react';
 
 const queryClient = new QueryClient();
 
 const InitialLayout = () => {
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/(app)');
+    } else {
+      router.push('/(auth)/');
+    }
+  }, [isAuthenticated]);
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(app)" />
+    <Stack>
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(app)" options={{ headerShown: false }} />
     </Stack>
   );
 };
@@ -16,8 +28,10 @@ const InitialLayout = () => {
 const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <StatusBar />
-      <InitialLayout />
+      <AuthProvider>
+        <StatusBar />
+        <InitialLayout />
+      </AuthProvider>
     </QueryClientProvider>
   );
 };
