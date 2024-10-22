@@ -16,6 +16,7 @@ interface AuthState {
   login: (userData: LoginRequestBody) => Promise<void>;
   register: (userData: RegisterRequestBody) => Promise<void>;
   logout: () => void;
+  clearError: () => void;
 }
 
 export const useAuthStore = create<AuthState>(
@@ -47,7 +48,6 @@ export const useAuthStore = create<AuthState>(
             });
           }
         } catch (error: any) {
-          console.log(error);
           set({ loading: false, error: error.message || 'Login failed' });
         }
       },
@@ -91,6 +91,10 @@ export const useAuthStore = create<AuthState>(
         } finally {
           set({ loading: false });
         }
+      },
+
+      clearError: async () => {
+        set({ error: null });
       },
     }),
     {

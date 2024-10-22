@@ -1,8 +1,9 @@
 import { router, Stack } from 'expo-router';
-import { StatusBar } from 'react-native';
+import { AppState, StatusBar } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from '../auth/authProvider';
 import { useEffect } from 'react';
+import { useAuthStore } from '../auth/authStore';
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,19 @@ const InitialLayout = () => {
 };
 
 const RootLayout = () => {
+  const clearError = useAuthStore((state) => state.clearError);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState.match(/inactive|background/)) {
+        clearError();
+      }
+    });
+    return () => {
+      subscription.remove();
+    };
+  }, [clearError]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
