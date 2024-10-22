@@ -3,7 +3,7 @@ import { LoginRequestBody, RegisterRequestBody } from '../types/auth';
 import { getSession, login, logout, register } from '../api/auth';
 
 interface AuthState {
-  user: any; // TODO: figure out user type
+  user: any;
   token: string | null;   
   refreshToken: string | null; 
   expirationTime: number | null;
@@ -43,12 +43,9 @@ export const useAuthStore = create<AuthState>((set) => ({
           loading: false,
           error: null,
         });
-
-        localStorage.setItem('token', session.access_token);
-        localStorage.setItem('refreshToken', session.refresh_token);
-        localStorage.setItem('expirationTime', (Date.now() + session.expires_in * 1000).toString());
       }
     } catch (error: any) {
+      console.log(error);
       set({ loading: false, error: error.message || 'Login failed' });
     }
   },
@@ -69,10 +66,6 @@ export const useAuthStore = create<AuthState>((set) => ({
           loading: false,
           error: null,
         });
-
-        localStorage.setItem('token', session.access_token);
-        localStorage.setItem('refreshToken', session.refresh_token);
-        localStorage.setItem('expirationTime', (Date.now() + session.expires_in * 1000).toString());
       }
     } catch (error: any) {
       set({ loading: false, error: error.message || 'Signup failed' });
@@ -84,9 +77,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       await logout();
       set({ user: null, token: null, refreshToken: null, expirationTime: null, isAuthenticated: false, error: null });
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('expirationTime');
     } catch (error: any) {
       set({ loading: false, error: error.message || 'Logout failed' });
     } finally {

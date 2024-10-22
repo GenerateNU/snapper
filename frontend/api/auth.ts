@@ -15,7 +15,6 @@ export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
   }
 
   const data: AuthResponse = await response.json();
-  console.log(data);
   return data;
 }
 

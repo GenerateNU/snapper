@@ -54,7 +54,7 @@ const Welcome = () => {
           >
             <View className="w-full mt-[100%] flex-1 flex-col justify-start items-center px-[8%]">
               <View className="w-full items-center pb-[8%] flex-gap">
-                <Text className="text-center text-2xl font-bold text-black">
+                <Text className="text-center text-3xl pb-[4%] font-bold text-black px-10">
                   {item.title}
                 </Text>
                 {item.description && (
