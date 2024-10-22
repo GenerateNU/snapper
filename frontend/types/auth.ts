@@ -9,7 +9,6 @@ export type LoginRequestBody = {
   password: string;
 };
 
-
 export interface AuthResponse {
   message: string;
   user: {

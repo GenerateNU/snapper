@@ -63,7 +63,9 @@ const RegisterForm = () => {
       style={{ gap: 10, flexDirection: 'column' }}
       className="w-full justify-center items-center"
     >
-      {authError && <Text className="text-red-500">Signup failed. Please try again.</Text>}
+      {authError && (
+        <Text className="text-red-500">Signup failed. Please try again.</Text>
+      )}
       <Controller
         name="username"
         control={control}
@@ -122,10 +124,11 @@ const RegisterForm = () => {
         )}
       />
       <View className="w-full pt-[5%]">
-        <Button 
-            disabled={loading} 
-                text={loading ? "Signing up..." : "Sign Up" }
-                onPress={handleSubmit(onSignUpPress)} />
+        <Button
+          disabled={loading}
+          text={loading ? 'Signing up...' : 'Sign Up'}
+          onPress={handleSubmit(onSignUpPress)}
+        />
       </View>
     </View>
   );

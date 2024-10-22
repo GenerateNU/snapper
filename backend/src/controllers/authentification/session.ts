@@ -1,7 +1,10 @@
 import express from 'express';
 import { supabase } from '../../config/supabaseClient';
 
-export const getSession = async (req: express.Request, res: express.Response) => {
+export const getSession = async (
+  req: express.Request,
+  res: express.Response,
+) => {
   try {
     const { data, error } = await supabase.auth.getSession();
 
@@ -14,11 +17,12 @@ export const getSession = async (req: express.Request, res: express.Response) =>
     if (data.session) {
       return res
         .status(200)
-        .json({ message: 'Session retrieved successfully.', session: data.session });
+        .json({
+          message: 'Session retrieved successfully.',
+          session: data.session,
+        });
     } else {
-      return res
-        .status(404)
-        .json({ error: 'No active session found.' });
+      return res.status(404).json({ error: 'No active session found.' });
     }
   } catch (err: any) {
     return res

@@ -78,7 +78,14 @@ export const useAuthStore = create<AuthState>(
         set({ loading: true, error: null });
         try {
           await logout();
-          set({ user: null, token: null, refreshToken: null, expirationTime: null, isAuthenticated: false, error: null });
+          set({
+            user: null,
+            token: null,
+            refreshToken: null,
+            expirationTime: null,
+            isAuthenticated: false,
+            error: null,
+          });
         } catch (error: any) {
           set({ loading: false, error: error.message || 'Logout failed' });
         } finally {
@@ -89,6 +96,6 @@ export const useAuthStore = create<AuthState>(
     {
       name: 'auth-storage',
       getStorage: () => AsyncStorage,
-    }
-  )
+    },
+  ),
 );

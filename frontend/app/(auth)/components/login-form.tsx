@@ -48,7 +48,9 @@ const LoginForm = () => {
 
   return (
     <View style={{ gap: 10, flexDirection: 'column' }} className="w-full">
-      {authError && <Text className="text-red-500">Login failed. Please try again.</Text>}
+      {authError && (
+        <Text className="text-red-500">Login failed. Please try again.</Text>
+      )}
       <Controller
         name="email"
         control={control}
@@ -83,12 +85,12 @@ const LoginForm = () => {
         )}
       />
       <View className="w-full pt-[5%]">
-          <Button
-            text={loading ? "Logging in..." : "Log In" }
-            onPress={handleSubmit(onLoginPress)}
-            disabled={loading}
-          />
-        </View>
+        <Button
+          text={loading ? 'Logging in...' : 'Log In'}
+          onPress={handleSubmit(onLoginPress)}
+          disabled={loading}
+        />
+      </View>
     </View>
   );
 };

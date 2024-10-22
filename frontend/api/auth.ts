@@ -1,6 +1,11 @@
-import { AuthResponse, LoginRequestBody, RegisterRequestBody, SessionResponse } from '../types/auth';
+import {
+  AuthResponse,
+  LoginRequestBody,
+  RegisterRequestBody,
+  SessionResponse,
+} from '../types/auth';
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = 'http://localhost:3000';
 
 export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -18,7 +23,9 @@ export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
   return data;
 }
 
-export async function register(userData: RegisterRequestBody): Promise<AuthResponse> {
+export async function register(
+  userData: RegisterRequestBody,
+): Promise<AuthResponse> {
   const requestBody = JSON.stringify(userData);
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: 'POST',
