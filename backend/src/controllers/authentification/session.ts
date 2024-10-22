@@ -15,12 +15,10 @@ export const getSession = async (
     }
 
     if (data.session) {
-      return res
-        .status(200)
-        .json({
-          message: 'Session retrieved successfully.',
-          session: data.session,
-        });
+      return res.status(200).json({
+        message: 'Session retrieved successfully.',
+        session: data.session,
+      });
     } else {
       return res.status(404).json({ error: 'No active session found.' });
     }
