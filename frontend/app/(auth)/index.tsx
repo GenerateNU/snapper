@@ -5,6 +5,7 @@ import {
   ImageBackground,
   ScrollView,
   Dimensions,
+  Platform,
 } from 'react-native';
 import Button from '../../components/button';
 import { router } from 'expo-router';
@@ -15,22 +16,21 @@ import { ONBOARDING_DATA } from '../../consts/onboarding';
 const Welcome = () => {
   const scrollViewRef = useRef<ScrollView>(null);
   const { width } = Dimensions.get('window');
-  // keep track of which page is on
   const [currentIndex, setCurrentIndex] = useState(0);
-  // set the progress bar in the layout
   const { setProgress } = useContext(ProgressContext);
 
-  // if user clicks arrow, update to next index and scroll view position
+  const isLargeDevice = () => {
+    return Platform.OS === 'ios' && width >= 428;
+  };
+
   const handleNext = () => {
     if (currentIndex < ONBOARDING_DATA.length - 1) {
       const nextIndex = currentIndex + 1;
-      // scroll to a specific position
       scrollViewRef.current?.scrollTo({ x: width * nextIndex, animated: true });
       setCurrentIndex(nextIndex);
     }
   };
 
-  // when currentIndex is updated, will set the progress
   useEffect(() => {
     const newProgress = ((currentIndex + 1) / ONBOARDING_DATA.length) * 100;
     setProgress(newProgress);
@@ -54,7 +54,11 @@ const Welcome = () => {
           >
             <View className="w-full mt-[100%] flex-1 flex-col justify-start items-center px-[8%]">
               <View className="w-full items-center pb-[8%] flex-gap">
-                <Text className="text-center text-3xl pb-[4%] font-bold text-black px-10">
+                <Text 
+                  className={`text-center ${
+                    isLargeDevice() ? 'text-3xl' : 'text-2xl'
+                  } pb-[4%] font-bold text-black px-10`}
+                >
                   {item.title}
                 </Text>
                 {item.description && (
