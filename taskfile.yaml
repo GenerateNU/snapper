@@ -30,6 +30,11 @@ tasks:
     desc: "Start the frontend development server"
     cmds:
       - cd frontend && npm run start
+  
+  frontend:start:tunnel:
+    desc: "Start the frontend development server"
+    cmds:
+      - cd frontend && npm run start:tunnel
 
   frontend:android:
     desc: "Start the frontend development server for Android"
@@ -106,6 +111,10 @@ tasks:
   start:
     desc: "Start both frontend and backend servers"
     deps: [frontend:start, backend:start]
+  
+  start:tunnel:
+    desc: "Start both frontend and backend servers"
+    deps: [frontend:start:tunnel, backend:start]
 
   install:
     desc: "Install frontend and backend dependencies"
