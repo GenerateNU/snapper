@@ -5,15 +5,26 @@ import sys
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 ENDPOINT_URL = "https://query.wikidata.org/sparql"
-QUERY = """SELECT ?fish ?fishLabel ?wormsLabel ?pic
-WHERE {
-  ?fish wdt:P171* wd:Q27207.
+
+QUERY = """SELECT ?common_name ?scientific_name ?fish ?article ?article_suffix ?aphia_id ?image_url
+WHERE {{
+  ?fish wdt:P171* wd:{class_qid}.
   ?fish wdt:P105 wd:Q7432.
-  ?fish wdt:P850 ?worms.
-  ?fish wdt:P18 ?pic.
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-}"""
-QUERY = 'SELECT ?fish ?fishLabel ?wormsLabel ?pic WHERE {{ ?fish wdt:P171* wd:{fish_class}. ?fish wdt:P105 wd:Q7432. ?fish wdt:P850 ?worms. ?fish wdt:P18 ?pic. SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}}} LIMIT {limit} OFFSET {offset}'
+  ?fish wdt:P850 ?aphia_id.
+  ?fish wdt:P18 ?image_url.
+  ?fish wdt:P225 ?scientific_name.
+  ?fish wdt:P1843 ?common_name.
+  ?article schema:about ?fish .
+  ?article schema:inLanguage ?lang ;
+           schema:name ?article_suffix;
+           schema:isPartOf <https://en.wikipedia.org/> .
+  
+  FILTER(LANGMATCHES(LANG(?common_name), "en"))
+  SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
+}}
+LIMIT {limit}
+OFFSET {offset}
+"""
 
 MARINE_CLASSES = [
     "Q127282",  # "Actinopterygii",
@@ -59,7 +70,7 @@ class Wikidata:
         while self.curr_class < len(MARINE_CLASSES):
             print("Fetching from", MARINE_CLASSES[self.curr_class])
             query = QUERY.format(
-                fish_class=MARINE_CLASSES[self.curr_class],
+                class_qid=MARINE_CLASSES[self.curr_class],
                 limit=self.amount_per_page,
                 offset=self.offset * self.amount_per_page,
             )
