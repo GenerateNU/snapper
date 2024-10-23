@@ -4,10 +4,17 @@ import {
   RegisterRequestBody,
   SessionResponse,
 } from '../types/auth';
+import Constants from 'expo-constants';
 
-const API_BASE_URL = 'http://localhost:3000';
+const api =
+  __DEV__ && Constants.expoConfig?.hostUri
+    ? `${Constants.expoConfig.hostUri.split(':').shift()}:8081`
+    : 'api.example.com';
+
+const API_BASE_URL = 'http://' + api;
 
 export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
+  console.log(API_BASE_URL);
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
