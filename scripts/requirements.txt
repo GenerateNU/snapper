@@ -1,0 +1,5 @@
+pandas
+pymongo
+python-dotenv
+requests
+SPARQLWrapper
