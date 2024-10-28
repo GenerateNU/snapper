@@ -3,7 +3,6 @@ import { TextInput, View, Image, Text, TouchableOpacity } from 'react-native';
 import { useFormContext } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 
-
 export default function FishSearch() {
   let data: string[] = ['Anemone', 'Angelfish', 'Barnacle', 'Clown Fish'];
 
@@ -14,40 +13,42 @@ export default function FishSearch() {
     false,
   ]);
 
-  const {setValue, watch} = useFormContext();
+  const { setValue, watch } = useFormContext();
   const tags = watch('tags') || [];
 
-  
   const updateBoolAtIndex = (index: number, value: boolean) => {
     const newVisibility = [...visibility];
     newVisibility[index] = value;
-    if(value){
-        setValue('tags', [data[index], ...tags]);
+    if (value) {
+      setValue('tags', [data[index], ...tags]);
     } else {
-        setValue('tags', tags.filter((tag: string) => tag !== data[index]))
+      setValue(
+        'tags',
+        tags.filter((tag: string) => tag !== data[index]),
+      );
     }
     setVisibility(newVisibility);
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     const checkTags = () => {
       let hasChanged = false;
       const newVisibility = [...visibility];
       for (let i: number = 0; i < 4; i++) {
-        if(!tags.includes(data[i]) && visibility[i]){
+        if (!tags.includes(data[i]) && visibility[i]) {
           newVisibility[i] = false;
-          hasChanged = true
-        } else if(tags.includes(data[i]) && !visibility[i]){
+          hasChanged = true;
+        } else if (tags.includes(data[i]) && !visibility[i]) {
           newVisibility[i] = true;
-          hasChanged = true
+          hasChanged = true;
         }
       }
-      if(hasChanged){
+      if (hasChanged) {
         setVisibility(newVisibility);
       }
-    }
-    checkTags()
-},[tags])
+    };
+    checkTags();
+  }, [tags]);
 
   return (
     <View className="h-[22vh] w-full">
