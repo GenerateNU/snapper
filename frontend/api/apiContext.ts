@@ -6,4 +6,4 @@ if (!Constants.expoConfig?.hostUri && !Constants.expoConfig) {
 }
 export const apiConfig =
   'http://' +
-  `${Constants.expoConfig.hostUri?.split(':').shift() || 'localhost'}:8081`;
+  `${Constants.expoConfig.hostUri?.split(':').shift() || 'localhost'}:3000`;
