@@ -1,14 +1,13 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../../services/userService';
 
-//Will get the user by the given ID
-export const getUserByID = async (
+export const getUserMe = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    //Get the ID from the params
-    const id = req.params.userid;
+    //Get the ID from current session
+    const id = req.session.userId;
 
     //Check to make sure that the id is defined
     if (!id) {
