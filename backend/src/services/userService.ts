@@ -14,11 +14,11 @@ export const findUserBySupabaseId = async (supabaseId: string) => {
   return UserModel.findOne({ supabaseId });
 };
 
-export const editUSerBySupabaseId = async (
+export const editUserBySupabaseId = async (
   supabaseId: string,
-  updatedJson: JSON,
+  updatedJson: Record<string, any>,
 ) => {
-  return UserModel.updateOne({ supabaseId }, { $set: { updatedJson } });
+  return UserModel.updateOne({ supabaseId }, { $set: updatedJson });
 };
 
 export interface UserService {
