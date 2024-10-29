@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import Button from '../../components/button';
 import { router } from 'expo-router';
-import Arrow from '../../components/arrow';
 import { ProgressContext } from './_layout';
 import { ONBOARDING_DATA } from '../../consts/onboarding';
 
@@ -52,46 +51,36 @@ const Welcome = () => {
             style={{ width, height: '100%' }}
             resizeMode="cover"
           >
-            <View className="w-full mt-[100%] flex-1 flex-col justify-start items-center px-[8%]">
+            <View className="w-full mt-[75%] flex-1 flex-col justify-center items-center px-[8%]">
               <View className="w-full items-center pb-[8%] flex-gap">
                 <Text
                   className={`text-center ${
                     isLargeDevice() ? 'text-3xl' : 'text-2xl'
-                  } pb-[4%] font-bold text-black px-10`}
+                  } pb-[4%] font-bold text-white px-10`}
                 >
                   {item.title}
                 </Text>
                 {item.description && (
-                  <Text className="text-center px-[10%] text-base text-black">
+                  <Text className="text-center px-[10%] text-base text-white">
                     {item.description}
                   </Text>
                 )}
               </View>
-              {index === ONBOARDING_DATA.length - 1 && (
-                <View
-                  className="w-full"
-                  style={{ gap: 20, flexDirection: 'column' }}
-                >
-                  <Button
-                    color="black"
-                    backgroundColor="white"
-                    text="Sign Up"
-                    onPress={() => router.push('/register')}
-                  />
-                  <Button
-                    text="Sign In"
-                    onPress={() => router.push('/login')}
-                  />
-                </View>
-              )}
             </View>
           </ImageBackground>
         ))}
       </ScrollView>
-      <View className="absolute bottom-40 right-10">
-        {currentIndex < ONBOARDING_DATA.length - 1 && (
-          <Arrow direction="right" onPress={handleNext} />
-        )}
+      <View className="w-full px-[8%] absolute bottom-20">
+        <Button
+          color="ocean"
+          backgroundColor="white"
+          text={currentIndex < ONBOARDING_DATA.length - 1 ? 'Next' : 'Finish'}
+          onPress={
+            currentIndex < ONBOARDING_DATA.length - 1
+              ? handleNext
+              : () => router.push('/(auth)/redirect')
+          }
+        />
       </View>
     </View>
   );
