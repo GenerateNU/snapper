@@ -7,7 +7,7 @@ import {
   idFormatValidation,
   updateDiveLogValidation,
 } from '../validators/divelog';
-import { DiveLogController } from '../controllers/divelog';
+import { DiveLogController } from '../controllers/divelogs/divelog';
 
 /**
  * @swagger

@@ -1,11 +1,12 @@
-import { DiveLogService, DiveLogServiceImpl } from '../services/divelogService';
+import { DiveLogService, DiveLogServiceImpl } from '../../services/divelogService';
 const { validationResult } = require('express-validator');
 import express from 'express';
-import { UserService, UserServiceImpl } from '../services/userService';
+import { UserService, UserServiceImpl } from '../../services/userService';
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
 const userService: UserService = new UserServiceImpl();
 
+// using mongoId
 export const DiveLogController = {
   createDiveLog: async (
     req: express.Request,
@@ -17,7 +18,6 @@ export const DiveLogController = {
       return;
     }
 
-    // TODO: replace this with actual getUserById method
     const user = await userService.getUserById(req.body.user);
     if (user == null) {
       res.status(404).json({ message: 'User not found' });
