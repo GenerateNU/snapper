@@ -1,9 +1,11 @@
 import React, { createContext, useState } from 'react';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import { View } from 'react-native';
 import ProgressBar from '../../components/progress-bar';
+import Arrow from '../../components/arrow';
+import { useAuthStore } from '../../auth/authStore';
 
-// create context with initial progress at 0
+// Create context with initial progress at 0
 export const ProgressContext = createContext({
   progress: 0,
   setProgress: (p: number) => {},
@@ -11,9 +13,9 @@ export const ProgressContext = createContext({
 
 const Layout = () => {
   const [progress, setProgress] = useState(0);
+  const { clearError } = useAuthStore();
 
   return (
-    // progress context allows for child components to update progress
     <ProgressContext.Provider value={{ progress, setProgress }}>
       <Stack>
         <Stack.Screen
@@ -24,24 +26,53 @@ const Layout = () => {
             headerTransparent: true,
             gestureEnabled: false,
             header: () => (
-              <View className="w-full px-[10%] flex mt-[20%]">
+              <View className="w-full px-[8%] flex mt-[20%]">
                 <ProgressBar progress={progress} />
               </View>
             ),
           }}
         />
         <Stack.Screen
-          name="register"
+          name="redirect"
           options={{
             headerShown: false,
             gestureEnabled: false,
           }}
         />
         <Stack.Screen
+          name="register"
+          options={{
+            headerShown: true,
+            gestureEnabled: false,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <Arrow
+                direction="left"
+                onPress={() => {
+                  router.back();
+                  clearError();
+                }}
+              />
+            ),
+          }}
+        />
+        <Stack.Screen
           name="login"
           options={{
-            headerShown: false,
+            headerShown: true,
             gestureEnabled: false,
+            headerTitle: '',
+            headerShadowVisible: false,
+            headerLeft: () => (
+              <Arrow
+                direction="left"
+                onPress={() => {
+                  router.back();
+                  clearError();
+                }}
+              />
+            ),
           }}
         />
       </Stack>

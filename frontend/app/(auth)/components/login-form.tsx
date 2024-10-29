@@ -23,7 +23,7 @@ const LoginForm = () => {
     control,
     handleSubmit,
     trigger,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginFormData>({
     resolver: zodResolver(LOGIN_SCHEMA),
     mode: 'onTouched',
@@ -48,9 +48,6 @@ const LoginForm = () => {
 
   return (
     <View style={{ gap: 10, flexDirection: 'column' }} className="w-full">
-      {authError && (
-        <Text className="text-red-500">Login failed. Please try again.</Text>
-      )}
       <Controller
         name="email"
         control={control}
@@ -84,11 +81,14 @@ const LoginForm = () => {
           />
         )}
       />
-      <View className="w-full pt-[5%]">
+      {authError && (
+        <Text className="text-red-500">Login failed. Please try again.</Text>
+      )}
+      <View className="w-full pt-[25%]">
         <Button
           text={loading ? 'Logging in...' : 'Log In'}
           onPress={handleSubmit(onLoginPress)}
-          disabled={loading}
+          disabled={loading || !isValid}
         />
       </View>
     </View>

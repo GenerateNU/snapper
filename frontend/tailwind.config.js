@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ocean: '#4899cf',
+        ocean: '#3688be',
         water: '#d0e2ee',
       },
     },

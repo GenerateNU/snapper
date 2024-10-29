@@ -22,7 +22,7 @@ const Arrow: React.FC<ArrowProps> = ({
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        className={`w-12 h-12 rounded-full ${backgroundColor} flex items-center justify-center`}
+        className={`w-12 h-12 rounded-full ${backgroundColor ? backgroundColor : ''} flex items-center justify-center`}
       >
         <FontAwesomeIcon icon={icon} size={25} color="black" />
       </View>

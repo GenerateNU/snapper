@@ -33,13 +33,13 @@ const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
   } = props;
 
   return (
-    <View className="w-full">
+    <View className="w-full mb-2">
       {title && <Text className="text-sm mb-2 font-bold">{title}</Text>}
       <TextInput
         ref={ref}
         placeholder={placeholder}
         placeholderTextColor="#a09b9b"
-        className={`h-14 border rounded-full px-[5%] bg-gray-200 ${
+        className={`border py-[3%] rounded-md px-[5%] ${
           error ? 'border-red-500' : 'border-gray-200'
         }`}
         onSubmitEditing={onSubmitEditing}

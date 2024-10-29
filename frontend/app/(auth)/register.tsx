@@ -21,16 +21,10 @@ const Register = () => {
         className="flex-1 justify-start items-center gap-y-5"
         onPress={() => Keyboard.dismiss()}
       >
-        <View className="h-[28%] w-full bg-water pt-[5%] justify-center items-center">
-          <Image source={require('../../assets/🐠.png')} resizeMode="contain" />
-        </View>
         <View className="w-full px-7">
-          <View className="w-full items-center pb-5">
-            <Text className="text-xl font-bold">Create your account</Text>
-            <Text className="text-xs">
-              Dive in - Start Your Ocean Adventure
-            </Text>
-          </View>
+          <Text className="mb-[20%] mt-[5%] text-xl font-bold">
+            Create an account
+          </Text>
           <SignUpForm />
         </View>
       </Pressable>
