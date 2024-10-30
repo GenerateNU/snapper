@@ -9,6 +9,7 @@ interface ButtonProps {
   disabled?: boolean;
   textOnly?: boolean;
   outline?: boolean;
+  small?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   textOnly = false,
   outline = false,
+  small = false,
 }) => {
   const isOutlined = outline || disabled;
 
@@ -26,7 +28,7 @@ const Button: React.FC<ButtonProps> = ({
     <>
       {!textOnly && (
         <TouchableOpacity
-          className={`items-center justify-center w-full py-[3%] rounded-md
+          className={`items-center h-10 justify-center ${small ? 'w-[20%]' : 'w-full'} py-[2%] rounded-lg
             ${isOutlined ? 'bg-transparent border' : backgroundColor ? `bg-${backgroundColor}` : 'bg-ocean'}
             ${isOutlined ? `border border-${backgroundColor || 'ocean'}` : ''}`}
           disabled={disabled}

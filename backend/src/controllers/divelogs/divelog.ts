@@ -1,4 +1,7 @@
-import { DiveLogService, DiveLogServiceImpl } from '../../services/divelogService';
+import {
+  DiveLogService,
+  DiveLogServiceImpl,
+} from '../../services/divelogService';
 const { validationResult } = require('express-validator');
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
@@ -13,7 +16,7 @@ export const DiveLogController = {
     res: express.Response,
   ): Promise<void> => {
     const errors = validationResult(req);
-    
+
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
       return;

@@ -30,10 +30,12 @@
     "react": "18.2.0",
     "react-hook-form": "^7.53.0",
     "react-native": "0.74.5",
-    "react-native-svg": "^15.7.1",
+    "react-native-svg": "15.2.0",
+    "react-native-svg-transformer": "^0.20.0",
     "zod": "^3.23.8",
     "zustand": "^3.7.2",
-    "zustand-persist": "^0.4.0"
+    "zustand-persist": "^0.4.0",
+    "expo-linear-gradient": "~13.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

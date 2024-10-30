@@ -17,7 +17,9 @@ export const toggleUserFollow = async (
 
     // Check if the user is logged in
     if (!currentUserId) {
-      return res.status(400).json({ error: 'User must be logged in to follow others.' });
+      return res
+        .status(400)
+        .json({ error: 'User must be logged in to follow others.' });
     }
 
     // Check if the target user ID is provided
@@ -47,17 +49,25 @@ export const toggleUserFollow = async (
     console.log(currentUserMongoDBId);
 
     // Check if the current user is already following the target user
-    const alreadyFollowing = await userService.isFollowingUser(currentUserMongoDBId, targetUserId);
+    const alreadyFollowing = await userService.isFollowingUser(
+      currentUserMongoDBId,
+      targetUserId,
+    );
     if (alreadyFollowing) {
       await userService.unfollowUser(currentUserMongoDBId, targetUserId);
-      return res.status(200).json({ message: 'Successfully unfollowed the user.' });
+      return res
+        .status(200)
+        .json({ message: 'Successfully unfollowed the user.' });
     } else {
       await userService.followUser(currentUserMongoDBId, targetUserId);
-      return res.status(200).json({ message: 'Successfully followed the user.' });
+      return res
+        .status(200)
+        .json({ message: 'Successfully followed the user.' });
     }
-
   } catch (error) {
     console.error('Error toggling follow status:', error);
-    return res.status(500).json({ error: 'An error occurred while toggling follow status.' });
+    return res
+      .status(500)
+      .json({ error: 'An error occurred while toggling follow status.' });
   }
 };

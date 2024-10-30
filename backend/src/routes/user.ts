@@ -13,5 +13,9 @@ export default (router: express.Router) => {
   router.get('/user/items/fish', isAuthenticated, getUserFish);
   router.get('/user/items/divelogs', isAuthenticated, getUserDiveLogs);
   router.put('/user/actions/edit', isAuthenticated, PutUser); //user put route
-  router.patch('/user/actions/follow/:userid', isAuthenticated, toggleUserFollow);
+  router.patch(
+    '/user/actions/follow/:userid',
+    isAuthenticated,
+    toggleUserFollow,
+  );
 };

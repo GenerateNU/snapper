@@ -11,15 +11,17 @@ export interface DiveLogService {
 }
 
 export class DiveLogServiceImpl implements DiveLogService {
-  async createDiveLog(data: Partial<Document & { user: string }>): Promise<Document> {
-    console.log("Creating dive log with data:", data);
-    
+  async createDiveLog(
+    data: Partial<Document & { user: string }>,
+  ): Promise<Document> {
+    console.log('Creating dive log with data:', data);
+
     const diveLog = await DiveLog.create(data);
-    
+
     await UserModel.findByIdAndUpdate(
       data.user,
       { $addToSet: { diveLogs: diveLog._id } },
-      { new: true }
+      { new: true },
     );
     return diveLog;
   }
