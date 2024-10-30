@@ -7,6 +7,7 @@ import ImagePicker from "../../../components/image-picker";
 import BigText from "../../../components/bigtext"
 import Input from '../../../components/input';
 import Button from "../../../components/button";
+import PageButton from "../../../components/page-button";
 
 
 type FormFields = {
@@ -29,28 +30,16 @@ export default function PostCreation() {
 
     return (
         <FormProvider {...methods}>
-            <ScrollView className="flex flex-col space-y-2 w-[90vw]">
-                <View className="flex flex-col justify-items items-center pt-[10vh]">
+            <ScrollView className="flex flex-col space-y-2 w-[90vw] bg-white">
+                <View className="flex flex-col justify-items items-center pt-[10vh] mb-[3vh]">
                     <Text className="font-bold text-[24px] leading-[29.05px] pb-[1vh]"> Log A Dive </Text>
-                    <Text className="font-normal text-[12px] leading-[18px]"> Ready to capture your underwater adventure?</Text>
-                    <Text className="font-normal text-[12px] leading-[18px]"> Fill out the details below to log your dive experience!</Text>
+                    <Text className="font-normal text-center text-[14px] leading-[18px]"> Ready to capture your underwater adventure?</Text>
+                    <Text className="font-normal text-center w-[70vw] text-[14px] leading-[18px]"> Fill out the details below to log your dive experience!</Text>
                 </View>
-                <View className="h-fit w-full flex flex-row justify-between items-center mb-4">
-                    <View className="w-[32vw]">
-                        <Controller
-                            control = {control}
-                            name = "location"
-                            render = {({field: {onChange, value}}) => (
-                                <Input
-                                    title={"Dive Location"}
-                                    placeholder={"42 Wallaby Way"}
-                                    onChangeText={onChange}
-                                    value = {value}
-                                />
-                            )}
-                        /> 
-                    </View>
+                <View className="w-full mb-[2vh]">
+                    <PageButton outline = 'gray-300' text = "Enter Location" backgroundColor="white" />
                 </View>
+
                 <ImagePicker />
                 <Text className="font-semibold text-[14px]">Tag Fishes</Text>
                 <View className="w-full">
@@ -75,7 +64,7 @@ export default function PostCreation() {
                         /> 
         
                 </View>
-                <Button text = "Post" onPress = {handleSubmit(submitPost)}/>
+                <Button text = "Post" onPress = {handleSubmit(submitPost)} />
             </ScrollView>
         </FormProvider>
     )
