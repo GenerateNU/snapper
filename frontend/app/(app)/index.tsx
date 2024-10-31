@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import Button from '../../components/button';
 import { useAuthStore } from '../../auth/authStore';
 import { router } from 'expo-router';
+import PostCreation from '../(postcreation)';
 
 const Home = () => {
   const { logout, loading, error: authError, isAuthenticated } = useAuthStore();
@@ -19,6 +20,12 @@ const Home = () => {
         textOnly
         text={loading ? 'Logging out' : 'Logout'}
       />
+      <Button
+        onPress = {() => router.push('/(postcreation)')}
+        textOnly
+        text="PostCreation">
+
+      </Button>
     </View>
   );
 };

@@ -14,12 +14,12 @@ export default function FishTags() {
         newFish.splice(index, 1);
 
         setValue('tags', newFish)
-      };
+    };
 
     
     return (
         <View className = "h-[5vh] max-w-full">
-            <ScrollView className = "h-full max-w-full border border-[#d2d9e2] rounded-[12px]" horizontal>
+            <ScrollView className = "h-full max-w-full" horizontal>
                 <View className = "flex flex-row items-center space-x-2 mx-2">
                 {tags.map((item, index) => {
                     return (
