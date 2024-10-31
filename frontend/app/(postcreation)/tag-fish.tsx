@@ -3,8 +3,6 @@ import { View, Text, Image, TextInput} from "react-native";
 import { useFormContext } from "react-hook-form";
 import Tag from "../../components/tag";
 import FishSearch from "./components/fish-search";
-import FishTags from "./components/fish-tags";
-
 
 type FormFields = {
     tags: string[],
@@ -49,8 +47,6 @@ export default function TagFish(){
                         placeholder="Default "
                         className="pl-3 font-medium text-[14px] h-[4vh]"
                     />
-            
-                    
                 </View>
             </View>
             <FishSearch/>
