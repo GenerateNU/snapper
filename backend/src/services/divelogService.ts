@@ -1,5 +1,5 @@
 import { DiveLog } from '../models/diveLog';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import divelog from '../routes/divelog';
 import { UserModel } from '../models/users';
 
@@ -8,6 +8,7 @@ export interface DiveLogService {
   getDiveLogById(id: string): Promise<Document | null>;
   updateDiveLog(id: string, data: Partial<Document>): Promise<Document | null>;
   deleteDiveLog(id: string): Promise<Document | null>;
+  getDiveLogs(id: Types.ObjectId[]): Promise<Document[]>;
 }
 
 export class DiveLogServiceImpl implements DiveLogService {
@@ -39,5 +40,9 @@ export class DiveLogServiceImpl implements DiveLogService {
 
   async deleteDiveLog(id: string): Promise<Document | null> {
     return DiveLog.findByIdAndDelete(id).exec();
+  }
+
+  async getDiveLogs(id: Types.ObjectId[]): Promise<Document[]> {
+    return DiveLog.find({ _id: { $in: id } }).exec();
   }
 }

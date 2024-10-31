@@ -1,76 +1,21 @@
-import { API_BASE_URL } from '../consts/onboarding';
+import { fetchData } from './base';
 
 export async function getMe(): Promise<any> {
-  const response = await fetch(`${API_BASE_URL}/user/me`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to get this user');
-  }
-
-  const data = await response.json();
-  return data;
+  return await fetchData('/user/me', "Failed to fetch this user data");
 }
 
 export async function getUserById(id: string): Promise<any> {
-  const response = await fetch(`${API_BASE_URL}/user/${id}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to get user with id');
-  }
-
-  const data = await response.json();
-  return data;
+  return await fetchData(`/user/${id}`, "Failed to fetch user with id");
 }
 
 export async function getUserDiveLogs(): Promise<any> {
-  const response = await fetch(`${API_BASE_URL}/user/items/divelogs`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to get this user's divelogs");
-  }
-
-  const data = await response.json();
-  return data;
+  return await fetchData('/user/items/divelogs', "Failed to fetch user's divelogs");
 }
 
 export async function getUserFish(): Promise<any> {
-  const response = await fetch(`${API_BASE_URL}/user/items/fish`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to get user's fish");
-  }
-
-  const data = await response.json();
-  return data;
+  return await fetchData('/user/items/fish', "Failed to fetch user's fish");
 }
 
 export async function getUserBadges(): Promise<any> {
-  const response = await fetch(`${API_BASE_URL}/user/items/badges`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to get user's badges");
-  }
-
-  const data = await response.json();
-  return data;
+  return await fetchData('/user/items/badges', "Failed to fetch user's badges");
 }

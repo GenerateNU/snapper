@@ -4,8 +4,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Header from './components/header';
 import Badges from './components/badges';
 import Menu from './components/menu';
+import { useLocalSearchParams } from 'expo-router';
 
 const Profile = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+
   return (
     <LinearGradient
       colors={['#549ac7', '#ffffff', '#ffffff', '#ffffff']}
@@ -20,7 +23,7 @@ const Profile = () => {
             paddingTop: 0,
           }}
         >
-          <View style={{gap: 15}} className='w-full px-[8%] mt-[5%]'>
+          <View style={{gap: 15}} className='w-full px-[8%]'>
             <Header />
             <Badges badges={["Diver", "First Catcher", "Ocean Explorer"]} />
             <Menu />

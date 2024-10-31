@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist } from 'zustand/middleware';
 import { LoginRequestBody, RegisterRequestBody } from '../types/auth';
 import { getSession, login, logout, register } from '../api/auth';
+import { getMe } from '../api/user';
 
 interface AuthState {
   user: any;
@@ -12,6 +13,8 @@ interface AuthState {
   isAuthenticated: boolean;
   error: string | null;
   loading: boolean;
+  supabaseId: string | null;
+  mongoDBId: string | null;
 
   login: (userData: LoginRequestBody) => Promise<void>;
   register: (userData: RegisterRequestBody) => Promise<void>;
@@ -29,14 +32,17 @@ export const useAuthStore = create<AuthState>(
       isAuthenticated: false,
       error: null,
       loading: false,
+      supabaseId: null,
+      mongoDBId: null,
 
       login: async (userData: LoginRequestBody) => {
         set({ loading: true, error: null });
         try {
           const response = await login(userData);
           const session = await getSession();
+          const userMe = await getMe();
 
-          if (session) {
+          if (session && userMe) {
             set({
               user: session.user,
               token: session.access_token,
@@ -45,6 +51,8 @@ export const useAuthStore = create<AuthState>(
               isAuthenticated: true,
               loading: false,
               error: null,
+              supabaseId: response.user.id,
+              mongoDBId: userMe.user._id,
             });
           }
         } catch (error: any) {
@@ -57,8 +65,9 @@ export const useAuthStore = create<AuthState>(
         try {
           const response = await register(userData);
           const session = await getSession();
+          const userMe = await getMe();
 
-          if (session) {
+          if (session && userMe) {
             set({
               user: session.user,
               token: session.access_token,
@@ -67,6 +76,8 @@ export const useAuthStore = create<AuthState>(
               isAuthenticated: true,
               loading: false,
               error: null,
+              supabaseId: response.user.id,
+              mongoDBId: userMe.user._id,
             });
           }
         } catch (error: any) {
@@ -85,6 +96,8 @@ export const useAuthStore = create<AuthState>(
             expirationTime: null,
             isAuthenticated: false,
             error: null,
+            supabaseId: null,
+            mongoDBId: null,
           });
         } catch (error: any) {
           set({ loading: false, error: error.message || 'Logout failed' });

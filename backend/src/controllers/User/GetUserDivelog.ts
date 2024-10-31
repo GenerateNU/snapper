@@ -1,5 +1,8 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../../services/userService';
+import { DiveLogService, DiveLogServiceImpl } from '../../services/divelogService';
+
+const diveLogService: DiveLogService = new DiveLogServiceImpl();
 
 export const getUserDiveLogs = async (
   req: express.Request,
@@ -25,9 +28,11 @@ export const getUserDiveLogs = async (
         .json({ error: 'Unable to find user of ID: ' + userID });
     }
 
+    const divelogs = await diveLogService.getDiveLogs(foundUser.diveLogs);
+
     //Return the OK status
     return res.status(200).json({
-      divelogs: foundUser.diveLogs,
+      divelogs: divelogs,
       message: 'Successfully found dive logs for user:' + userID,
     });
   } catch (err) {

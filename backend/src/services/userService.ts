@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 

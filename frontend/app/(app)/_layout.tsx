@@ -4,6 +4,7 @@ import { router, Stack } from 'expo-router';
 import Arrow from '../../components/arrow';
 import IconButton from '../../components/icon-button';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { StyleSheet } from 'react-native';
 
 const Layout = () => {
   return (
@@ -22,6 +23,7 @@ const Layout = () => {
           headerTitle: '',
           headerTransparent: true,
           headerShown: true,
+          headerStyle: styles.header,
           headerLeft: () => (
             <Arrow
               direction="left"
@@ -38,3 +40,10 @@ const Layout = () => {
 };
 
 export default Layout;
+
+const styles = StyleSheet.create({
+  header: {
+    height: 10,
+    backgroundColor: 'transparent',
+  },
+});

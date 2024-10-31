@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import session from 'express-session';
 import { Session } from 'express-session';
 
 // Mock the authMiddleware
@@ -32,7 +31,6 @@ import express from 'express';
 import { UserModel } from '../models/users';
 import request from 'supertest';
 import userRoute from '../routes/user';
-import mongoose from 'mongoose';
 jest.mock('../models/users');
 
 UserModel.findOne = jest.fn();
