@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native';
 import Button from '../../components/button';
 import { useAuthStore } from '../../auth/authStore';
-import { router } from 'expo-router';
+import Badge from '../../assets/fish badge.svg';
 
 const Home = () => {
   const { logout, loading, error: authError, isAuthenticated } = useAuthStore();
@@ -14,6 +14,7 @@ const Home = () => {
           Failed to logout. Please try again.
         </Text>
       )}
+      <Badge width={100} height={100} />
       <Button
         onPress={logout}
         textOnly
