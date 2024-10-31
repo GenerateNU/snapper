@@ -21,7 +21,7 @@ export const getUserBadges = async (
     }
 
     return res.status(200).json({
-      divelogs: foundUser.badges,
+      badges: foundUser.badges,
       message: 'Successfully found badges for user:' + userID,
     });
   } catch (err) {

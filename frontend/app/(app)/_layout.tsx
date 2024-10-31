@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
+import Arrow from '../../components/arrow';
+import IconButton from '../../components/icon-button';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 const Layout = () => {
   return (
@@ -10,8 +13,24 @@ const Layout = () => {
         options={{
           headerShown: false,
           headerTitle: '',
-          headerTransparent: true,
           gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen
+        name="user"
+        options={{
+          headerTitle: '',
+          headerTransparent: true,
+          headerShown: true,
+          headerLeft: () => (
+            <Arrow
+              direction="left"
+              onPress={() => router.back()}
+            />
+          ),
+          headerRight: () => (
+            <IconButton icon={faBars} />
+          ),
         }}
       />
     </Stack>

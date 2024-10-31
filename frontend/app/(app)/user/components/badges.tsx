@@ -7,7 +7,7 @@ interface BadgeProps {
 const Badges: React.FC<BadgeProps> = ({ badges }) => {
   return (
     <View className="flex flex-col w-full">
-      <Text className="font-bold text-lg pb-[2%]">Badges</Text>
+      <Text className="font-bold text-lg pb-[2%] text-darkblue">Badges</Text>
       <View className="flex flex-row w-full bg-water rounded-xl justify-around p-[5%] shadow-md">
         {badges.map((badge, key) => (
           <View className="flex flex-col items-center justify-center" key={key}>

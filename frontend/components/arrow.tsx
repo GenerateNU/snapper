@@ -15,16 +15,16 @@ interface ArrowProps {
 const Arrow: React.FC<ArrowProps> = ({
   direction,
   onPress,
-  backgroundColor = 'bg-white',
+  backgroundColor = 'bg-transparent',
 }) => {
   const icon = direction === 'left' ? faChevronLeft : faChevronRight;
 
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        className={`w-12 h-12 rounded-full ${backgroundColor ? backgroundColor : ''} flex items-center justify-center`}
+        className={`rounded-full ${backgroundColor ? backgroundColor : ''} flex items-center justify-center`}
       >
-        <FontAwesomeIcon icon={icon} size={25} color="black" />
+        <FontAwesomeIcon icon={icon} size={24} color="black" />
       </View>
     </TouchableOpacity>
   );

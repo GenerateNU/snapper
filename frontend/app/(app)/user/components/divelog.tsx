@@ -1,7 +1,7 @@
 import { TouchableOpacity, View, Text, Image } from 'react-native';
-import Profile from '../../../components/profile';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
-import Icon from '../../../components/icon-button';
+import Profile from '../../../../components/profile';
+import IconButton from '../../../../components/icon-button';
 
 interface DiveLogProps {
   username?: string;
@@ -32,7 +32,7 @@ const DiveLog: React.FC<DiveLogProps> = ({
             <Text>1h ago</Text>
           </View>
         </View>
-        <Icon icon={faEllipsisVertical} />
+        <IconButton icon={faEllipsisVertical} />
       </View>
       <View className="w-ful h-40 my-[5%]">
         <Image
