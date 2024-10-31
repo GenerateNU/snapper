@@ -1,6 +1,7 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import Button from '../../components/button';
 import { useAuthStore } from '../../auth/authStore';
+import Badge from '../../assets/fish badge.svg';
 import { router } from 'expo-router';
 
 const Home = () => {
@@ -13,8 +14,7 @@ const Home = () => {
             Failed to logout. Please try again.
           </Text>
         )}
-        <Button textOnly text="Profile" onPress={() => router.push('/user/1')}
-        />
+        <Button textOnly text="Profile" onPress={() => router.push('/user/671303b84593cf21bd513d76')} />
         <Button
           onPress={logout}
           textOnly

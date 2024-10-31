@@ -9,13 +9,16 @@ export async function getUserById(id: string): Promise<any> {
 }
 
 export async function getUserDiveLogs(): Promise<any> {
-  return await fetchData('/user/items/divelogs', "Failed to fetch user's divelogs");
+  const data = await fetchData('/user/items/divelogs', "Failed to fetch user's divelogs");
+  return data.divelogs;
 }
 
 export async function getUserFish(): Promise<any> {
-  return await fetchData('/user/items/fish', "Failed to fetch user's fish");
+  const data = await fetchData('/user/items/fish', "Failed to fetch user's fish");
+  return data.fish;
 }
 
 export async function getUserBadges(): Promise<any> {
-  return await fetchData('/user/items/badges', "Failed to fetch user's badges");
+  const data = await fetchData('/user/items/badges', "Failed to fetch user's badges");
+  return data.badges;
 }
