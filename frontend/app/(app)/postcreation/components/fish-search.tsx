@@ -2,87 +2,73 @@ import React from 'react';
 import { TextInput, View, Image, Text, TouchableOpacity } from 'react-native';
 import { useFormContext } from 'react-hook-form';
 import { useState, useEffect } from 'react';
+import { string } from 'zod';
 
+type FishData = {
+  name: string,
+  visibility: Boolean
+}
 export default function FishSearch() {
-  let data: string[] = ['Anemone', 'Angelfish', 'Barnacle', 'Clown Fish'];
-
-  const [visibility, setVisibility] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [data, setData] = useState<FishData[]>(
+    [{ name: 'Anemone', visibility: false }, { name: 'Angelfish', visibility: false },
+    { name: 'Barnacle', visibility: false }, { name: 'Betta', visibility: false }, { name: 'Bitterling', visibility: false },
+    { name: 'Carp', visibility: false }, { name: 'Catfish', visibility: false }, { name: 'Clownfish', visibility: false },
+    { name: 'Crawfish', visibility: false }, { name: 'Dab', visibility: false }, { name: 'Dace', visibility: false }])
 
   const { setValue, watch } = useFormContext();
   const tags = watch('tags') || [];
 
   const updateBoolAtIndex = (index: number, value: boolean) => {
-    const newVisibility = [...visibility];
-    newVisibility[index] = value;
+    const newData = [...data];
     if (value) {
-      setValue('tags', [data[index], ...tags]);
+      setValue('tags', [data[index].name, ...tags]);
     } else {
-      setValue(
-        'tags',
-        tags.filter((tag: string) => tag !== data[index]),
-      );
+      setValue('tags', tags.filter((tag: string) => tag !== data[index].name))
     }
-    setVisibility(newVisibility);
+    newData[index].visibility = !newData[index].visibility;
+    setData(newData);
   };
 
   useEffect(() => {
     const checkTags = () => {
       let hasChanged = false;
-      const newVisibility = [...visibility];
-      for (let i: number = 0; i < 4; i++) {
-        if (!tags.includes(data[i]) && visibility[i]) {
-          newVisibility[i] = false;
-          hasChanged = true;
-        } else if (tags.includes(data[i]) && !visibility[i]) {
-          newVisibility[i] = true;
-          hasChanged = true;
+      const newData = [...data];
+      for (let i: number = 0; i < newData.length; i++) {
+        if (!tags.includes(newData[i].name) && newData[i].visibility) {
+          newData[i].visibility = false;
+          hasChanged = true
+        } else if (tags.includes(data[i]) && !newData[i].visibility) {
+          newData[i].visibility = true;
+          hasChanged = true
         }
       }
       if (hasChanged) {
-        setVisibility(newVisibility);
+        setData(newData);
       }
     };
     checkTags();
   }, [tags]);
 
   return (
-    <View className="h-[22vh] w-full">
-      <View className="flex flex-row border border-[#d2d9e2] rounded-t-[12px] basis-1/5 items-center pl-2">
-        <Image
-          className="h-[2.5vh] w-[2.5vh]"
-          source={require('../../../../assets/search.png')}
-        />
-        <TextInput
-          placeholder="Search"
-          className="pl-3 font-medium text-[14px]"
-        />
-      </View>
+    <View className="h-[22vh] w-full flex flex-row flex-wrap">
       {data.map((item, index) => {
         return (
           <View
             key={index}
-            className="flex flex-row border border-[#d2d9e2] basis-1/5 items-center pl-4"
+            className="flex flex-col basis-1/4 items-center space-y-2"
           >
-            <Text className="text-[#7C8B9D] font-medium"> {item} </Text>
-            {visibility[index] ? (
-              <TouchableOpacity
-                className="justify-self-end w-[2vh] h-[2vh] rounded-[3px] bg-[#d2d9e2] absolute right-5"
-                onPress={() => updateBoolAtIndex(index, false)}
-              />
-            ) : (
-              <TouchableOpacity
-                className="justify-self-end w-[2vh] h-[2vh] rounded-[3px] border border-[3px] border-[#d2d9e2] absolute right-5"
-                onPress={() => updateBoolAtIndex(index, true)}
-              />
-            )}
+
+            <TouchableOpacity
+              className={`border h-[8vh] w-[8vh] rounded-md ${item.visibility ? 'border-blue-400 bg-blue-300' : 'border-gray-300'
+                }`}
+              onPress={() => updateBoolAtIndex(index, !item.visibility)}
+            />
+
+            <Text className="text-[14px] mb-[2vh]"> {item.name} </Text>
           </View>
         );
       })}
+
     </View>
   );
 }
