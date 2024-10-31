@@ -60,8 +60,8 @@ export default function FishSearch() {
           >
          
               <TouchableOpacity
-                className={`border h-[8vh] w-[8vh] rounded-md ${
-                  item.visibility ? 'border-blue-400 bg-blue-300' : 'border-gray-300'
+                className={`border h-[7.5vh] w-[7.5vh] rounded-lg ${
+                  item.visibility ? 'border-blue-400 bg-blue-300' : 'border-gray-400'
                 }`}
                 onPress={() => updateBoolAtIndex(index, !item.visibility)}
               />
