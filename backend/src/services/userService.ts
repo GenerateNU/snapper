@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 
@@ -36,6 +35,8 @@ export interface UserService {
     currentUserId: string,
     targetUserId: string,
   ): Promise<boolean>;
+  getFish(id: string): Promise<Document[] | null>;
+  getDiveLogs(id: string): Promise<Document[] | null>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -85,5 +86,28 @@ export class UserServiceImpl implements UserService {
       following: targetUserId, // search in following array if it contains targetUserId
     });
     return !!user;
+  }
+
+  async getFish(id: string): Promise<Document[] | null> {
+    try {
+      const user = await UserModel.findById(id).populate('fishCollected').exec();
+      return user ? user.fishCollected : null;
+    } catch (error) {
+      throw new Error('Could not retrieve fish collected by user.');
+    }
+  }
+
+  async getDiveLogs(userId: string): Promise<Document[] | null> {
+    try {
+      const user = await UserModel.findById(userId)
+        .populate({
+          path: 'diveLogs',
+          populate: { path: 'fishTags' },
+        })
+        .exec();
+      return user ? user.diveLogs : null;
+    } catch (error) {
+      throw new Error('Could not retrieve dive logs for user.');
+    }
   }
 }

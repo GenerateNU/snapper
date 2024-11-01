@@ -1,13 +1,13 @@
-import { Types } from 'mongoose';
-import { Fish } from './../models/fish';
-import { Document } from 'mongodb';
+import { Fish } from "../models/fish";
+import { Document } from 'mongoose';
 
 export interface FishService {
-  getFish(id: Types.ObjectId[]): Promise<Document[]>;
+    createFish(data: Partial<Document>): Promise<Document>;
 }
 
 export class FishServiceImpl implements FishService {
-  async getFish(id: Types.ObjectId[]): Promise<Document[]> {
-    return Fish.find({ _id: { $in: id } }).exec();
-  }
+    async createFish(data: Partial<Document>): Promise<Document> {    
+        const fish = await Fish.create(data);
+        return fish;
+    }
 }

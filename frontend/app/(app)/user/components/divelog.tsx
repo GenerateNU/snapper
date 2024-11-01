@@ -1,11 +1,10 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, Image } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import Profile from '../../../../components/profile';
 import IconButton from '../../../../components/icon-button';
-import { useLocalSearchParams } from 'expo-router';
-import { useUserDiveLogs } from '../../../../hooks/user';
-import Tag from '../../../../components/tag';
+import FishTag from './fish-tag';
+import { timeAgo } from '../../../../utils/profile';
 
 interface DiveLogProps {
   username?: string;
@@ -13,6 +12,7 @@ interface DiveLogProps {
   description?: string;
   profilePhoto: string;
   date: Date;
+  fishTags: any[];
 }
 
 const DiveLog: React.FC<DiveLogProps> = ({
@@ -21,23 +21,8 @@ const DiveLog: React.FC<DiveLogProps> = ({
   description,
   profilePhoto,
   date,
+  fishTags
 }) => {
-  const timeAgo = (date: Date = new Date()): string => {
-    const seconds = Math.floor(
-      (new Date().getTime() - new Date(date).getTime()) / 1000,
-    );
-    let interval = Math.floor(seconds / 31536000);
-    if (interval > 1) return `${interval} years ago`;
-    interval = Math.floor(seconds / 2592000);
-    if (interval > 1) return `${interval} months ago`;
-    interval = Math.floor(seconds / 86400);
-    if (interval > 1) return `${interval} days ago`;
-    interval = Math.floor(seconds / 3600);
-    if (interval > 1) return `${interval} hours ago`;
-    interval = Math.floor(seconds / 60);
-    if (interval > 1) return `${interval} minutes ago`;
-    return `${seconds} seconds ago`;
-  };
 
   return (
     <View className="w-full p-[5%] bg-white shadow-lg rounded-lg">
@@ -59,7 +44,12 @@ const DiveLog: React.FC<DiveLogProps> = ({
           }}
         />
       </View>
-      <Text>{description}</Text>
+      <Text className="pb-[5%]">{description}</Text>
+      <View style={{gap: 10}} className="flex flex-row flex-wrap">
+          {fishTags?.map((fish: any) => (
+            <FishTag key={fish._id} id={fish._id} name={fish.commonName} />
+          ))}
+      </View>
     </View>
   );
 };

@@ -5,35 +5,43 @@ import Divider from '../../../../components/divider';
 import { useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '../../../../auth/authStore';
 import { useUserData } from '../../../../hooks/user';
+import HeaderSkeleton from './skeleton/header-skeleton';
+import { PROFILE_PHOTO } from '../../../../consts/profile';
+import { formatNumber } from '../../../../utils/profile';
 
-interface HeaderProps {
-  image?: string;
-  follower?: number;
-  following?: number;
-  name?: string;
-  username?: string;
-  userId?: string;
-}
-
-const Header: React.FC<HeaderProps> = () => {
+const Header = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { mongoDBId } = useAuthStore();
+  const { mongoDBId, user } = useAuthStore();
   const { data, isError, isLoading } = useUserData();
+
+  if (isLoading) {
+    return <HeaderSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <View className="flex flex-col w-full p-4">
+        <Text className="text-red-500">Failed to load user data.</Text>
+      </View>
+    );
+  }
+
+  const profilePhoto = user.profilePicture ? user.profilePicture : PROFILE_PHOTO;
 
   return (
     <View className="flex flex-col w-full">
       <View className="flex flex-row w-full">
-        <Profile image={data?.user.profilePicture} />
+        <Profile image={profilePhoto} />
         <View className="flex flex-row ml-[5%] justify-around w-3/4">
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
             <Text className="font-bold text-darkblue">
-              {data?.user.followers.length}
+              {formatNumber(data?.user.followers.length)}
             </Text>
             <Text className="text-darkblue">Followers</Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
             <Text className="font-bold text-darkblue">
-              {data?.user.following.length}
+            {formatNumber(data?.user.following.length)}
             </Text>
             <Text className="text-darkblue">Following</Text>
           </TouchableOpacity>

@@ -1,8 +1,8 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../../services/userService';
-import { FishService, FishServiceImpl } from '../../services/fishService';
+import { UserService, UserServiceImpl } from '../../services/userService';
 
-const fishService: FishService = new FishServiceImpl();
+const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
 export const getUserFish = async (
@@ -31,7 +31,7 @@ export const getUserFish = async (
         .json({ error: 'Unable to find user of ID: ' + userID });
     }
 
-    const fishCollected = await fishService.getFish(foundUser.fishCollected);
+    const fishCollected = await userService.getFish(foundUser._id.toString());
 
     //Return the OK status
     return res.status(200).json({
