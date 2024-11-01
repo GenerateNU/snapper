@@ -25,14 +25,9 @@ const Layout = () => {
           headerShown: true,
           headerStyle: styles.header,
           headerLeft: () => (
-            <Arrow
-              direction="left"
-              onPress={() => router.back()}
-            />
+            <Arrow direction="left" onPress={() => router.back()} />
           ),
-          headerRight: () => (
-            <IconButton icon={faBars} />
-          ),
+          headerRight: () => <IconButton icon={faBars} />,
         }}
       />
     </Stack>

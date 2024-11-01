@@ -1,6 +1,6 @@
-import { getDiveLogById } from "../api/divelog";
-import { useQueryBase } from "./base";
+import { getDiveLogById } from '../api/divelog';
+import { useQueryBase } from './base';
 
 export const useDiveLog = (id: string) => {
-    return useQueryBase(['divelogs', id], () => getDiveLogById(id));
+  return useQueryBase(['divelogs', id], () => getDiveLogById(id));
 };

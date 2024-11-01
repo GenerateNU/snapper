@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>(
 
           if (session && userMe) {
             set({
-              user: session.user,
+              user: userMe.user,
               token: session.access_token,
               refreshToken: session.refresh_token,
               expirationTime: Date.now() + session.expires_in * 1000,
@@ -69,7 +69,7 @@ export const useAuthStore = create<AuthState>(
 
           if (session && userMe) {
             set({
-              user: session.user,
+              user: userMe.user,
               token: session.access_token,
               refreshToken: session.refresh_token,
               expirationTime: Date.now() + session.expires_in * 1000,

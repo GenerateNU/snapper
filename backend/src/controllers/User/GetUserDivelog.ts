@@ -1,6 +1,9 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../../services/userService';
-import { DiveLogService, DiveLogServiceImpl } from '../../services/divelogService';
+import {
+  DiveLogService,
+  DiveLogServiceImpl,
+} from '../../services/divelogService';
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
 

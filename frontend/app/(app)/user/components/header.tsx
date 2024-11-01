@@ -10,14 +10,14 @@ interface HeaderProps {
   image?: string;
   follower?: number;
   following?: number;
-  name?: string; // Adjusted from number to string
-  username?: string; // Adjusted from number to string
+  name?: string;
+  username?: string;
   userId?: string;
 }
 
 const Header: React.FC<HeaderProps> = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { mongoDBId }  = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const { data, isError, isLoading } = useUserData();
 
   return (
@@ -26,11 +26,15 @@ const Header: React.FC<HeaderProps> = () => {
         <Profile image={data?.user.profilePicture} />
         <View className="flex flex-row ml-[5%] justify-around w-3/4">
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
-            <Text className="font-bold text-darkblue">{data?.user.followers.length}</Text>
+            <Text className="font-bold text-darkblue">
+              {data?.user.followers.length}
+            </Text>
             <Text className="text-darkblue">Followers</Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
-            <Text className="font-bold text-darkblue">{data?.user.following.length}</Text>
+            <Text className="font-bold text-darkblue">
+              {data?.user.following.length}
+            </Text>
             <Text className="text-darkblue">Following</Text>
           </TouchableOpacity>
         </View>

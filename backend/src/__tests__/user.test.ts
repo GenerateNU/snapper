@@ -1,5 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { Session } from 'express-session';
+import express from 'express';
+import request from 'supertest';
+import userRoute from '../routes/user';
+import { UserModel } from '../models/users';
+import { Fish } from '../models/fish';
+import { DiveLog } from '../models/diveLog';
 
 // Mock the authMiddleware
 jest.mock('../middlewares/authMiddleware', () => ({
@@ -27,45 +33,32 @@ jest.mock('../middlewares/authMiddleware', () => ({
   },
 }));
 
-import express from 'express';
-import { UserModel } from '../models/users';
-import request from 'supertest';
-import userRoute from '../routes/user';
 jest.mock('../models/users');
+jest.mock('../models/fish');
+jest.mock('../models/diveLog');
 
-UserModel.findOne = jest.fn();
+const mockUserModelFindOne = jest.fn();
+const mockFishFind = jest.fn().mockReturnValue({
+  exec: jest.fn().mockResolvedValue([]),
+});
+const mockDiveLogFind = jest.fn().mockReturnValue({
+  exec: jest.fn().mockResolvedValue([]),
+});
+
+UserModel.findOne = mockUserModelFindOne;
+Fish.find = mockFishFind;
+DiveLog.find = mockDiveLogFind;
 
 const app = express();
 const router = express.Router();
 userRoute(router);
-
 app.use(router);
-const userMock = UserModel.findOne as jest.Mock;
 
-describe('GET /user/:id', () => {
-  beforeEach(() => {
-    userMock.mockReset();
-  });
-
-  it('Gets a specific user from id', async () => {
-    const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
-    const user = {
-      diveLogs: [],
-      fishCollected: [],
-      followers: [],
-      following: [],
-      _id: '66e357c93572d39e66a0ba31',
-      username: 'zainab_i',
-      email: 'zainab.imadulla@icloud.com',
-      supabaseId: '9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
-      __v: 0,
-    };
-
-    userMock.mockResolvedValue(user);
-    const res = await request(app).get(`/user/${id}`);
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      user: {
+describe('User Routes', () => {
+  describe('GET /user/:id', () => {
+    it('Gets a specific user from id', async () => {
+      const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
+      const user = {
         diveLogs: [],
         fishCollected: [],
         followers: [],
@@ -73,118 +66,91 @@ describe('GET /user/:id', () => {
         _id: '66e357c93572d39e66a0ba31',
         username: 'zainab_i',
         email: 'zainab.imadulla@icloud.com',
-        supabaseId: '9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
+        supabaseId: id,
         __v: 0,
-      },
-      message:
-        'Successfully found the user ID:9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
+      };
+
+      mockUserModelFindOne.mockResolvedValue(user); // Mock resolved value for user find
+      const res = await request(app).get(`/user/${id}`);
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({
+        user: {
+          diveLogs: [],
+          fishCollected: [],
+          followers: [],
+          following: [],
+          _id: '66e357c93572d39e66a0ba31',
+          username: 'zainab_i',
+          email: 'zainab.imadulla@icloud.com',
+          supabaseId: id,
+          __v: 0,
+        },
+        message: `Successfully found the user ID:${id}`,
+      });
+    });
+
+    it('Returns 400 if user is not found', async () => {
+      const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
+      mockUserModelFindOne.mockResolvedValue(null); // Simulate user not found
+      const res = await request(app).get(`/user/${id}`);
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ error: 'Unable to find user of ID: ' + id });
     });
   });
-});
 
-describe('GET /user/items/fish', () => {
-  beforeEach(() => {
-    userMock.mockReset();
-  });
+  describe('GET /user/items/fish', () => {
+    it('Gets specific fish for user', async () => {
+      const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
+      const user = {
+        _id: id,
+        fishCollected: [],
+      };
 
-  it('Gets specific fish by id', async () => {
-    const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
-    const user = {
-      diveLogs: [],
-      fishCollected: [],
-      followers: [],
-      following: [],
-      _id: '66e357c93572d39e66a0ba31',
-      username: 'zainab_i',
-      email: 'zainab.imadulla@icloud.com',
-      supabaseId: '9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
-      __v: 0,
-    };
-
-    userMock.mockResolvedValue(user);
-    const res = await request(app).get(`/user/items/fish`);
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      fish: [],
-      message:
-        'Successfully found fish for user:9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
+      mockUserModelFindOne.mockResolvedValue(user);
+      const res = await request(app).get(`/user/items/fish`);
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({
+        fish: [],
+        message: `Successfully found fish for user:${id}`,
+      });
     });
   });
-});
 
-describe('GET /user/items/divelogs', () => {
-  beforeEach(() => {
-    userMock.mockReset();
-  });
+  describe('GET /user/items/divelogs', () => {
+    it('Gets specific dive logs for user', async () => {
+      const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
+      const user = {
+        _id: id,
+        diveLogs: [],
+      };
 
-  it('Gets specific divelogs by id', async () => {
-    const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
-    const user = {
-      diveLogs: [],
-      fishCollected: [],
-      followers: [],
-      following: [],
-      _id: '66e357c93572d39e66a0ba31',
-      username: 'zainab_i',
-      email: 'zainab.imadulla@icloud.com',
-      supabaseId: '9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
-      __v: 0,
-    };
-
-    userMock.mockResolvedValue(user);
-    const res = await request(app).get(`/user/items/divelogs`);
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      divelogs: [],
-      message:
-        'Successfully found dive logs for user:9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
+      mockUserModelFindOne.mockResolvedValue(user);
+      const res = await request(app).get(`/user/items/divelogs`);
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({
+        divelogs: [],
+        message: `Successfully found dive logs for user:${id}`,
+      });
     });
   });
-});
 
-describe('PUT /user/actions/edit', () => {
-  beforeEach(() => {
-    userMock.mockReset();
-  });
+  describe('PUT /user/actions/edit', () => {
+    it('edits user', async () => {
+      const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
+      const updatedUser = {
+        username: 'zainabimadulla',
+      };
+      const user = {
+        ...updatedUser,
+        _id: id,
+      };
 
-  it('edits user', async () => {
-    const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
-    const updatedUser = {
-      username: 'zainabimadulla',
-    };
-    const user = {
-      diveLogs: [],
-      fishCollected: [],
-      followers: [],
-      following: [],
-      _id: '66e357c93572d39e66a0ba31',
-      username: 'zainab_i',
-      email: 'zainab.imadulla@icloud.com',
-      supabaseId: '9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
-      __v: 0,
-    };
-
-    userMock.mockResolvedValue(user);
-    const res = await request(app).put(`/user/actions/edit`).send(updatedUser);
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      message: 'Successfully updated user:9f824f26-59b7-4f7f-a1b4-fef456b69bdf',
+      mockUserModelFindOne.mockResolvedValue(user);
+      const res = await request(app).put(`/user/actions/edit`).send(updatedUser);
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({
+        message: `Successfully updated user:${id}`,
+      });
     });
-  });
-});
-
-describe('GET /user/:id', () => {
-  beforeEach(() => {
-    userMock.mockReset();
-  });
-
-  it('Gets a specific user from id', async () => {
-    const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
-    const user = undefined;
-
-    userMock.mockResolvedValue(user);
-    const res = await request(app).get(`/user/${id}`);
-    expect(res.status).toBe(400);
-    expect(res.body).toEqual({ error: 'Unable to find user of ID: ' + id });
   });
 });

@@ -4,6 +4,7 @@ import { View, Text, Image } from 'react-native';
 interface TagProps {
   fish?: string;
 }
+
 const Tag: React.FC<TagProps> = ({ fish }) => {
   return (
     <View className="flex flex-row border rounded-[5px] border-[#7c8a9e] items-center justify-ceter py-1 px-2">
