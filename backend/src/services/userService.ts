@@ -90,7 +90,9 @@ export class UserServiceImpl implements UserService {
 
   async getFish(id: string): Promise<Document[] | null> {
     try {
-      const user = await UserModel.findById(id).populate('fishCollected').exec();
+      const user = await UserModel.findById(id)
+        .populate('fishCollected')
+        .exec();
       return user ? user.fishCollected : null;
     } catch (error) {
       throw new Error('Could not retrieve fish collected by user.');

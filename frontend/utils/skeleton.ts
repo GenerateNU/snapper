@@ -1,7 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
 
-const usePulsingAnimation = (initialValue: number = 1, duration: number = 1000) => {
+const usePulsingAnimation = (
+  initialValue: number = 1,
+  duration: number = 1000,
+) => {
   const opacity = useRef(new Animated.Value(initialValue)).current;
 
   const startPulsing = () => {
@@ -18,7 +21,7 @@ const usePulsingAnimation = (initialValue: number = 1, duration: number = 1000) 
           duration: duration,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   };
 

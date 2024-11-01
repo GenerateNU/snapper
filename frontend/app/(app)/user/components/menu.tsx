@@ -22,7 +22,9 @@ const Menu = () => {
   } = useUserFish();
   const { user } = useAuthStore();
 
-  const profilePhoto = user.profilePicture ? user.profilePicture : PROFILE_PHOTO;
+  const profilePhoto = user.profilePicture
+    ? user.profilePicture
+    : PROFILE_PHOTO;
 
   const renderDiveLog = ({ item }: { item: any }) => {
     const firstPhoto =
@@ -59,15 +61,17 @@ const Menu = () => {
           <Text className="text-darkblue font-bold text-lg">Species</Text>
         </TouchableOpacity>
       </View>
-      {category === 'Dives' && (
-        diveLogLoading ? (
+      {category === 'Dives' &&
+        (diveLogLoading ? (
           <FlatList
             data={[1, 2]}
             renderItem={() => <DiveLogSkeleton />}
             keyExtractor={(item) => item.toString()}
           />
         ) : diveLogError ? (
-          <Text className="text-gray-500 text-md">Error loading divelogs. Please try again.</Text>
+          <Text className="text-gray-500 text-md">
+            Error loading divelogs. Please try again.
+          </Text>
         ) : (
           <FlatList
             data={diveLogData}
@@ -80,10 +84,9 @@ const Menu = () => {
             }}
             keyExtractor={(item, index) => index.toString()}
           />
-        )
-      )}
-      {category === 'Species' && (
-        fishLoading ? (
+        ))}
+      {category === 'Species' &&
+        (fishLoading ? (
           <FlatList
             data={[1, 2, 3, 4, 5, 6]}
             renderItem={() => <SpeciesSkeleton />}
@@ -100,7 +103,9 @@ const Menu = () => {
             }}
           />
         ) : fishError ? (
-          <Text className="text-gray-500 text-md">Error loading species. Please try again.</Text>
+          <Text className="text-gray-500 text-md">
+            Error loading species. Please try again.
+          </Text>
         ) : (
           <FlatList
             data={fishData}
@@ -117,8 +122,7 @@ const Menu = () => {
             }}
             keyExtractor={(item) => item._id}
           />
-        )
-      )}
+        ))}
     </View>
   );
 };

@@ -3,7 +3,7 @@ import { View, Animated } from 'react-native';
 import usePulsingAnimation from '../../../../../utils/skeleton';
 
 const SpeciesSkeleton = () => {
-    const opacity = usePulsingAnimation();
+  const opacity = usePulsingAnimation();
 
   return (
     <Animated.View

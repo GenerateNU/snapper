@@ -3,7 +3,7 @@ import { View, Animated } from 'react-native';
 import usePulsingAnimation from '../../../../../utils/skeleton';
 
 const BadgeSkeleton = () => {
-    const opacity = usePulsingAnimation();
+  const opacity = usePulsingAnimation();
 
   return (
     <View className="flex flex-row w-full justify-between p-5 bg-gray-200 rounded-xl">

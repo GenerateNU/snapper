@@ -26,7 +26,9 @@ const Header = () => {
     );
   }
 
-  const profilePhoto = user.profilePicture ? user.profilePicture : PROFILE_PHOTO;
+  const profilePhoto = user.profilePicture
+    ? user.profilePicture
+    : PROFILE_PHOTO;
 
   return (
     <View className="flex flex-col w-full">
@@ -41,7 +43,7 @@ const Header = () => {
           </TouchableOpacity>
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
             <Text className="font-bold text-darkblue">
-            {formatNumber(data?.user.following.length)}
+              {formatNumber(data?.user.following.length)}
             </Text>
             <Text className="text-darkblue">Following</Text>
           </TouchableOpacity>

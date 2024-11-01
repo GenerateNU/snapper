@@ -21,9 +21,8 @@ const DiveLog: React.FC<DiveLogProps> = ({
   description,
   profilePhoto,
   date,
-  fishTags
+  fishTags,
 }) => {
-
   return (
     <View className="w-full p-[5%] bg-white shadow-lg rounded-lg">
       <View className="flex-row justify-between items-start">
@@ -45,10 +44,10 @@ const DiveLog: React.FC<DiveLogProps> = ({
         />
       </View>
       <Text className="pb-[5%]">{description}</Text>
-      <View style={{gap: 10}} className="flex flex-row flex-wrap">
-          {fishTags?.map((fish: any) => (
-            <FishTag key={fish._id} id={fish._id} name={fish.commonName} />
-          ))}
+      <View style={{ gap: 10 }} className="flex flex-row flex-wrap">
+        {fishTags?.map((fish: any) => (
+          <FishTag key={fish._id} id={fish._id} name={fish.commonName} />
+        ))}
       </View>
     </View>
   );

@@ -146,7 +146,9 @@ describe('User Routes', () => {
       };
 
       mockUserModelFindOne.mockResolvedValue(user);
-      const res = await request(app).put(`/user/actions/edit`).send(updatedUser);
+      const res = await request(app)
+        .put(`/user/actions/edit`)
+        .send(updatedUser);
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
         message: `Successfully updated user:${id}`,
