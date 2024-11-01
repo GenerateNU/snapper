@@ -16,8 +16,13 @@ const Home = () => {
       )}
       <Button
         textOnly
-        text="Profile"
-        onPress={() => router.push('/user/671303b84593cf21bd513d76')}
+        text="Another user's profile"
+        onPress={() => router.push('/user/9eb15c34-56ad-4673-8c5a-4243806fbd14')}
+      />
+      <Button
+        textOnly
+        text="My profile"
+        onPress={() => router.push('/user/3707e4ea-62ef-4aeb-b107-b5c80f2c7730')}
       />
       <Button
         onPress={logout}

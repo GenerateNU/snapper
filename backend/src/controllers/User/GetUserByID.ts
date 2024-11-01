@@ -1,7 +1,10 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../../services/userService';
+import { UserService, UserServiceImpl } from '../../services/userService';
 
-//Will get the user by the given ID
+const userService = new UserServiceImpl();
+
+//Will get the user by the given supabaseID
 export const getUserByID = async (
   req: express.Request,
   res: express.Response,
@@ -26,7 +29,6 @@ export const getUserByID = async (
         .status(400)
         .json({ error: 'Unable to find user of ID: ' + id });
     }
-
     //Return the OK status
     return res.status(200).json({
       user: foundUser,

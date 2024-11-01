@@ -1,49 +1,51 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useAuthStore } from '../../../../auth/authStore';
-import { useUserDiveLogs, useUserFish } from '../../../../hooks/user';
+import { useUserById, useUserData, useUserDivelogById, useUserDiveLogs, useUserFish, useUserFishById } from '../../../../hooks/user';
 import DiveLog from './divelog';
 import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
+import { useLocalSearchParams } from 'expo-router';
 
 const Menu = () => {
   const [category, setCategory] = useState('Dives');
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { supabaseId } = useAuthStore();
+  const { data } = supabaseId !== id ? useUserById(id) : useUserData();
+  
+  const isViewingOwnProfile = supabaseId === id;
   const {
     data: diveLogData,
     isError: diveLogError,
     isLoading: diveLogLoading,
-  } = useUserDiveLogs();
+  } = isViewingOwnProfile ? useUserDiveLogs() : useUserDivelogById(id);
+
   const {
     data: fishData,
     isError: fishError,
     isLoading: fishLoading,
-  } = useUserFish();
-  const { user } = useAuthStore();
+  } = isViewingOwnProfile ? useUserFish() : useUserFishById(id);
 
-  const profilePhoto = user.profilePicture
-    ? user.profilePicture
-    : PROFILE_PHOTO;
+  const profilePhoto = data?.user.profilePicture || PROFILE_PHOTO;
+  const username = data?.user.username;
 
-  const renderDiveLog = ({ item }: { item: any }) => {
-    const firstPhoto =
-      item?.photos && item.photos.length > 0 ? item.photos[0] : null;
+  const renderDiveLog = ({ item }: {item: any}) => {
+    const firstPhoto = item?.photos?.[0] || null;
     return (
       <DiveLog
         fishTags={item?.fishTags}
         image={firstPhoto}
         description={item?.description}
-        username={user.username}
+        username={username}
         profilePhoto={profilePhoto}
         date={item?.date}
       />
     );
   };
 
-  const renderSpecies = ({ item }: { item: any }) => {
-    return <Species id={item._id} name={item.commonName} />;
-  };
+  const renderSpecies = ({ item }: {item: any}) => <Species id={item._id} name={item.commonName} />;
 
   return (
     <View className="flex flex-col w-full mb-[20%]">

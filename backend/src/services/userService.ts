@@ -37,6 +37,7 @@ export interface UserService {
   ): Promise<boolean>;
   getFish(id: string): Promise<Document[] | null>;
   getDiveLogs(id: string): Promise<Document[] | null>;
+  getAllUserInfo(id: string): Promise<Document | null>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -89,27 +90,22 @@ export class UserServiceImpl implements UserService {
   }
 
   async getFish(id: string): Promise<Document[] | null> {
-    try {
-      const user = await UserModel.findById(id)
-        .populate('fishCollected')
-        .exec();
-      return user ? user.fishCollected : null;
-    } catch (error) {
-      throw new Error('Could not retrieve fish collected by user.');
-    }
+    const user = await UserModel.findById(id).populate('fishCollected').exec();
+    return user ? user.fishCollected : null;
   }
 
   async getDiveLogs(userId: string): Promise<Document[] | null> {
-    try {
-      const user = await UserModel.findById(userId)
-        .populate({
-          path: 'diveLogs',
-          populate: { path: 'fishTags' },
-        })
-        .exec();
-      return user ? user.diveLogs : null;
-    } catch (error) {
-      throw new Error('Could not retrieve dive logs for user.');
-    }
+    const user = await this.getAllUserInfo(userId);
+    return user ? user.diveLogs : null;
+  }
+
+  async getAllUserInfo(id: string): Promise<Document | null> {
+    const user = await UserModel.findById(id)
+      .populate({
+        path: 'diveLogs',
+        populate: { path: 'fishTags' },
+      })
+      .exec();
+    return user;
   }
 }

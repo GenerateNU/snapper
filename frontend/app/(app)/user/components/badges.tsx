@@ -1,10 +1,19 @@
 import { View, Text } from 'react-native';
 import Badge from '../../../../assets/badge.svg';
-import { useUserBadges } from '../../../../hooks/user';
+import { useUserBadges, useUserById } from '../../../../hooks/user';
 import BadgeSkeleton from './skeleton/badge-skeleton';
+import { useAuthStore } from '../../../../auth/authStore';
+import { useLocalSearchParams } from 'expo-router';
 
 const Badges = () => {
-  const { data, isError, isLoading } = useUserBadges();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { supabaseId } = useAuthStore();
+  
+  const { data, isError, isLoading } = supabaseId !== id 
+    ? useUserById(id) 
+    : useUserBadges();
+
+  const badges = supabaseId !== id ? data?.badges : data;
 
   if (isLoading) {
     return <BadgeSkeleton />;
@@ -18,7 +27,7 @@ const Badges = () => {
     );
   }
 
-  if (data?.length === 0) {
+  if (!badges || badges.length === 0) {
     return;
   }
 
@@ -26,7 +35,7 @@ const Badges = () => {
     <View className="flex flex-col w-full">
       <Text className="font-bold text-lg pb-[2%] text-darkblue">Badges</Text>
       <View className="flex flex-row w-full bg-water rounded-xl justify-between p-[5%] shadow-md">
-        {data.map((badge: any, key: number) => (
+        {badges.map((badge: any, key: number) => (
           <View
             className="flex flex-col items-center justify-center"
             key={key}

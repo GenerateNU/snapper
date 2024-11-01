@@ -4,13 +4,12 @@ import { UserService, UserServiceImpl } from '../../services/userService';
 
 const userService: UserService = new UserServiceImpl();
 
-export const getUserDiveLogs = async (
+export const getUserDiveLogsById = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    //Get the ID from the body of the request
-    const userID = req.session.userId;
+    const userID = req.params.id;
 
     //Check to make sure that the id is defined
     if (!userID) {

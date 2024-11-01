@@ -4,21 +4,20 @@ import { UserService, UserServiceImpl } from '../../services/userService';
 
 const userService: UserService = new UserServiceImpl();
 
-//Will get the user by the given ID
-export const getUserFishById = async (
+export const getUserDiveLogs = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    const userID = req.params.id;
+    //Get the ID from the body of the request
+    const userID = req.session.userId;
 
     //Check to make sure that the id is defined
     if (!userID) {
-      return res
-        .status(400)
-        .json({ error: 'User is not present in the current session!' });
+      return res.status(400).json({ error: 'ID is a required argument' });
     }
 
+    //Query the given ID on the database and save the result
     const foundUser = await findUserBySupabaseId(userID);
 
     //Ensure that there is a defined(non-null) result
@@ -29,19 +28,20 @@ export const getUserFishById = async (
         .json({ error: 'Unable to find user of ID: ' + userID });
     }
 
-    const fishCollected = await userService.getFish(foundUser._id.toString());
+    const divelogs = await userService.getDiveLogs(foundUser._id.toString());
 
     //Return the OK status
     return res.status(200).json({
-      fish: fishCollected,
-      message: 'Successfully found fish for user:' + userID,
+      divelogs: divelogs,
+      message: 'Successfully found dive logs for user:' + userID,
     });
   } catch (err) {
     //Handle error
-    console.error("Error while searching for User's fish:\n", err);
+    console.error("Error while searching for User's dive logs:\n", err);
     return res.status(500).json({
       error:
-        "Internal server error while searching for the user's fish.' + err",
+        "Internal server error while searching for the user's dive logs.\n" +
+        err,
     });
   }
 };

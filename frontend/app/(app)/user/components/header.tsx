@@ -1,18 +1,29 @@
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Profile from '../../../../components/profile';
 import Button from '../../../../components/button';
 import Divider from '../../../../components/divider';
 import { useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '../../../../auth/authStore';
-import { useUserData } from '../../../../hooks/user';
+import { useFollowUser, useUserById, useUserData } from '../../../../hooks/user';
 import HeaderSkeleton from './skeleton/header-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import { formatNumber } from '../../../../utils/profile';
+import { useCallback } from 'react';
 
 const Header = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { mongoDBId, user } = useAuthStore();
-  const { data, isError, isLoading } = useUserData();
+  const { supabaseId } = useAuthStore();
+
+  const { data, isError, isLoading } = supabaseId !== id ? useUserById(id) : useUserData();
+  const followMutation = useFollowUser();
+
+  const handleFollowToggle = useCallback(async () => {
+    try {
+      await followMutation.mutateAsync(id);
+    } catch (error) {
+      console.error('Error toggling follow status:', error);
+    }
+  }, [followMutation, id]);
 
   if (isLoading) {
     return <HeaderSkeleton />;
@@ -26,14 +37,14 @@ const Header = () => {
     );
   }
 
-  const profilePhoto = user.profilePicture
-    ? user.profilePicture
-    : PROFILE_PHOTO;
+  const isFollowing = data?.user.followers.some(
+    (follower: { id: string | null }) => follower.id === supabaseId
+  );
 
   return (
     <View className="flex flex-col w-full">
       <View className="flex flex-row w-full">
-        <Profile image={profilePhoto} />
+        <Profile image={data?.user.profilePicture || PROFILE_PHOTO} />
         <View className="flex flex-row ml-[5%] justify-around w-3/4">
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
             <Text className="font-bold text-darkblue">
@@ -54,7 +65,14 @@ const Header = () => {
           <Text className="font-bold text-xl text-darkblue">First Last</Text>
           <Text className="text-ocean">{`@${data?.user.username}`}</Text>
         </View>
-        {id !== mongoDBId && <Button text="Follow" small />}
+        {id !== supabaseId && (
+          <Button 
+            onPress={handleFollowToggle}
+            text={followMutation.isPending ? "Loading..." : isFollowing ? "Unfollow" : "Follow"}
+            small
+            disabled={followMutation.isPending}
+          />
+        )}
       </View>
       <Divider />
     </View>

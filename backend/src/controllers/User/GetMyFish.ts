@@ -5,12 +5,13 @@ import { UserService, UserServiceImpl } from '../../services/userService';
 const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
-export const getUserFishById = async (
+export const getUserFish = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    const userID = req.params.id;
+    //Get the ID from the body of the request
+    const userID = req.session.userId;
 
     //Check to make sure that the id is defined
     if (!userID) {
@@ -19,6 +20,7 @@ export const getUserFishById = async (
         .json({ error: 'User is not present in the current session!' });
     }
 
+    //Query the given ID on the database and save the result
     const foundUser = await findUserBySupabaseId(userID);
 
     //Ensure that there is a defined(non-null) result

@@ -10,10 +10,8 @@ export const toggleUserFollow = async (
   res: express.Response,
 ) => {
   try {
-    const currentUserId = req.session.userId; // supabaseId
-    const targetUserId = req.params.userid; // mongoId
-    console.log(currentUserId);
-    console.log(targetUserId);
+    const currentUserId = req.session.userId;
+    const targetUserId = req.params.userid;
 
     // Check if the user is logged in
     if (!currentUserId) {
@@ -29,37 +27,30 @@ export const toggleUserFollow = async (
 
     // Fetch the current user from MongoDB using their Supabase ID
     const currentUserInMongoDB = await findUserBySupabaseId(currentUserId);
+    const targetUserInMongoDB = await findUserBySupabaseId(targetUserId);
+
     if (!currentUserInMongoDB) {
       return res.status(404).json({ error: 'Current user not found.' });
     }
 
-    // Assuming targetUserId is a MongoDB ObjectId, convert it if necessary
-    if (!mongoose.Types.ObjectId.isValid(targetUserId)) {
-      return res.status(400).json({ error: 'Invalid target user ID format.' });
-    }
-
-    // Fetch the target user using the MongoDB ObjectId
-    const targetUser = await userService.getUserById(targetUserId);
-    if (!targetUser) {
+    if (!targetUserInMongoDB) {
       return res.status(404).json({ error: 'Target user not found.' });
     }
 
-    // Use the current user's MongoDB ID
     const currentUserMongoDBId = currentUserInMongoDB._id.toString();
-    console.log(currentUserMongoDBId);
-
-    // Check if the current user is already following the target user
+    const targetUserMongoDBId = targetUserInMongoDB._id.toString();
+    
     const alreadyFollowing = await userService.isFollowingUser(
       currentUserMongoDBId,
-      targetUserId,
+      targetUserMongoDBId,
     );
     if (alreadyFollowing) {
-      await userService.unfollowUser(currentUserMongoDBId, targetUserId);
+      await userService.unfollowUser(currentUserMongoDBId, targetUserMongoDBId);
       return res
         .status(200)
         .json({ message: 'Successfully unfollowed the user.' });
     } else {
-      await userService.followUser(currentUserMongoDBId, targetUserId);
+      await userService.followUser(currentUserMongoDBId, targetUserMongoDBId);
       return res
         .status(200)
         .json({ message: 'Successfully followed the user.' });
