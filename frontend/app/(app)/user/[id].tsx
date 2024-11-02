@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from './components/header';
 import Badges from './components/badges';

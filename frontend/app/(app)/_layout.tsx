@@ -1,12 +1,8 @@
 import React from 'react';
 
-import { router, Stack } from 'expo-router';
-import Arrow from '../../components/arrow';
-import IconButton from '../../components/icon-button';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { StyleSheet } from 'react-native';
+import { Stack } from 'expo-router';
 
-const Layout = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
+const Layout = () => {
   return (
     <Stack>
       <Stack.Screen
