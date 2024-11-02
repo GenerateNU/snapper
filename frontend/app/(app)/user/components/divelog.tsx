@@ -25,7 +25,7 @@ const DiveLog: React.FC<DiveLogProps> = ({
   date,
   fishTags,
   isMyProfile,
-  divelogId
+  divelogId,
 }) => {
   return (
     <View className="w-full p-[5%] bg-white shadow-lg rounded-lg">
