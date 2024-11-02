@@ -48,29 +48,6 @@ export const useFollowUser = () => {
     onSuccess: (_, userId) => {
       queryClient.invalidateQueries({ queryKey: ['user', userId] });
       queryClient.invalidateQueries({ queryKey: ['user'] });
-
-      queryClient.setQueryData(['user', userId], (oldData: any) => {
-        if (!oldData) return oldData;
-
-        const currentUser = queryClient.getQueryData(['user']) as any;
-        const currentUserId = currentUser?.user?.id;
-
-        const isCurrentlyFollowing = oldData.user.followers.some(
-          (follower: { id: string }) => follower.id === currentUserId,
-        );
-
-        return {
-          ...oldData,
-          user: {
-            ...oldData.user,
-            followers: isCurrentlyFollowing
-              ? oldData.user.followers.filter(
-                  (follower: { id: string }) => follower.id !== currentUserId,
-                )
-              : [...oldData.user.followers, { id: currentUserId }],
-          },
-        };
-      });
     },
     onError: (error) => {
       console.error('Error toggling follow status:', error);
