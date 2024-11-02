@@ -4,8 +4,6 @@ import express from 'express';
 import request from 'supertest';
 import userRoute from '../routes/user';
 import { UserModel } from '../models/users';
-import { Fish } from '../models/fish';
-import { DiveLog } from '../models/diveLog';
 
 // Mock the authMiddleware
 jest.mock('../middlewares/authMiddleware', () => ({
@@ -34,20 +32,12 @@ jest.mock('../middlewares/authMiddleware', () => ({
 }));
 
 jest.mock('../models/users');
-jest.mock('../models/fish');
-jest.mock('../models/diveLog');
 
 const mockUserModelFindOne = jest.fn();
-const mockFishFind = jest.fn().mockReturnValue({
-  exec: jest.fn().mockResolvedValue([]),
-});
-const mockDiveLogFind = jest.fn().mockReturnValue({
-  exec: jest.fn().mockResolvedValue([]),
-});
+const mockUserFindById = jest.fn();
 
+UserModel.findById = mockUserFindById;
 UserModel.findOne = mockUserModelFindOne;
-Fish.find = mockFishFind;
-DiveLog.find = mockDiveLogFind;
 
 const app = express();
 const router = express.Router();
@@ -71,6 +61,7 @@ describe('User Routes', () => {
       };
 
       mockUserModelFindOne.mockResolvedValue(user); // Mock resolved value for user find
+
       const res = await request(app).get(`/user/${id}`);
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
@@ -106,7 +97,12 @@ describe('User Routes', () => {
         fishCollected: [],
       };
 
+      mockUserFindById.mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue({ fishCollected: [] }),
+      });
       mockUserModelFindOne.mockResolvedValue(user);
+
       const res = await request(app).get(`/user/items/fish`);
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
@@ -124,7 +120,15 @@ describe('User Routes', () => {
         diveLogs: [],
       };
 
+      mockUserFindById.mockReturnValue({
+        populate: jest.fn().mockReturnValue({
+          populate: jest.fn().mockReturnThis(),
+          exec: jest.fn().mockResolvedValue({ diveLogs: [] }),
+        }),
+      });
+
       mockUserModelFindOne.mockResolvedValue(user);
+
       const res = await request(app).get(`/user/items/divelogs`);
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
