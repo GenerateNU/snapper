@@ -8,18 +8,26 @@ import { useFollowUser, useUserById, useUserData } from '../../../../hooks/user'
 import HeaderSkeleton from './skeleton/header-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import { formatNumber } from '../../../../utils/profile';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const Header = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { supabaseId } = useAuthStore();
+  const { supabaseId, mongoDBId } = useAuthStore();
 
   const { data, isError, isLoading } = supabaseId !== id ? useUserById(id) : useUserData();
   const followMutation = useFollowUser();
 
+  const follow: boolean = data?.user.followers.some(
+    (follower: string) => follower === mongoDBId
+  );
+  console.log(follow);
+
+  const [isFollowing, setIsFollowing] = useState(follow);
+
   const handleFollowToggle = useCallback(async () => {
     try {
       await followMutation.mutateAsync(id);
+      setIsFollowing(prevState => !prevState);
     } catch (error) {
       console.error('Error toggling follow status:', error);
     }
@@ -36,10 +44,6 @@ const Header = () => {
       </View>
     );
   }
-
-  const isFollowing = data?.user.followers.some(
-    (follower: { id: string | null }) => follower.id === supabaseId
-  );
 
   return (
     <View className="flex flex-col w-full">
