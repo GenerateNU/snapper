@@ -6,7 +6,7 @@ import IconButton from '../../components/icon-button';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { StyleSheet } from 'react-native';
 
-const Layout = () => {
+const Layout = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
   return (
     <Stack>
       <Stack.Screen
@@ -22,12 +22,7 @@ const Layout = () => {
         options={{
           headerTitle: '',
           headerTransparent: true,
-          headerShown: true,
-          headerStyle: styles.header,
-          headerLeft: () => (
-            <Arrow direction="left" onPress={() => router.back()} />
-          ),
-          headerRight: () => <IconButton icon={faBars} />,
+          headerShown: false,
         }}
       />
     </Stack>
@@ -35,10 +30,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
-const styles = StyleSheet.create({
-  header: {
-    height: 10,
-    backgroundColor: 'transparent',
-  },
-});

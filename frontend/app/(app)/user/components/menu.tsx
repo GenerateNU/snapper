@@ -47,6 +47,7 @@ const Menu = () => {
     const firstPhoto = item?.photos?.[0] || null;
     return (
       <DiveLog
+        isMyProfile={isViewingOwnProfile}
         fishTags={item?.fishTags}
         image={firstPhoto}
         description={item?.description}
