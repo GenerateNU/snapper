@@ -13,7 +13,8 @@ interface DiveLogProps {
   profilePhoto: string;
   date: Date;
   fishTags?: any[];
-  isMyProfile?: boolean;
+  isMyProfile: boolean;
+  divelogId: string;
 }
 
 const DiveLog: React.FC<DiveLogProps> = ({
@@ -23,7 +24,8 @@ const DiveLog: React.FC<DiveLogProps> = ({
   profilePhoto,
   date,
   fishTags,
-  isMyProfile = false,
+  isMyProfile,
+  divelogId
 }) => {
   return (
     <View className="w-full p-[5%] bg-white shadow-lg rounded-lg">

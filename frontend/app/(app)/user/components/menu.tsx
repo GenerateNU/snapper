@@ -47,6 +47,7 @@ const Menu = () => {
     const firstPhoto = item?.photos?.[0] || null;
     return (
       <DiveLog
+        divelogId={item._id}
         isMyProfile={isViewingOwnProfile}
         fishTags={item?.fishTags}
         image={firstPhoto}
@@ -103,7 +104,7 @@ const Menu = () => {
               justifyContent: 'flex-start',
               alignItems: 'center',
             }}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(_, index) => index.toString()}
           />
         ))}
       {category === 'Species' &&
