@@ -20,7 +20,8 @@ const Menu = () => {
   const [category, setCategory] = useState('Dives');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { supabaseId } = useAuthStore();
-  const { data: userData } = supabaseId !== id ? useUserById(id) : useUserData();
+  const { data: userData } =
+    supabaseId !== id ? useUserById(id) : useUserData();
 
   const isViewingOwnProfile = supabaseId === id;
   const {
@@ -35,7 +36,9 @@ const Menu = () => {
     isLoading: fishLoading,
   } = isViewingOwnProfile ? useUserFish() : useUserFishById(id);
 
-  const noData = (!diveLogData || diveLogData.length === 0) && (!fishData || fishData.length === 0);
+  const noData =
+    (!diveLogData || diveLogData.length === 0) &&
+    (!fishData || fishData.length === 0);
 
   const profilePhoto = userData?.user.profilePicture || PROFILE_PHOTO;
   const username = userData?.user.username;

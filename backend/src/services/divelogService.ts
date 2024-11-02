@@ -11,15 +11,23 @@ export interface DiveLogService {
 
 export class DiveLogServiceImpl implements DiveLogService {
   async createDiveLog(
-    data: Partial<Document & { user: string }>,
+    data: Partial<Document & { user: string; fishTags?: string[] }>,
   ): Promise<Document> {
     const diveLog = await DiveLog.create(data);
 
-    await UserModel.findByIdAndUpdate(
-      data.user,
-      { $addToSet: { diveLogs: diveLog._id } },
-      { new: true },
-    );
+    // update diveLogs in user
+    const update: any = {
+      $addToSet: {
+        diveLogs: diveLog._id,
+      },
+    };
+
+    // update fishCollected in user
+    if (data.fishTags && data.fishTags.length > 0) {
+      update.$addToSet.fishCollected = { $each: data.fishTags };
+    }
+
+    await UserModel.findByIdAndUpdate(data.user, update, { new: true });
     return diveLog;
   }
 
