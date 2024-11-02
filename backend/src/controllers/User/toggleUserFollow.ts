@@ -39,7 +39,7 @@ export const toggleUserFollow = async (
 
     const currentUserMongoDBId = currentUserInMongoDB._id.toString();
     const targetUserMongoDBId = targetUserInMongoDB._id.toString();
-    
+
     const alreadyFollowing = await userService.isFollowingUser(
       currentUserMongoDBId,
       targetUserMongoDBId,

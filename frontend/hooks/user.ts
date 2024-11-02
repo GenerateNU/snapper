@@ -56,7 +56,7 @@ export const useFollowUser = () => {
         const currentUserId = currentUser?.user?.id;
 
         const isCurrentlyFollowing = oldData.user.followers.some(
-          (follower: { id: string }) => follower.id === currentUserId
+          (follower: { id: string }) => follower.id === currentUserId,
         );
 
         return {
@@ -65,7 +65,7 @@ export const useFollowUser = () => {
             ...oldData.user,
             followers: isCurrentlyFollowing
               ? oldData.user.followers.filter(
-                  (follower: { id: string }) => follower.id !== currentUserId
+                  (follower: { id: string }) => follower.id !== currentUserId,
                 )
               : [...oldData.user.followers, { id: currentUserId }],
           },
@@ -77,4 +77,4 @@ export const useFollowUser = () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
-}
+};

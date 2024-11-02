@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useAuthStore } from '../../../../auth/authStore';
-import { useUserById, useUserData, useUserDivelogById, useUserDiveLogs, useUserFish, useUserFishById } from '../../../../hooks/user';
+import {
+  useUserById,
+  useUserData,
+  useUserDivelogById,
+  useUserDiveLogs,
+  useUserFish,
+  useUserFishById,
+} from '../../../../hooks/user';
 import DiveLog from './divelog';
 import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
@@ -14,7 +21,7 @@ const Menu = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { supabaseId } = useAuthStore();
   const { data } = supabaseId !== id ? useUserById(id) : useUserData();
-  
+
   const isViewingOwnProfile = supabaseId === id;
   const {
     data: diveLogData,
@@ -31,7 +38,7 @@ const Menu = () => {
   const profilePhoto = data?.user.profilePicture || PROFILE_PHOTO;
   const username = data?.user.username;
 
-  const renderDiveLog = ({ item }: {item: any}) => {
+  const renderDiveLog = ({ item }: { item: any }) => {
     const firstPhoto = item?.photos?.[0] || null;
     return (
       <DiveLog
@@ -45,7 +52,9 @@ const Menu = () => {
     );
   };
 
-  const renderSpecies = ({ item }: {item: any}) => <Species id={item._id} name={item.commonName} />;
+  const renderSpecies = ({ item }: { item: any }) => (
+    <Species id={item._id} name={item.commonName} />
+  );
 
   return (
     <View className="flex flex-col w-full mb-[20%]">

@@ -8,10 +8,9 @@ import { useLocalSearchParams } from 'expo-router';
 const Badges = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { supabaseId } = useAuthStore();
-  
-  const { data, isError, isLoading } = supabaseId !== id 
-    ? useUserById(id) 
-    : useUserBadges();
+
+  const { data, isError, isLoading } =
+    supabaseId !== id ? useUserById(id) : useUserBadges();
 
   const badges = supabaseId !== id ? data?.badges : data;
 

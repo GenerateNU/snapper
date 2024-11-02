@@ -4,7 +4,11 @@ import Button from '../../../../components/button';
 import Divider from '../../../../components/divider';
 import { useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '../../../../auth/authStore';
-import { useFollowUser, useUserById, useUserData } from '../../../../hooks/user';
+import {
+  useFollowUser,
+  useUserById,
+  useUserData,
+} from '../../../../hooks/user';
 import HeaderSkeleton from './skeleton/header-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import { formatNumber } from '../../../../utils/profile';
@@ -14,11 +18,12 @@ const Header = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { supabaseId, mongoDBId } = useAuthStore();
 
-  const { data, isError, isLoading } = supabaseId !== id ? useUserById(id) : useUserData();
+  const { data, isError, isLoading } =
+    supabaseId !== id ? useUserById(id) : useUserData();
   const followMutation = useFollowUser();
 
   const follow: boolean = data?.user.followers.some(
-    (follower: string) => follower === mongoDBId
+    (follower: string) => follower === mongoDBId,
   );
   console.log(follow);
 
@@ -27,7 +32,7 @@ const Header = () => {
   const handleFollowToggle = useCallback(async () => {
     try {
       await followMutation.mutateAsync(id);
-      setIsFollowing(prevState => !prevState);
+      setIsFollowing((prevState) => !prevState);
     } catch (error) {
       console.error('Error toggling follow status:', error);
     }
@@ -70,9 +75,15 @@ const Header = () => {
           <Text className="text-ocean">{`@${data?.user.username}`}</Text>
         </View>
         {id !== supabaseId && (
-          <Button 
+          <Button
             onPress={handleFollowToggle}
-            text={followMutation.isPending ? "Loading..." : isFollowing ? "Unfollow" : "Follow"}
+            text={
+              followMutation.isPending
+                ? 'Loading...'
+                : isFollowing
+                  ? 'Unfollow'
+                  : 'Follow'
+            }
             small
             disabled={followMutation.isPending}
           />

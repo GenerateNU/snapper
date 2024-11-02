@@ -56,6 +56,6 @@ export async function followUser(id: string): Promise<void> {
   });
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to follow user");
+    throw new Error(errorData.error || 'Failed to follow user');
   }
 }
