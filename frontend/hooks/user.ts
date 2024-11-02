@@ -33,11 +33,11 @@ export const useUserById = (id: string) => {
 };
 
 export const useUserDivelogById = (id: string) => {
-  return useQueryBase(['user', id], () => getUserDiveLogsById(id));
+  return useQueryBase(['divelogs', id], () => getUserDiveLogsById(id));
 };
 
 export const useUserFishById = (id: string) => {
-  return useQueryBase(['user', id], () => getUserFishById(id));
+  return useQueryBase(['divelogs', id], () => getUserFishById(id));
 };
 
 export const useFollowUser = () => {

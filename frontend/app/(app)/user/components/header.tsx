@@ -20,14 +20,9 @@ const Header = () => {
 
   const { data, isError, isLoading } =
     supabaseId !== id ? useUserById(id) : useUserData();
+
   const followMutation = useFollowUser();
-
-  const follow: boolean = data?.user.followers.some(
-    (follower: string) => follower === mongoDBId,
-  );
-  console.log(follow);
-
-  const [isFollowing, setIsFollowing] = useState(follow);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const handleFollowToggle = useCallback(async () => {
     try {
@@ -37,6 +32,15 @@ const Header = () => {
       console.error('Error toggling follow status:', error);
     }
   }, [followMutation, id]);
+
+  useEffect(() => {
+    if (data && data.user) {
+      const follow = data.user.followers.some(
+        (follower: string) => follower === mongoDBId,
+      );
+      setIsFollowing(follow);
+    }
+  }, [data, mongoDBId]);
 
   if (isLoading) {
     return <HeaderSkeleton />;

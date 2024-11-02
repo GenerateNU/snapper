@@ -20,7 +20,7 @@ const Menu = () => {
   const [category, setCategory] = useState('Dives');
   const { id } = useLocalSearchParams<{ id: string }>();
   const { supabaseId } = useAuthStore();
-  const { data } = supabaseId !== id ? useUserById(id) : useUserData();
+  const { data: userData } = supabaseId !== id ? useUserById(id) : useUserData();
 
   const isViewingOwnProfile = supabaseId === id;
   const {
@@ -35,8 +35,10 @@ const Menu = () => {
     isLoading: fishLoading,
   } = isViewingOwnProfile ? useUserFish() : useUserFishById(id);
 
-  const profilePhoto = data?.user.profilePicture || PROFILE_PHOTO;
-  const username = data?.user.username;
+  const noData = (!diveLogData || diveLogData.length === 0) && (!fishData || fishData.length === 0);
+
+  const profilePhoto = userData?.user.profilePicture || PROFILE_PHOTO;
+  const username = userData?.user.username;
 
   const renderDiveLog = ({ item }: { item: any }) => {
     const firstPhoto = item?.photos?.[0] || null;
@@ -55,6 +57,10 @@ const Menu = () => {
   const renderSpecies = ({ item }: { item: any }) => (
     <Species id={item._id} name={item.commonName} />
   );
+
+  if (noData) {
+    return;
+  }
 
   return (
     <View className="flex flex-col w-full mb-[20%]">
