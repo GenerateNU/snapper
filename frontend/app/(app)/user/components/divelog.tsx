@@ -7,12 +7,12 @@ import FishTag from './fish-tag';
 import { timeAgo } from '../../../../utils/profile';
 
 interface DiveLogProps {
-  username?: string;
+  username: string;
   image?: string;
   description?: string;
   profilePhoto: string;
   date: Date;
-  fishTags: any[];
+  fishTags?: any[];
 }
 
 const DiveLog: React.FC<DiveLogProps> = ({
@@ -35,20 +35,24 @@ const DiveLog: React.FC<DiveLogProps> = ({
         </View>
         <IconButton icon={faEllipsisVertical} />
       </View>
-      <View className="w-full h-40 my-[5%]">
-        <Image
-          className="w-full h-full object-cover rounded-lg"
-          source={{
-            uri: image,
-          }}
-        />
-      </View>
-      <Text className="pb-[5%]">{description}</Text>
-      <View style={{ gap: 10 }} className="flex flex-row flex-wrap">
-        {fishTags?.map((fish: any) => (
-          <FishTag key={fish._id} id={fish._id} name={fish.commonName} />
-        ))}
-      </View>
+      {image && (
+        <View className="w-full h-40 my-[5%]">
+          <Image
+            className="w-full h-full object-cover rounded-lg"
+            source={{
+              uri: image,
+            }}
+          />
+        </View>
+      )}
+      {description && <Text className="pb-[5%]">{description}</Text>}
+      {fishTags && (
+        <View style={{ gap: 10 }} className="flex flex-row flex-wrap">
+          {fishTags?.map((fish: any) => (
+            <FishTag key={fish._id} id={fish._id} name={fish.commonName} />
+          ))}
+        </View>
+      )}
     </View>
   );
 };
