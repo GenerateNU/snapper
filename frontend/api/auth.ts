@@ -1,5 +1,3 @@
-import { API_BASE_URL } from '../consts/onboarding';
-
 import {
   AuthResponse,
   LoginRequestBody,
