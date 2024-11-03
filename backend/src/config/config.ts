@@ -32,10 +32,10 @@ export const config = {
     url: SUPABASE_URL,
     key: SUPABASE_KEY,
   },
-  aws : {
-    public : AWS_PUBLIC_KEY,
-    private : AWS_PRIVATE_KEY,
-    name : AWS_BUCKET_NAME,
-    region : AWS_BUCKET_REGION
-  }
+  aws: {
+    public: AWS_PUBLIC_KEY,
+    private: AWS_PRIVATE_KEY,
+    name: AWS_BUCKET_NAME,
+    region: AWS_BUCKET_REGION,
+  },
 };
