@@ -8,6 +8,7 @@ interface ButtonProps {
   color?: string;
   disabled?: boolean;
   textOnly?: boolean;
+  outline?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,18 +18,22 @@ const Button: React.FC<ButtonProps> = ({
   color,
   disabled = false,
   textOnly = false,
+  outline = false,
 }) => {
+  const isOutlined = outline || disabled;
+
   return (
     <>
       {!textOnly && (
         <TouchableOpacity
-          className={`items-center justify-center w-full ${disabled ? 'bg-slate-400' : backgroundColor ? `bg-${backgroundColor}` : 'bg-ocean'} h-14 rounded-full`}
+          className={`items-center justify-center w-full py-[3%] rounded-md
+            ${isOutlined ? 'bg-transparent border' : backgroundColor ? `bg-${backgroundColor}` : 'bg-ocean'}
+            ${isOutlined ? `border border-${backgroundColor || 'ocean'}` : ''}`}
           disabled={disabled}
           onPress={onPress}
         >
           <Text
-            className={`font-bold ${disabled ? 'text-gray-300' : ''}`}
-            style={{ color: color || 'white' }}
+            className={`${disabled ? 'text-ocean' : color ? `text-${color}` : 'text-white'}`}
           >
             {text}
           </Text>
@@ -37,8 +42,8 @@ const Button: React.FC<ButtonProps> = ({
       {textOnly && (
         <TouchableOpacity disabled={disabled} onPress={onPress}>
           <Text
-            className={`${disabled ? 'text-gray-400' : ''}`}
-            style={{ color: color || 'black' }}
+            className={`underline ${disabled ? 'text-gray-400' : color ? `text-${color}` : 'text-black'}`}
+            style={{ opacity: disabled ? 0.5 : 1 }}
           >
             {text}
           </Text>

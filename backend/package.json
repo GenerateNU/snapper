@@ -31,9 +31,11 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.685.0",
     "@supabase/supabase-js": "^2.45.3",
     "@types/express-session": "^1.18.0",
     "@types/supertest": "^6.0.2",
+    "aws-sdk": "^2.1691.0",
     "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -46,6 +48,7 @@
     "supertest": "^7.0.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.0.2",
     "zod": "^3.23.8"
   }
 }
