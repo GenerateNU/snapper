@@ -4,8 +4,9 @@ import {
   RegisterRequestBody,
   SessionResponse,
 } from '../types/auth';
+import { apiConfig } from './apiContext';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = apiConfig;
 
 export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {

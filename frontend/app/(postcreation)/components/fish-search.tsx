@@ -1,27 +1,54 @@
 import React from 'react';
 import { TextInput, View, Image, Text, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 
 export default function FishSearch() {
   let data: string[] = ['Anemone', 'Angelfish', 'Barnacle', 'Clown Fish'];
+
   const [visibility, setVisibility] = useState<boolean[]>([
-    false,
     false,
     false,
     false,
     false,
   ]);
 
+  const { setValue, watch } = useFormContext();
+  const tags = watch('tags') || [];
+
   const updateBoolAtIndex = (index: number, value: boolean) => {
-    // Create a new array by spreading the existing array
     const newVisibility = [...visibility];
-
-    // Set the specific index to the new value
     newVisibility[index] = value;
-
-    // Update the state
+    if (value) {
+      setValue('tags', [data[index], ...tags]);
+    } else {
+      setValue(
+        'tags',
+        tags.filter((tag: string) => tag !== data[index]),
+      );
+    }
     setVisibility(newVisibility);
   };
+
+  useEffect(() => {
+    const checkTags = () => {
+      let hasChanged = false;
+      const newVisibility = [...visibility];
+      for (let i: number = 0; i < 4; i++) {
+        if (!tags.includes(data[i]) && visibility[i]) {
+          newVisibility[i] = false;
+          hasChanged = true;
+        } else if (tags.includes(data[i]) && !visibility[i]) {
+          newVisibility[i] = true;
+          hasChanged = true;
+        }
+      }
+      if (hasChanged) {
+        setVisibility(newVisibility);
+      }
+    };
+    checkTags();
+  }, [tags]);
 
   return (
     <View className="h-[22vh] w-full">
