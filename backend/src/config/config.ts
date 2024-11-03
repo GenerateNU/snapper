@@ -7,6 +7,11 @@ const MONGO_USERNAME = process.env.MONGO_USERNAME || '';
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
 const MONGO_URL = process.env.MONGO_URL || '';
 
+const AWS_PUBLIC_KEY = process.env.PUBLIC_KEY_AWS || '';
+const AWS_PRIVATE_KEY = process.env.SECRET_KEY_AWS || '';
+const AWS_BUCKET_NAME = process.env.S3BUCKETNAME || '';
+const AWS_BUCKET_REGION = process.env.S3BUCKETNAME || '';
+
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
   : 3000;
@@ -26,5 +31,11 @@ export const config = {
   supabase: {
     url: SUPABASE_URL,
     key: SUPABASE_KEY,
+  },
+  aws: {
+    public: AWS_PUBLIC_KEY,
+    private: AWS_PRIVATE_KEY,
+    name: AWS_BUCKET_NAME,
+    region: AWS_BUCKET_REGION,
   },
 };
