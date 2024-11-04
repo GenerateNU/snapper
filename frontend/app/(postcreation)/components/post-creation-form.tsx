@@ -55,9 +55,7 @@ export default function PostCreationForm() {
 
     return (
         <View className="space-y-2">
-            <View className="h-[10vh] bg-gray-200 w-full">
-                <Text> Insert image picker here</Text>
-            </View>
+            <ImagePicker />
             <Text className="text-[16px] pt-[2vh]">Caption</Text>
             <View className="mb-4">
                 <Controller
