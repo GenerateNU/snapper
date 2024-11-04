@@ -4,11 +4,9 @@ import {
   getUserFish,
   getUserById,
   getUserFishById,
-  getUserBadges,
   getUserDiveLogsById,
   followUser,
 } from '../api/user';
-import { API_BASE_URL } from '../consts/onboarding';
 import { useQueryBase } from './base';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -22,10 +20,6 @@ export const useUserDiveLogs = () => {
 
 export const useUserFish = () => {
   return useQueryBase(['fish'], getUserFish);
-};
-
-export const useUserBadges = () => {
-  return useQueryBase(['badges'], getUserBadges);
 };
 
 export const useUserById = (id: string) => {

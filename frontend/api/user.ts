@@ -41,14 +41,6 @@ export async function getUserFish(): Promise<any> {
   return data.fish;
 }
 
-export async function getUserBadges(): Promise<any> {
-  const data = await fetchData(
-    '/user/items/badges',
-    "Failed to fetch user's badges",
-  );
-  return data.badges;
-}
-
 export async function followUser(
   id: string,
   followUserId: string,
