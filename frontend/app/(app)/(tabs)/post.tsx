@@ -1,5 +1,4 @@
-import { View } from 'react-native';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import { useEffect } from 'react';
 
 const Post = () => {
