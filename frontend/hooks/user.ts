@@ -37,7 +37,7 @@ export const useUserDivelogById = (id: string) => {
 };
 
 export const useUserFishById = (id: string) => {
-  return useQueryBase(['divelogs', id], () => getUserFishById(id));
+  return useQueryBase(['fish', id], () => getUserFishById(id));
 };
 
 export const useFollowUser = () => {
