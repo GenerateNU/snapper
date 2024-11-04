@@ -11,7 +11,6 @@ const Layout = () => {
           headerShown: false,
           headerTitle: '',
           headerTransparent: true,
-          gestureEnabled: false,
         }}
       />
     </Stack>

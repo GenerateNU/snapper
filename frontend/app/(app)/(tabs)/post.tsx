@@ -1,12 +1,13 @@
 import { View } from 'react-native';
-import PostCreation from '../post/components/post-creation-form';
+import { Link, router } from 'expo-router';
+import { useEffect } from 'react';
 
 const Post = () => {
-  return (
-    <View className="flex flex-1 justify-between items-center">
-      <PostCreation />
-    </View>
-  );
+  useEffect(() => {
+    router.replace('/postcreation');
+  }, []);
+
+  return null;
 };
 
 export default Post;
