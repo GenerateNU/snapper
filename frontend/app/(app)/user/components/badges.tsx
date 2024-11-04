@@ -1,12 +1,11 @@
 import { View, Text } from 'react-native';
 import Badge from '../../../../assets/badge.svg';
-import { useUserBadges, useUserById } from '../../../../hooks/user';
+import { useUserById } from '../../../../hooks/user';
 import BadgeSkeleton from './skeleton/badge-skeleton';
-import { useAuthStore } from '../../../../auth/authStore';
 
 const Badges = ({ id }: { id: string }) => {
   const { data, isError, isLoading } = useUserById(id);
-  const badges = data?.badges;
+  const badges = data?.user.badges;
 
   if (isLoading) {
     return <BadgeSkeleton />;
@@ -27,7 +26,7 @@ const Badges = ({ id }: { id: string }) => {
   return (
     <View className="flex flex-col w-full">
       <Text className="font-bold text-lg pb-[2%] text-darkblue">Badges</Text>
-      <View className="flex flex-row w-full bg-water rounded-xl justify-between p-[5%] shadow-md">
+      <View className="flex flex-row w-full bg-water rounded-xl justify-between p-[5%] shadow-md flex-wrap">
         {badges.map((badge: any, key: number) => (
           <View
             className="flex flex-col items-center justify-center"
