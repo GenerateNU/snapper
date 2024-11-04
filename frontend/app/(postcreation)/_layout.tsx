@@ -2,7 +2,6 @@ import React from "react";
 import { router, Stack } from 'expo-router';
 import { useForm, FormProvider } from "react-hook-form";
 
-
 type FormFields = {
     tags: string[],
     image: string,
@@ -11,9 +10,10 @@ type FormFields = {
     description: string,
 }
 
+
+
 export default function Layout() {
     const methods = useForm<FormFields>();
-    const {control, register, handleSubmit} = methods;
 
     return (
         <FormProvider {...methods}>
