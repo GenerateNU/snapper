@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text } from 'react-native';
-import { useFormContext } from 'react-hook-form';
-import { Controller } from 'react-hook-form';
-import Input from '../../../components/input';
+import { View } from 'react-native';
+import Input from '../../../../components/input';
 import { z, ZodError } from 'zod';
-import { datetimeRegex } from 'zod';
 
 type DateFromDate = {
   date: string;

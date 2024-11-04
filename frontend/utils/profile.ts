@@ -9,18 +9,17 @@ export const formatNumber = (number: number): string => {
 };
 
 export const timeAgo = (date: Date = new Date()): string => {
-  const seconds = Math.floor(
-    (new Date().getTime() - new Date(date).getTime()) / 1000,
-  );
+  const seconds = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
   let interval = Math.floor(seconds / 31536000);
-  if (interval > 1) return `${interval} years ago`;
+  if (interval >= 1) return interval === 1 ? "1y ago" : `${interval}y ago`;
   interval = Math.floor(seconds / 2592000);
-  if (interval > 1) return `${interval} months ago`;
+  if (interval >= 1) return interval === 1 ? "1m ago" : `${interval}m ago`;
   interval = Math.floor(seconds / 86400);
-  if (interval > 1) return `${interval} days ago`;
+  if (interval >= 1) return interval === 1 ? "1d ago" : `${interval}d ago`;
   interval = Math.floor(seconds / 3600);
-  if (interval > 1) return `${interval} hours ago`;
+  if (interval >= 1) return interval === 1 ? "1h ago" : `${interval}h ago`;
   interval = Math.floor(seconds / 60);
-  if (interval > 1) return `${interval} minutes ago`;
-  return `${seconds} seconds ago`;
+  if (interval >= 1) return interval === 1 ? "1m ago" : `${interval}m ago`;
+  return seconds === 1 ? "1s ago" : `${seconds}s ago`;
 };
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { View, Animated } from 'react-native';
 import usePulsingAnimation from '../../../../../utils/skeleton';
 

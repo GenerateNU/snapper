@@ -3,16 +3,10 @@ import Badge from '../../../../assets/badge.svg';
 import { useUserBadges, useUserById } from '../../../../hooks/user';
 import BadgeSkeleton from './skeleton/badge-skeleton';
 import { useAuthStore } from '../../../../auth/authStore';
-import { useLocalSearchParams } from 'expo-router';
 
-const Badges = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const { supabaseId } = useAuthStore();
-
-  const { data, isError, isLoading } =
-    supabaseId !== id ? useUserById(id) : useUserBadges();
-
-  const badges = supabaseId !== id ? data?.badges : data;
+const Badges = ({ id }: { id: string }) => {
+  const { data, isError, isLoading } = useUserById(id);
+  const badges = data?.badges;
 
   if (isLoading) {
     return <BadgeSkeleton />;

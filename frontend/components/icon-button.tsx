@@ -10,7 +10,7 @@ interface IconProps {
 
 const IconButton: React.FC<IconProps> = ({ icon, onPress, size }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity className="m-0 p-0" onPress={onPress}>
       <FontAwesomeIcon size={size ? size : 20} icon={icon} />
     </TouchableOpacity>
   );

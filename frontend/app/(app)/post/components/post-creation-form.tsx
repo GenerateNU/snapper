@@ -3,10 +3,10 @@ import { View, Text, ScrollView } from 'react-native';
 import FishTags from './fish-tags';
 import FishSearch from './fish-search';
 import { useForm, FormProvider, useFormContext, Form } from 'react-hook-form';
-import ImagePicker from '../../../components/image-picker';
-import BigText from '../../../components/bigtext';
+import ImagePicker from '../../../../components/image-picker';
+import BigText from '../../../../components/bigtext';
 import DatePicker from './date-picker';
-import Input from '../../../components/input';
+import Input from '../../../../components/input';
 
 type FormFields = {
   tags: string[];
@@ -17,7 +17,7 @@ export default function PostCreation() {
   const methods = useForm<FormFields>();
   return (
     <FormProvider {...methods}>
-      <ScrollView className="flex flex-col space-y-2 w-[90vw]">
+      <ScrollView showsVerticalScrollIndicator={false} className="flex flex-col space-y-2 w-[90vw]">
         <View className="flex flex-col justify-items items-center pt-[10vh]">
           <Text className="font-bold text-[24px] leading-[29.05px] pb-[1vh]">
             {' '}

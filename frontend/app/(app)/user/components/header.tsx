@@ -2,31 +2,27 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import Profile from '../../../../components/profile';
 import Button from '../../../../components/button';
 import Divider from '../../../../components/divider';
-import { useLocalSearchParams } from 'expo-router';
 import { useAuthStore } from '../../../../auth/authStore';
-import {
-  useFollowUser,
-  useUserById,
-  useUserData,
-} from '../../../../hooks/user';
+import { useFollowUser, useUserById } from '../../../../hooks/user';
 import HeaderSkeleton from './skeleton/header-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import { formatNumber } from '../../../../utils/profile';
 import { useCallback, useEffect, useState } from 'react';
 
-const Header = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
+const Header = ({ id }: { id: string }) => {
   const { supabaseId, mongoDBId } = useAuthStore();
-
-  const { data, isError, isLoading } =
-    supabaseId !== id ? useUserById(id) : useUserData();
+  const { data, isError, isLoading } = useUserById(id);
 
   const followMutation = useFollowUser();
   const [isFollowing, setIsFollowing] = useState(false);
 
   const handleFollowToggle = useCallback(async () => {
     try {
-      await followMutation.mutateAsync(id);
+      if (supabaseId) {
+        await followMutation.mutateAsync({id: supabaseId, followUserId: id});
+      } else {
+        console.error('supabaseId is null');
+      }
       setIsFollowing((prevState) => !prevState);
     } catch (error) {
       console.error('Error toggling follow status:', error);

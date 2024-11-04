@@ -1,7 +1,6 @@
 import { findUserBySupabaseId } from './../../services/userService';
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
-import mongoose from 'mongoose'; // Import mongoose to use ObjectId
 
 const userService: UserService = new UserServiceImpl();
 
@@ -10,7 +9,7 @@ export const toggleUserFollow = async (
   res: express.Response,
 ) => {
   try {
-    const currentUserId = req.session.userId;
+    const currentUserId = req.params.id;
     const targetUserId = req.params.userid;
 
     // Check if the user is logged in

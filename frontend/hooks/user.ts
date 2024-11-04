@@ -44,9 +44,9 @@ export const useFollowUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => followUser(id),
-    onSuccess: (_, userId) => {
-      queryClient.invalidateQueries({ queryKey: ['user', userId] });
+    mutationFn: ({ id, followUserId }: { id: string, followUserId: string }) => followUser(id, followUserId),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: ['user', id] });
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {

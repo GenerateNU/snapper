@@ -3,10 +3,7 @@ import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useAuthStore } from '../../../../auth/authStore';
 import {
   useUserById,
-  useUserData,
   useUserDivelogById,
-  useUserDiveLogs,
-  useUserFish,
   useUserFishById,
 } from '../../../../hooks/user';
 import DiveLog from './divelog';
@@ -14,27 +11,25 @@ import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
-import { useLocalSearchParams } from 'expo-router';
 
-const Menu = () => {
+const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
-  const { id } = useLocalSearchParams<{ id: string }>();
   const { supabaseId } = useAuthStore();
-  const { data: userData } =
-    supabaseId !== id ? useUserById(id) : useUserData();
+  const { data: userData } = useUserById(id);
 
   const isViewingOwnProfile = supabaseId === id;
+
   const {
     data: diveLogData,
     isError: diveLogError,
     isLoading: diveLogLoading,
-  } = isViewingOwnProfile ? useUserDiveLogs() : useUserDivelogById(id);
+  } = useUserDivelogById(id);
 
   const {
     data: fishData,
     isError: fishError,
     isLoading: fishLoading,
-  } = isViewingOwnProfile ? useUserFish() : useUserFishById(id);
+  } = useUserFishById(id);
 
   const noData =
     (!diveLogData || diveLogData.length === 0) &&
