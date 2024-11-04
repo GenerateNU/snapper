@@ -18,9 +18,10 @@ type FormFields = {
     description: string,
 }
 
+
 export default function PostCreationForm() {
 
-    const {setValue, watch} = useFormContext<FormFields>();
+    const {setValue, watch, reset} = useFormContext<FormFields>();
     const tags: string[] = watch('tags') || [];
 
     const removeFish = (index: number) => {
@@ -31,14 +32,27 @@ export default function PostCreationForm() {
         setValue('tags', newFish)
     };
 
-    const {control, register, handleSubmit, } = useFormContext<FormFields>();
+    const {control, trigger, register, handleSubmit} = useFormContext<FormFields>();
 
     const submitPost = async (postData: FormFields) => {
-        console.log(postData)
-    }
+       try {
+            const response = await fetch(
+            'http://localhost:3000/divelog', {
+                method: 'POST', 
+                headers: {
+                'Content-Type': 'application/json'}, 
+                body: JSON.stringify(postData)})
+        } catch (error) {
+            console.error(error);
+        }
+        console.log(postData);
+        reset();
+    };
+        
+    
 
     return (
-        <View className = "space-y-1">
+        <View className = "space-y-2">
             <View className = "h-[10vh] bg-gray-200 w-full">
                 <Text> Insert image picker here</Text>
             </View>
@@ -47,18 +61,34 @@ export default function PostCreationForm() {
                 <Controller
                     control = {control}
                     name = "description"
-                    render = {({field: {onChange, value}}) => (
+                    render = {({field: {
+                        onChange, value}}) => (
                     <BigText 
                         placeholder="Your description..." 
-                        onChangeText={onChange}
+                        onChangeText={(text: string) => {
+                            onChange(text);
+                            trigger('description');}}
                         value = {value}
                     />
                     )}
                 /> 
             </View>
             <Text className="text-[16px]"> Location </Text>
-            <Input placeholder="Enter Location" />
-
+            <View>
+                <Controller
+                    control = {control}
+                    name = "location"
+                    render = {({field: {onChange, value}}) => (
+                    <Input 
+                        placeholder="Enter Location" 
+                        onChangeText={(text: string) => {
+                            onChange(text);
+                            trigger('location');}}
+                        value = {value}
+                    />
+                    )}
+                /> 
+            </View>
             <Text className = "text-[16px] ">Tag Fish</Text>
             <View className="w-full mb-[4vh]">
                 {tags.length == 0 ?
