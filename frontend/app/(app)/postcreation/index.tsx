@@ -1,11 +1,11 @@
-import { SafeAreaView } from 'react-native';
+import { View } from 'react-native';
 import PostCreation from './components/post-creation-form';
 
 const CreatePost = () => {
   return (
-    <SafeAreaView className="flex items-center">
+    <View className="flex items-center">
       <PostCreation />
-    </SafeAreaView>
+    </View>
   );
 };
 
