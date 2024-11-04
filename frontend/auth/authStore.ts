@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>(
             'supabase.auth.token',
             'supabase.auth.refreshToken',
             '@supabase.auth.token',
-            '@supabase.auth.refreshToken'
+            '@supabase.auth.refreshToken',
           ]);
         } catch (error) {
           console.error('Error clearing storage:', error);
@@ -55,7 +55,7 @@ export const useAuthStore = create<AuthState>(
         set({ loading: true, error: null });
         try {
           await get().clearStorage();
-          
+
           const response = await login(userData);
           const session = await getSession();
           const userMe = await getUserById(response.user.id);
@@ -82,7 +82,7 @@ export const useAuthStore = create<AuthState>(
         set({ loading: true, error: null });
         try {
           await get().clearStorage();
-          
+
           const response = await register(userData);
           const session = await getSession();
           const userMe = await getUserById(response.user.id);
@@ -110,7 +110,7 @@ export const useAuthStore = create<AuthState>(
         try {
           await logout();
           await get().clearStorage();
-          
+
           set({
             user: null,
             token: null,
@@ -134,6 +134,6 @@ export const useAuthStore = create<AuthState>(
     {
       name: 'auth-storage',
       getStorage: () => AsyncStorage,
-    }
-  )
+    },
+  ),
 );

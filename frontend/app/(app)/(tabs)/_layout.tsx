@@ -1,10 +1,16 @@
 import React from 'react';
-import Home from "../../../assets/house.svg";
-import Search from "../../../assets/search.svg";
-import Plus from "../../../assets/plus.svg";
-import Star from "../../../assets/star.svg";
-import Profile from "../../../assets/profile.svg";
-import { faHouse, faSearch, faStar, faCircleUser, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import Home from '../../../assets/house.svg';
+import Search from '../../../assets/search.svg';
+import Plus from '../../../assets/plus.svg';
+import Star from '../../../assets/star.svg';
+import Profile from '../../../assets/profile.svg';
+import {
+  faHouse,
+  faSearch,
+  faStar,
+  faCircleUser,
+  faPlusSquare,
+} from '@fortawesome/free-solid-svg-icons';
 import { Tabs } from 'expo-router';
 import IconButton from '../../../components/icon-button';
 
@@ -29,7 +35,13 @@ const Layout = () => {
             title: 'Home',
             headerShown: false,
             headerTransparent: true,
-            tabBarIcon: ({ focused }) => { return focused ? <IconButton icon={faHouse} /> : <Home width={20} height={20} />;},
+            tabBarIcon: ({ focused }) => {
+              return focused ? (
+                <IconButton icon={faHouse} />
+              ) : (
+                <Home width={20} height={20} />
+              );
+            },
           }}
         />
         <Tabs.Screen
@@ -38,7 +50,13 @@ const Layout = () => {
             title: 'Explore',
             headerShown: false,
             headerTransparent: true,
-            tabBarIcon: ({ focused }) => {return focused ? <IconButton icon={faSearch} /> : <Search width={20} height={20} />},
+            tabBarIcon: ({ focused }) => {
+              return focused ? (
+                <IconButton icon={faSearch} />
+              ) : (
+                <Search width={20} height={20} />
+              );
+            },
           }}
         />
         <Tabs.Screen
@@ -47,7 +65,13 @@ const Layout = () => {
             title: 'Post',
             headerShown: false,
             headerTransparent: true,
-            tabBarIcon: ({ focused }) => {return focused ? <IconButton icon={faPlusSquare} /> : <Plus width={20} height={20} />},
+            tabBarIcon: ({ focused }) => {
+              return focused ? (
+                <IconButton icon={faPlusSquare} />
+              ) : (
+                <Plus width={20} height={20} />
+              );
+            },
           }}
         />
         <Tabs.Screen
@@ -56,7 +80,13 @@ const Layout = () => {
             title: 'Notification',
             headerShown: false,
             headerTransparent: true,
-            tabBarIcon: ({ focused }) => {return focused ? <IconButton icon={faStar} /> : <Star width={20} height={20} />},
+            tabBarIcon: ({ focused }) => {
+              return focused ? (
+                <IconButton icon={faStar} />
+              ) : (
+                <Star width={20} height={20} />
+              );
+            },
           }}
         />
         <Tabs.Screen
@@ -65,7 +95,13 @@ const Layout = () => {
             title: 'Profile',
             headerShown: false,
             headerTransparent: true,
-            tabBarIcon: ({ focused }) => {return focused ?  <IconButton icon={faCircleUser} /> : <Profile width={20} height={20} />},
+            tabBarIcon: ({ focused }) => {
+              return focused ? (
+                <IconButton icon={faCircleUser} />
+              ) : (
+                <Profile width={20} height={20} />
+              );
+            },
           }}
         />
       </Tabs>

@@ -19,7 +19,7 @@ const Header = ({ id }: { id: string }) => {
   const handleFollowToggle = useCallback(async () => {
     try {
       if (supabaseId) {
-        await followMutation.mutateAsync({id: supabaseId, followUserId: id});
+        await followMutation.mutateAsync({ id: supabaseId, followUserId: id });
       } else {
         console.error('supabaseId is null');
       }

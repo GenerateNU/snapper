@@ -49,11 +49,17 @@ export async function getUserBadges(): Promise<any> {
   return data.badges;
 }
 
-export async function followUser(id: string, followUserId: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/user/${id}/follow/${followUserId}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-  });
+export async function followUser(
+  id: string,
+  followUserId: string,
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE_URL}/user/${id}/follow/${followUserId}`,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.error || 'Failed to follow user');
