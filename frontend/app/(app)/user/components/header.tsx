@@ -16,27 +16,28 @@ const Header = ({ id }: { id: string }) => {
   const followMutation = useFollowUser();
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const handleFollowToggle = useCallback(async () => {
-    try {
-      if (supabaseId) {
-        await followMutation.mutateAsync({ id: supabaseId, followUserId: id });
-      } else {
-        console.error('supabaseId is null');
-      }
-      setIsFollowing((prevState) => !prevState);
-    } catch (error) {
-      console.error('Error toggling follow status:', error);
-    }
-  }, [followMutation, id]);
-
   useEffect(() => {
-    if (data && data.user) {
-      const follow = data.user.followers.some(
-        (follower: string) => follower === mongoDBId,
-      );
-      setIsFollowing(follow);
+    if (data && data.user && Array.isArray(data.user.followers)) {
+      const isUserFollowing = data.user.followers.includes(mongoDBId);
+      setIsFollowing(isUserFollowing);
     }
   }, [data, mongoDBId]);
+
+  const handleFollowToggle = useCallback(async () => {
+    if (!supabaseId) {
+      console.error('supabaseId is null');
+      return;
+    }
+
+    setIsFollowing((prevIsFollowing) => !prevIsFollowing);
+
+    try {
+      await followMutation.mutateAsync({ id: supabaseId, followUserId: id });
+    } catch (error) {
+      console.error('Error toggling follow status:', error);
+      setIsFollowing((prevIsFollowing) => !prevIsFollowing);
+    }
+  }, [followMutation, id, supabaseId]);
 
   if (isLoading) {
     return <HeaderSkeleton />;
@@ -71,7 +72,9 @@ const Header = ({ id }: { id: string }) => {
       </View>
       <View className="flex flex-row justify-between py-[5%]">
         <View>
-          <Text className="font-bold text-xl text-darkblue">First Last</Text>
+          <Text className="font-bold text-xl text-darkblue">
+            {data?.user.name || 'First Last'}
+          </Text>
           <Text className="text-ocean">{`@${data?.user.username}`}</Text>
         </View>
         {id !== supabaseId && (

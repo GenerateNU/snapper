@@ -38,7 +38,6 @@ export const useAuthStore = create<AuthState>(
 
       clearStorage: async () => {
         try {
-          // Clear all auth-related items from AsyncStorage
           await AsyncStorage.multiRemove([
             'auth-storage',
             'supabase.auth.token',
