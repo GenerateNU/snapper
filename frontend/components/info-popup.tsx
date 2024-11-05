@@ -32,7 +32,7 @@ const InfoPopup = () => {
             <View className=" bg-primary-blue pt-12 pb-12 px-8 flex flex-row justify-between">
                 <View className=" flex flex-col gap-1">
                     <Text className=" text-sm">
-                        📍 Western Atlantic Ocean
+                        📍 {speciesContent.location}
                     </Text>
                     <Text className=" text-2xl font-semibold">
                         {speciesContent.commonName}

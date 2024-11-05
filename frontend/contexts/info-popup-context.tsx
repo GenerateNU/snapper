@@ -6,6 +6,7 @@ const defaultContent: SpeciesContent = {
     scientificName: "scientific",
     introduction: "introduction",
     images: [],
+    location: "Unknown",
 }
 
 const InfoPopupContext = createContext({ speciesContent: defaultContent, setSpeciesContent: (content: SpeciesContent) => console.log("Not working :("), isOpen: false, setOpen: () => console.log("Not working :("), setClose: () => console.log("Not working :(") })
