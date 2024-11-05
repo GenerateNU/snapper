@@ -4,10 +4,11 @@ import { useAuthStore } from '../../auth/authStore';
 import Badge from '../../assets/fish badge.svg';
 import { InfoPopupProvider, useInfoPopup } from '../../contexts/info-popup-context';
 import InfoPopup from '../../components/info-popup';
+import { cuttlefish, greatWhite, redSnapper } from '../../types/species';
 
 const Home = () => {
   const { logout, loading, error: authError } = useAuthStore();
-  const { isOpen, setOpen } = useInfoPopup();
+  const { setSpeciesContent, isOpen, setOpen } = useInfoPopup();
 
   return (
     <View className="flex-1 justify-center items-center">
@@ -23,10 +24,20 @@ const Home = () => {
         textOnly
         text={loading ? 'Logging out' : 'Logout'}
       />
-      <Button
-        onPress={setOpen}
-        text={`Open info page, currently open: ${isOpen}`}
-      />
+      <View className=' flex flex-col'>
+        <Button
+          onPress={() => { setSpeciesContent(redSnapper); setOpen(); }}
+          text="Open Red Snapper"
+        />
+        <Button
+          onPress={() => { setSpeciesContent(cuttlefish); setOpen(); }}
+          text="Open Cuttlefish"
+        />
+        <Button
+          onPress={() => { setSpeciesContent(greatWhite); setOpen(); }}
+          text="Open Great White Shark"
+        />
+      </View>
       <InfoPopup />
     </View>
   );
