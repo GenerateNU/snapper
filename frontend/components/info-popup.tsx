@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, Button, LayoutAnimation, Animated, Easing, Dimensions } from "react-native"
+import { View, Text, Image, ScrollView, Button, LayoutAnimation, Animated, Easing, Dimensions, Pressable } from "react-native"
 import { useInfoPopup } from "../contexts/info-popup-context";
 import { useEffect, useRef } from "react";
 
@@ -30,8 +30,12 @@ const InfoPopup = () => {
             transform: [{ translateY }],
         }}
     >
-        <View className={"bg-white w-screen h-2/3"}>
-            <Button title="X" onPress={setClose} />
+        <View className={" w-screen h-2/3"}>
+            <View className=" h-7 rounded-t-2xl bg-white flex flex-row justify-end items-center">
+                <Pressable onPress={setClose}>
+                    <Text className=" px-4">X</Text>
+                </Pressable>
+            </View>
             <View className=" bg-primary-blue pt-12 pb-12 px-8 flex flex-row justify-between">
                 <View className=" flex flex-col gap-1">
                     <Text className=" text-sm">
@@ -61,7 +65,7 @@ const InfoPopup = () => {
                 <View
                     className=" border-background border-b-2"
                 />
-                <View className="flex flex-col gap-y-2">
+                <View className="flex flex-col gap-y-2 h-full">
                     <Text className=" text-xs font-bold">Description:</Text>
                     <Text className=" text-xs">
                         Red snapper is like the rock star of the underwater world! With its vibrant, ruby-red skin and striking profile, it turns heads wherever it swims.
@@ -75,7 +79,7 @@ const InfoPopup = () => {
                 </View>
             </View>
         </View >
-    </Animated.View>
+    </Animated.View >
 }
 
 export default InfoPopup
