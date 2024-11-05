@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import Profile from '../../../../components/profile';
@@ -27,6 +27,16 @@ const DiveLog: React.FC<DiveLogProps> = ({
   isMyProfile,
   divelogId,
 }) => {
+  const [aspectRatio, setAspectRatio] = useState(1);
+
+  useEffect(() => {
+    if (image) {
+      Image.getSize(image, (width, height) => {
+        setAspectRatio(width / height);
+      });
+    }
+  }, [image]);
+
   return (
     <View className="w-full p-[5%] bg-white shadow-lg rounded-lg">
       <View className="flex-row justify-between items-start">
@@ -40,9 +50,14 @@ const DiveLog: React.FC<DiveLogProps> = ({
         {isMyProfile && <IconButton icon={faEllipsisVertical} />}
       </View>
       {image && (
-        <View className="w-full h-40 my-[5%]">
+        <View className="my-[5%]">
           <Image
-            className="w-full h-full object-cover rounded-lg"
+            style={{
+              width: '100%',
+              aspectRatio: aspectRatio,
+              resizeMode: 'contain',
+            }}
+            className="rounded-lg"
             source={{
               uri: image,
             }}
