@@ -2,10 +2,12 @@ import { View, Text } from 'react-native';
 import Button from '../../components/button';
 import { useAuthStore } from '../../auth/authStore';
 import Badge from '../../assets/fish badge.svg';
+import { InfoPopupProvider, useInfoPopup } from '../../contexts/info-popup-context';
 import InfoPopup from '../../components/info-popup';
 
 const Home = () => {
-  const { logout, loading, error: authError, isAuthenticated } = useAuthStore();
+  const { logout, loading, error: authError } = useAuthStore();
+  const { isOpen, setOpen } = useInfoPopup();
 
   return (
     <View className="flex-1 justify-center items-center">
@@ -21,9 +23,11 @@ const Home = () => {
         textOnly
         text={loading ? 'Logging out' : 'Logout'}
       />
-      <View className=' absolute flex flex-col justify-end h-screen'>
-        <InfoPopup commonName='Red Snapper' scientificName='Lutjanus campechanus' />
-      </View>
+      <Button
+        onPress={setOpen}
+        text={`Open info page, currently open: ${isOpen}`}
+      />
+      <InfoPopup />
     </View>
   );
 };

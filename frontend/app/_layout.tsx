@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from '../auth/authProvider';
 import { useEffect } from 'react';
 import { useAuthStore } from '../auth/authStore';
 import { NavBar } from './(app)/(components)/navbar';
+import { InfoPopupProvider } from '../contexts/info-popup-context';
 
 const queryClient = new QueryClient();
 
@@ -48,8 +49,10 @@ const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StatusBar />
-        <InitialLayout />
+        <InfoPopupProvider>
+          <StatusBar />
+          <InitialLayout />
+        </InfoPopupProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
