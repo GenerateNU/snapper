@@ -64,7 +64,7 @@ def populate_wikipedia_intros():
 
         for title in title_to_intro:
             intro = title_to_intro[title]
-            wikidata.update_one({"articleTitle": title}, {"$set": {"intro": intro}})
+            wikidata.update_one({"articleTitle": title}, {"$set": {"introduction": intro}})
 
 
 def populate_worms():
@@ -78,9 +78,9 @@ def populate_worms():
     for i in range(pages):
         try:
             batch = [
-                item["aphia_id"]
+                item["aphiaId"]
                 for item in wikidata.find({}, {}).limit(BATCH_SIZE).skip(i * BATCH_SIZE)
-                if item.get("aphia_id")
+                if item.get("aphiaId")
             ]
             attributes = fetch_worms(batch)
             print(attributes)
