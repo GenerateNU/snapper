@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, Button, LayoutAnimation, Animated, Easing, Dimensions, Pressable } from "react-native"
+import { View, Text, Image, ScrollView, Animated, Easing, Dimensions, Pressable } from "react-native"
 import { useInfoPopup } from "../contexts/info-popup-context";
 import { useEffect, useRef } from "react";
 
@@ -35,7 +35,7 @@ const InfoPopup = () => {
                         📍 {speciesContent.location}
                     </Text>
                     <Text className=" text-2xl font-semibold">
-                        {speciesContent.commonName}
+                        {speciesContent.commonNames && speciesContent.commonNames[0]}
                     </Text>
                     <Text className=" text-sm italic">
                         {speciesContent.scientificName}
@@ -49,8 +49,8 @@ const InfoPopup = () => {
                         <Text className=" text-xs font-bold">Photos:</Text>
                         <Text className=" text-xs">View all photos</Text>
                     </View>
-                    {speciesContent.images.length > 0 ? <ScrollView horizontal className="flex flex-row gap-2">
-                        {speciesContent.images.map((url, i) => (
+                    {speciesContent.imageUrls.length > 0 ? <ScrollView horizontal className="flex flex-row gap-2">
+                        {speciesContent.imageUrls.map((url, i) => (
                             <Image style={{ overlayColor: "white" }} key={i} className=" w-20 h-20 rounded-xl overlay" source={{ uri: url }}></Image>
                         ))}
                     </ScrollView> :

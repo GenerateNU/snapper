@@ -5,7 +5,7 @@ const defaultContent: SpeciesContent = {
     commonName: "common",
     scientificName: "scientific",
     introduction: "introduction",
-    images: [],
+    imageUrls: [],
     location: "Unknown",
 }
 

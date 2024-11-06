@@ -21,7 +21,7 @@ species(router);
 
 app.use(router);
 const speciesMock = Species.findById as jest.Mock;
-const speciesFindMock = Species.find as jest.Mock;
+const speciesFindMock = Species.findOne as jest.Mock;
 
 describe('GET /species/id', () => {
   beforeEach(() => {

@@ -5,6 +5,7 @@ import Badge from '../../assets/fish badge.svg';
 import { InfoPopupProvider, useInfoPopup } from '../../contexts/info-popup-context';
 import InfoPopup from '../../components/info-popup';
 import { cuttlefish, greatWhite, redSnapper } from '../../types/species';
+import PopulatedInfoPopupButton from '../../components/populated-info-popup';
 
 const Home = () => {
   const { logout, loading, error: authError } = useAuthStore();
@@ -25,18 +26,11 @@ const Home = () => {
         text={loading ? 'Logging out' : 'Logout'}
       />
       <View className=' flex flex-col'>
-        <Button
-          onPress={() => { setSpeciesContent(redSnapper); setOpen(); }}
-          text="Open Red Snapper"
-        />
-        <Button
-          onPress={() => { setSpeciesContent(cuttlefish); setOpen(); }}
-          text="Open Cuttlefish"
-        />
-        <Button
-          onPress={() => { setSpeciesContent(greatWhite); setOpen(); }}
-          text="Open Great White Shark"
-        />
+        <PopulatedInfoPopupButton speciesId='Canthidermis maculata' />
+        <PopulatedInfoPopupButton speciesId='Sufflamen bursa' />
+        <PopulatedInfoPopupButton speciesId='Gaidropsarus mediterraneus' />
+        <PopulatedInfoPopupButton speciesId='Gaidropsarus vulgaris' />
+        <PopulatedInfoPopupButton speciesId='Spicara smaris' />
       </View>
       <InfoPopup />
     </View>
