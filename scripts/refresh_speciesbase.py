@@ -50,13 +50,13 @@ def populate_wikidata():
 
 
 def populate_wikipedia_intros():
-    wikidata = db["wikidata"]
+    wikidata = db["species"]
     BATCH_SIZE = 20
 
     pages = (wikidata.count_documents({}) // BATCH_SIZE) + 1
     for i in range(pages):
         titles = [
-            item["article_suffix"]
+            item["articleTitle"]
             for item in wikidata.find({}, {}).limit(BATCH_SIZE).skip(i * BATCH_SIZE)
         ]
 
@@ -64,11 +64,11 @@ def populate_wikipedia_intros():
 
         for title in title_to_intro:
             intro = title_to_intro[title]
-            wikidata.update_one({"article_suffix": title}, {"$set": {"intro": intro}})
+            wikidata.update_one({"articleTitle": title}, {"$set": {"intro": intro}})
 
 
 def populate_worms():
-    wikidata = db["wikidata"]
+    wikidata = db["species"]
     worms = db["worms"]
 
     BATCH_SIZE = 10
@@ -91,8 +91,8 @@ def populate_worms():
 
 
 def main():
-    populate_wikidata()
-    # populate_wikipedia_intros()
+    # populate_wikidata()
+    populate_wikipedia_intros()
     # populate_worms()
 
 
