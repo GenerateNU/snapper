@@ -28,8 +28,6 @@ export const getUserDiveLogsById = async (
     }
 
     const divelogs = await userService.getDiveLogs(foundUser._id.toString());
-    // @ts-ignore
-    console.log(divelogs.speciesTags);
 
     //Return the OK status
     return res.status(200).json({

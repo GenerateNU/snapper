@@ -29,7 +29,6 @@ export class DiveLogServiceImpl implements DiveLogService {
     const user: any = await UserModel.findByIdAndUpdate(data.user, update, {
       new: true,
     });
-    console.log(user);
     return diveLog;
   }
 
