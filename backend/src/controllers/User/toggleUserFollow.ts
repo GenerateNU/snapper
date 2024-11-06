@@ -1,7 +1,12 @@
 import { findUserBySupabaseId } from './../../services/userService';
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import {
+  NotificationService,
+  NotificationServiceImpl,
+} from '../../services/notificationService';
 
+const notificationService: NotificationService = new NotificationServiceImpl();
 const userService: UserService = new UserServiceImpl();
 
 export const toggleUserFollow = async (
@@ -50,6 +55,10 @@ export const toggleUserFollow = async (
         .json({ message: 'Successfully unfollowed the user.' });
     } else {
       await userService.followUser(currentUserMongoDBId, targetUserMongoDBId);
+      await notificationService.createFollowNotification(
+        currentUserMongoDBId,
+        targetUserMongoDBId,
+      );
       return res
         .status(200)
         .json({ message: 'Successfully followed the user.' });

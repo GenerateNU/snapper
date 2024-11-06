@@ -22,8 +22,12 @@
     "@tanstack/react-query": "^5.59.0",
     "axios": "^1.7.7",
     "expo": "~51.0.36",
+    "expo-device": "^6.0.2",
     "expo-image-picker": "~15.0.7",
+    "expo-linear-gradient": "~13.0.2",
+    "expo-notifications": "^0.28.19",
     "expo-router": "~3.5.23",
+    "expo-server-sdk": "^3.11.0",
     "expo-status-bar": "~1.12.1",
     "nativewind": "^2.0.11",
     "prettier": "^3.3.3",
@@ -34,8 +38,7 @@
     "react-native-svg-transformer": "^0.20.0",
     "zod": "^3.23.8",
     "zustand": "^3.7.2",
-    "zustand-persist": "^0.4.0",
-    "expo-linear-gradient": "~13.0.2"
+    "zustand-persist": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
