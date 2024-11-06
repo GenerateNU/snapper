@@ -10,6 +10,10 @@ module.exports = {
       colors: {
         ocean: '#3688be',
         water: '#d0e2ee',
+        primary: {
+          blue: '#d4ecfc',
+        },
+        background: '#d1d9e2',
       },
     },
   },
