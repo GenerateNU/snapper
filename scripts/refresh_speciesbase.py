@@ -12,24 +12,34 @@ load_dotenv(dotenv_path="../.env")
 MONGO_URL = os.getenv("MONGO_URL")
 
 client = MongoClient(MONGO_URL)
-db = client["speciesbase"]
+db = client["test"]
 
 
 def populate_wikidata():
-    wikidata = db["wikidata"]
+    wikidata = db["species"]
 
     wikidata_iter = iter(Wikidata())
 
     for batch in wikidata_iter:
         df = pd.DataFrame.from_dict(batch)
 
+        """
+        aphiaId: { type: String, required: true },
+        articleUrl: { type: String },
+        articleTitle: { type: String },
+        commonNames: [String],
+        scientificName: { type: String },
+        introduction: { type: String },
+        imageUrls: [String],
+        """
+
         batch_out = []
         for fish, info in df.groupby("fish"):
             out = info.drop(columns=["common_name", "image_url"])
-            out = out.rename(columns={"fish": "_id"})
+            out = out.rename(columns={"fish": "_id", "aphia_id": "aphiaId", "article": "articleUrl", "article_suffix": "articleTitle", "scientific_name": "scientificName", "intro": "introduction"})
             out = out.iloc[0].to_dict()
-            out["common_names"] = list(set(info["common_name"].to_list()))
-            out["image_urls"] = list(set(info["image_url"].to_list()))
+            out["commonNames"] = list(set(info["common_name"].to_list()))
+            out["imageUrls"] = list(set(info["image_url"].to_list()))
             batch_out.append(out)
 
         try:
@@ -81,9 +91,9 @@ def populate_worms():
 
 
 def main():
-    # populate_wikidata()
+    populate_wikidata()
     # populate_wikipedia_intros()
-    populate_worms()
+    # populate_worms()
 
 
 if __name__ == "__main__":
