@@ -7,7 +7,7 @@ import Button from "./button";
 const API_BASE_URL = apiConfig;
 
 const PopulatedInfoPopupButton = (props: { speciesId: string }) => {
-    const { isOpen, setSpeciesContent, setOpen } = useInfoPopup();
+    const { setSpeciesContent, setOpen } = useInfoPopup();
     const [content, setContent] = useState({} as SpeciesContent)
 
     // Fetch species data

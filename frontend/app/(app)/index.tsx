@@ -2,14 +2,11 @@ import { View, Text } from 'react-native';
 import Button from '../../components/button';
 import { useAuthStore } from '../../auth/authStore';
 import Badge from '../../assets/fish badge.svg';
-import { InfoPopupProvider, useInfoPopup } from '../../contexts/info-popup-context';
 import InfoPopup from '../../components/info-popup';
-import { cuttlefish, greatWhite, redSnapper } from '../../types/species';
 import PopulatedInfoPopupButton from '../../components/populated-info-popup';
 
 const Home = () => {
   const { logout, loading, error: authError } = useAuthStore();
-  const { setSpeciesContent, isOpen, setOpen } = useInfoPopup();
 
   return (
     <View className="flex-1 justify-center items-center">
