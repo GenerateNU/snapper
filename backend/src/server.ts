@@ -15,6 +15,7 @@ import { resolve } from 'path';
 import dotenv from 'dotenv';
 import { serve, setup } from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
+import compression from 'compression';
 
 dotenv.config({ path: resolve(__dirname, '../.env') });
 
@@ -45,6 +46,8 @@ const spec = swaggerJsDoc(options);
 
 export const startServer = () => {
   initializeLogging();
+
+  router.use(compression({ threshold: 0 }));
 
   router.use(sessionMiddleware);
 
