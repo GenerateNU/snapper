@@ -20,10 +20,11 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
       'supabaseId',
       'badges',
       'diveLogs',
-      'fishCollected',
+      'speciesCollected',
       'followers',
       'following',
       'profilePicture',
+      'name',
     ];
 
     //TODO: Will not change with schema

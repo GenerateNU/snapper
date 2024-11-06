@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const DiveLogSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  fishTags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Fish' }],
+  speciesTags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Species' }],
   location: {
     type: {
       type: String,

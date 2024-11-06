@@ -5,7 +5,7 @@ import { UserService, UserServiceImpl } from '../../services/userService';
 const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
-export const getUserFish = async (
+export const getUserSpecies = async (
   req: express.Request,
   res: express.Response,
 ) => {
@@ -31,19 +31,21 @@ export const getUserFish = async (
         .json({ error: 'Unable to find user of ID: ' + userID });
     }
 
-    const fishCollected = await userService.getFish(foundUser._id.toString());
+    const speciesCollected = await userService.getSpecies(
+      foundUser._id.toString(),
+    );
 
     //Return the OK status
     return res.status(200).json({
-      fish: fishCollected,
-      message: 'Successfully found fish for user:' + userID,
+      species: speciesCollected,
+      message: 'Successfully found species for user:' + userID,
     });
   } catch (err) {
     //Handle error
-    console.error("Error while searching for User's fish:\n", err);
+    console.error("Error while searching for User's species:\n", err);
     return res.status(500).json({
       error:
-        "Internal server error while searching for the user's fish.' + err",
+        "Internal server error while searching for the user's species.' + err",
     });
   }
 };

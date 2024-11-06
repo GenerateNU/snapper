@@ -35,9 +35,8 @@ export interface UserService {
     currentUserId: string,
     targetUserId: string,
   ): Promise<boolean>;
-  getFish(id: string): Promise<Document[] | null>;
+  getSpecies(id: string): Promise<Document[] | null>;
   getDiveLogs(id: string): Promise<Document[] | null>;
-  getAllUserInfo(id: string): Promise<Document | null>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -89,23 +88,23 @@ export class UserServiceImpl implements UserService {
     return !!user;
   }
 
-  async getFish(id: string): Promise<Document[] | null> {
-    const user = await UserModel.findById(id).populate('fishCollected').exec();
-    return user ? user.fishCollected : null;
+  async getSpecies(id: string): Promise<Document[] | null> {
+    const user = await UserModel.findById(id)
+      .populate('speciesCollected')
+      .exec();
+    return user ? user.speciesCollected : null;
   }
 
   async getDiveLogs(userId: string): Promise<Document[] | null> {
-    const user = await this.getAllUserInfo(userId);
-    return user ? user.diveLogs : null;
-  }
-
-  async getAllUserInfo(id: string): Promise<Document | null> {
-    const user = await UserModel.findById(id)
+    const user = await UserModel.findById(userId)
       .populate({
         path: 'diveLogs',
-        populate: { path: 'fishTags' },
+        populate: {
+          path: 'speciesTags',
+          select: 'commonNames scientificName',
+        },
       })
       .exec();
-    return user;
+    return user ? user.diveLogs : null;
   }
 }

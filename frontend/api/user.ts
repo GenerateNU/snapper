@@ -17,12 +17,12 @@ export async function getUserDiveLogs(): Promise<any> {
   return data.divelogs;
 }
 
-export async function getUserFishById(id: string): Promise<any> {
+export async function getUserSpeciesById(id: string): Promise<any> {
   const data = await fetchData(
-    `/user/${id}/fish`,
-    "Failed to fetch user's fish",
+    `/user/${id}/species`,
+    "Failed to fetch user's species",
   );
-  return data.fish;
+  return data.species;
 }
 
 export async function getUserDiveLogsById(id: string): Promise<any> {
@@ -33,12 +33,12 @@ export async function getUserDiveLogsById(id: string): Promise<any> {
   return data.divelogs;
 }
 
-export async function getUserFish(): Promise<any> {
+export async function getUserSpecies(): Promise<any> {
   const data = await fetchData(
-    '/user/items/fish',
-    "Failed to fetch user's fish",
+    '/user/items/species',
+    "Failed to fetch user's species",
   );
-  return data.fish;
+  return data.species;
 }
 
 export async function followUser(

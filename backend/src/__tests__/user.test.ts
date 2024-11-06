@@ -50,7 +50,7 @@ describe('User Routes', () => {
       const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
       const user = {
         diveLogs: [],
-        fishCollected: [],
+        speciesCollected: [],
         followers: [],
         following: [],
         _id: '66e357c93572d39e66a0ba31',
@@ -67,7 +67,7 @@ describe('User Routes', () => {
       expect(res.body).toEqual({
         user: {
           diveLogs: [],
-          fishCollected: [],
+          speciesCollected: [],
           followers: [],
           following: [],
           _id: '66e357c93572d39e66a0ba31',
@@ -89,25 +89,25 @@ describe('User Routes', () => {
     });
   });
 
-  describe('GET /user/items/fish', () => {
-    it('Gets specific fish for user', async () => {
+  describe('GET /user/items/species', () => {
+    it('Gets specific species for user', async () => {
       const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
       const user = {
         _id: id,
-        fishCollected: [],
+        speciesCollected: [],
       };
 
       mockUserFindById.mockReturnValue({
         populate: jest.fn().mockReturnThis(),
-        exec: jest.fn().mockResolvedValue({ fishCollected: [] }),
+        exec: jest.fn().mockResolvedValue({ speciesCollected: [] }),
       });
       mockUserModelFindOne.mockResolvedValue(user);
 
-      const res = await request(app).get(`/user/items/fish`);
+      const res = await request(app).get(`/user/items/species`);
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
-        fish: [],
-        message: `Successfully found fish for user:${id}`,
+        species: [],
+        message: `Successfully found species for user:${id}`,
       });
     });
   });

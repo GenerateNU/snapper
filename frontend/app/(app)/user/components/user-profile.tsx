@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Stack } from 'expo-router';
 import { useAuthStore } from '../../../../auth/authStore';
 import Arrow from '../../../../components/arrow';
+import InfoPopup from '../../../../components/info-popup';
 
 const User = ({ id }: { id: string }) => {
   const { supabaseId } = useAuthStore();
@@ -56,6 +57,7 @@ const User = ({ id }: { id: string }) => {
           showsVerticalScrollIndicator={false}
         />
       </SafeAreaView>
+      <InfoPopup />
     </LinearGradient>
   );
 };

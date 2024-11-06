@@ -54,6 +54,7 @@ export const DiveLogController = {
       }
       res.status(200).json(diveLog);
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: 'Internal server error' });
     }
   },
