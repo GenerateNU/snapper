@@ -13,9 +13,7 @@ export const getByScientificName = async (
   res: express.Response,
 ) => {
   const scientificName = req.params.scientificName;
-  const species = await Species.findOne({
-    scientificName: scientificName,
-  });
+  const species = await Species.findOne({ scientificName: scientificName });
   if (!species) return res.status(404).json({ message: 'Species not found' });
   return res.status(200).json(species);
 };
