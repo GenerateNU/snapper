@@ -13,6 +13,7 @@ const PopulatedInfoPopupButton = (props: { speciesId: string }) => {
     // Fetch species data
     useEffect(() => {
         const fetchData = async () => {
+            // Can be changed to different url depending on how we want to fetch
             const response = await fetch(`${API_BASE_URL}/species/scientific/${props.speciesId}`);
             const value = await response.json();
             console.log(value)
@@ -27,7 +28,7 @@ const PopulatedInfoPopupButton = (props: { speciesId: string }) => {
         setOpen()
     }
 
-    return <Button onPress={updateContent} text={content.commonNames ? content.commonNames[0] : "Loading"} />
+    return <Button onPress={updateContent} text={content.commonNames ? content.commonNames[0] : "Loading..."} />
 }
 
 export default PopulatedInfoPopupButton

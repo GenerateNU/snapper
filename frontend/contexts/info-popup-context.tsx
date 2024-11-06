@@ -2,18 +2,21 @@ import { ReactNode, createContext, useContext, useState } from "react";
 import { SpeciesContent } from "../types/species"
 
 const defaultContent: SpeciesContent = {
-    commonName: "common",
+    commonNames: ["common"],
+    aphiaId: "0",
     scientificName: "scientific",
     introduction: "introduction",
+    articleTitle: "Title",
+    articleUrl: "wwww.wikipedia.org/stuff",
     imageUrls: [],
-    location: "Unknown",
+    locations: [],
 }
 
 const InfoPopupContext = createContext({ speciesContent: defaultContent, setSpeciesContent: (content: SpeciesContent) => console.log("Not working :("), isOpen: false, setOpen: () => console.log("Not working :("), setClose: () => console.log("Not working :(") })
 
 export const InfoPopupProvider = (props: { children: ReactNode }) => {
     const [speciesContent, setSpeciesContent] = useState(defaultContent)
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const setOpen = () => setIsOpen(true)
     const setClose = () => setIsOpen(false)
 

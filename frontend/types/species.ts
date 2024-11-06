@@ -6,5 +6,5 @@ export type SpeciesContent = {
     aphiaId: string,
     articleUrl: string,
     articleTitle: string,
-    location?: string,
+    locations: string[],
 }

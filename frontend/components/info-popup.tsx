@@ -32,7 +32,7 @@ const InfoPopup = () => {
             <View className=" bg-primary-blue pt-12 pb-12 px-8 flex flex-row justify-between">
                 <View className=" flex flex-col gap-1">
                     <Text className=" text-sm">
-                        📍 {speciesContent.location}
+                        📍 {speciesContent.locations?.length > 0 ? speciesContent.locations.join(", ") : "Unknown"}
                     </Text>
                     <Text className=" text-2xl font-semibold">
                         {speciesContent.commonNames && speciesContent.commonNames[0]}
@@ -49,7 +49,7 @@ const InfoPopup = () => {
                         <Text className=" text-xs font-bold">Photos:</Text>
                         <Text className=" text-xs">View all photos</Text>
                     </View>
-                    {speciesContent.imageUrls.length > 0 ? <ScrollView horizontal className="flex flex-row gap-2">
+                    {speciesContent.imageUrls?.length > 0 ? <ScrollView horizontal className="flex flex-row gap-2">
                         {speciesContent.imageUrls.map((url, i) => (
                             <Image style={{ overlayColor: "white" }} key={i} className=" w-20 h-20 rounded-xl overlay" source={{ uri: url }}></Image>
                         ))}
