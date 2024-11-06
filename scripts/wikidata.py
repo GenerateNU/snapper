@@ -6,18 +6,20 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 
 ENDPOINT_URL = "https://query.wikidata.org/sparql"
 
-QUERY = """SELECT ?common_name ?scientific_name ?fish ?article ?article_suffix ?aphia_id ?image_url
+QUERY = """SELECT ?common_name ?locationLabel ?scientificName ?fish ?articleUrl ?articleTitle ?aphiaId ?image_url
 WHERE {{
   ?fish wdt:P171* wd:{class_qid}.
   ?fish wdt:P105 wd:Q7432.
-  ?fish wdt:P850 ?aphia_id.
+  ?fish wdt:P850 ?aphiaId.
   ?fish wdt:P18 ?image_url.
-  ?fish wdt:P225 ?scientific_name.
+  ?fish wdt:P225 ?scientificName.
   ?fish wdt:P1843 ?common_name.
-  ?article schema:about ?fish .
-  ?article schema:inLanguage ?lang ;
-           schema:name ?article_suffix;
+  ?articleUrl schema:about ?fish .
+  ?articleUrl schema:inLanguage ?lang ;
+           schema:name ?articleTitle;
            schema:isPartOf <https://en.wikipedia.org/> .
+  
+  OPTIONAL{{?fish wdt:P9714 ?location.}}
   
   FILTER(LANGMATCHES(LANG(?common_name), "en"))
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}

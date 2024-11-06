@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 import pandas as pd
+import numpy as np
 
 from wikidata import Wikidata
 from wikipedia import get_intros
@@ -36,10 +37,24 @@ def populate_wikidata():
         batch_out = []
         for fish, info in df.groupby("fish"):
             out = info.drop(columns=["common_name", "image_url"])
-            out = out.rename(columns={"fish": "_id", "aphia_id": "aphiaId", "article": "articleUrl", "article_suffix": "articleTitle", "scientific_name": "scientificName", "intro": "introduction"})
+            if "locationLabel" in info.columns:
+                out = out.drop(columns="locationLabel")
+            else:
+                info["locationLabel"] = pd.Series(dtype='object')
+
+            # Replace NaN with None in the locationLabel column
+            info["locationLabel"] = info["locationLabel"].replace({np.nan: None})
+
+            out['fish'] = out['fish'].str.split('/').str[-1]
+            out = out.rename(columns={"fish": "_id" })
             out = out.iloc[0].to_dict()
             out["commonNames"] = list(set(info["common_name"].to_list()))
             out["imageUrls"] = list(set(info["image_url"].to_list()))
+            if "locationLabel" in info.columns:
+                # Filter out None values to avoid NaN in the locations list
+                out["locations"] = [loc for loc in set(info["locationLabel"].to_list()) if loc is not None]
+            else:
+                out["locations"] = []  # Empty list if locationLabel column is missing
             batch_out.append(out)
 
         try:
@@ -91,7 +106,7 @@ def populate_worms():
 
 
 def main():
-    # populate_wikidata()
+    populate_wikidata()
     populate_wikipedia_intros()
     # populate_worms()
 
