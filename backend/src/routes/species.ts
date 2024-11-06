@@ -40,24 +40,6 @@ import { getById, getByScientificName } from '../controllers/species/get';
  *         description: Unauthorized
  *       404:
  *         description: species not found
- * /species/aphia/{aphiaId}:
- *   get:
- *     summary: Get species by aphiaId
- *     description: Retrieve a species by its unique aphiaId.
- *     parameters:
- *       - in: path
- *         name: aphiaId
- *         required: true
- *         description: aphiaId of the species to retrieve
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successfully retrieved species
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: species not found
  */
 export default (router: express.Router) => {
     router.get('/species/id/:id', isAuthenticated, getById);

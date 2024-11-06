@@ -16,7 +16,6 @@ const PopulatedInfoPopupButton = (props: { speciesId: string }) => {
             // Can be changed to different url depending on how we want to fetch
             const response = await fetch(`${API_BASE_URL}/species/scientific/${props.speciesId}`);
             const value = await response.json();
-            console.log(value)
             setContent(value as SpeciesContent);
         };
 
