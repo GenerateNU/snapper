@@ -32,8 +32,11 @@ def populate_wikidata():
             out["image_urls"] = list(set(info["image_url"].to_list()))
             batch_out.append(out)
 
-        n = wikidata.insert_many(batch_out, ordered=False)
-        print("Inserted:", len(n.inserted_ids))
+        try:
+            n = wikidata.insert_many(batch_out, ordered=False)
+            print("Inserted:", len(n.inserted_ids))
+        except:
+            print("Error inserting documents")
 
 
 def populate_wikipedia_intros():
@@ -63,19 +66,23 @@ def populate_worms():
     pages = (wikidata.count_documents({}) // BATCH_SIZE) + 1
 
     for i in range(pages):
-        batch = [
-            item["wormsLabel"]
-            for item in wikidata.find({}, {}).limit(BATCH_SIZE).skip(i * BATCH_SIZE)
-        ]
-        attributes = fetch_worms(batch)
-        print(attributes)
-        n = worms.insert_many(attributes)
-        print("Inserted:", len(n.inserted_ids))
+        try:
+            batch = [
+                item["aphia_id"]
+                for item in wikidata.find({}, {}).limit(BATCH_SIZE).skip(i * BATCH_SIZE)
+                if item.get("aphia_id")
+            ]
+            attributes = fetch_worms(batch)
+            print(attributes)
+            n = worms.insert_many(attributes, ordered=False)
+            print("Inserted:", len(n.inserted_ids))
+        except Exception as e:
+            print("Error when fetching and/or inserting worms", e)
 
 
 def main():
-    populate_wikidata()
-    populate_wikipedia_intros()
+    # populate_wikidata()
+    # populate_wikipedia_intros()
     populate_worms()
 
 
