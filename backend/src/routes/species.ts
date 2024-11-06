@@ -1,11 +1,10 @@
 import express from 'express';
 import { isAuthenticated } from '../middlewares/authMiddleware';
-import { getById } from '../controllers/species/getById';
-import { getByScientificName } from '../controllers/species/getByScientificName';
+import { getById, getByScientificName } from '../controllers/species/get';
 
 /**
  * @swagger
- * /species/{id}:
+ * /species/id/{id}:
  *   get:
  *     summary: Get species by ID
  *     description: Retrieve a species by its unique ID.
@@ -23,7 +22,7 @@ import { getByScientificName } from '../controllers/species/getByScientificName'
  *         description: Unauthorized
  *       404:
  *         description: species not found
- * /species/{scientificName}:
+ * /species/scientifc/{scientificName}:
  *   get:
  *     summary: Get species by scientificName
  *     description: Retrieve a species by its unique scientificName.
@@ -41,8 +40,26 @@ import { getByScientificName } from '../controllers/species/getByScientificName'
  *         description: Unauthorized
  *       404:
  *         description: species not found
+ * /species/aphia/{aphiaId}:
+ *   get:
+ *     summary: Get species by aphiaId
+ *     description: Retrieve a species by its unique aphiaId.
+ *     parameters:
+ *       - in: path
+ *         name: aphiaId
+ *         required: true
+ *         description: aphiaId of the species to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved species
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: species not found
  */
 export default (router: express.Router) => {
-    router.get('/species/:id', isAuthenticated, getById);
-    router.get('/species/:scientificName', isAuthenticated, getByScientificName);
+    router.get('/species/id/:id', isAuthenticated, getById);
+    router.get('/species/scientific/:scientificName', isAuthenticated, getByScientificName);
 };
