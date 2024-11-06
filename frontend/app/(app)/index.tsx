@@ -22,12 +22,12 @@ const Home = () => {
         textOnly
         text={loading ? 'Logging out' : 'Logout'}
       />
-      <View className=' flex flex-col'>
-        <PopulatedInfoPopupButton speciesId='Canthidermis maculata' />
-        <PopulatedInfoPopupButton speciesId='Sufflamen bursa' />
-        <PopulatedInfoPopupButton speciesId='Gaidropsarus mediterraneus' />
-        <PopulatedInfoPopupButton speciesId='Gaidropsarus vulgaris' />
-        <PopulatedInfoPopupButton speciesId='Spicara smaris' />
+      <View className=" flex flex-col">
+        <PopulatedInfoPopupButton speciesId="Canthidermis maculata" />
+        <PopulatedInfoPopupButton speciesId="Sufflamen bursa" />
+        <PopulatedInfoPopupButton speciesId="Gaidropsarus mediterraneus" />
+        <PopulatedInfoPopupButton speciesId="Gaidropsarus vulgaris" />
+        <PopulatedInfoPopupButton speciesId="Spicara smaris" />
       </View>
       <InfoPopup />
     </View>

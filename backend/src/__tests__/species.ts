@@ -58,7 +58,7 @@ describe('GET /species/scientific/id', () => {
 
   it('Gets a specific species by scientific name', async () => {
     const id = new mongoose.Types.ObjectId().toString();
-    const scientificName = "Scorpaena brachion"
+    const scientificName = 'Scorpaena brachion';
     const species = { _id: id, scientificName: scientificName };
     speciesFindMock.mockResolvedValue(species);
     const res = await request(app).get(`/species/scientific/${scientificName}`);

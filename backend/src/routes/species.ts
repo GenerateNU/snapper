@@ -42,6 +42,10 @@ import { getById, getByScientificName } from '../controllers/species/get';
  *         description: species not found
  */
 export default (router: express.Router) => {
-    router.get('/species/id/:id', isAuthenticated, getById);
-    router.get('/species/scientific/:scientificName', isAuthenticated, getByScientificName);
+  router.get('/species/id/:id', isAuthenticated, getById);
+  router.get(
+    '/species/scientific/:scientificName',
+    isAuthenticated,
+    getByScientificName,
+  );
 };
