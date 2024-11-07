@@ -33,9 +33,11 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.685.0",
     "@supabase/supabase-js": "^2.45.3",
+    "@types/compression": "^1.7.5",
     "@types/express-session": "^1.18.0",
     "@types/supertest": "^6.0.2",
     "aws-sdk": "^2.1691.0",
+    "compression": "^1.7.5",
     "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.5",
     "expo-server-sdk": "^3.11.0",

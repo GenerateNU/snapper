@@ -20,11 +20,12 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
       'supabaseId',
       'badges',
       'diveLogs',
-      'fishCollected',
+      'speciesCollected',
       'followers',
       'following',
       'profilePicture',
-      'deviceTokens'
+      'deviceTokens',
+      'name'
     ];
 
     //TODO: Will not change with schema
@@ -50,7 +51,6 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
 
     //Should mutate the id with the given request
     const user = await editUserBySupabaseId(userId, req.body);
-    console.log(user);
     //Return the OK status
     return res.status(200).json({
       message: 'Successfully updated user:' + userId,

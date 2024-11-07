@@ -13,7 +13,7 @@ export interface DiveLogService {
 
 export class DiveLogServiceImpl implements DiveLogService {
   async createDiveLog(
-    data: Partial<Document & { user: string; fishTags?: string[] }>,
+    data: Partial<Document & { user: string; speciesTags?: string[] }>,
   ): Promise<Document> {
     const diveLog = await DiveLog.create(data);
 
@@ -24,17 +24,18 @@ export class DiveLogServiceImpl implements DiveLogService {
       },
     };
 
-    // update fishCollected in user
-    if (data.fishTags && data.fishTags.length > 0) {
-      update.$addToSet.fishCollected = { $each: data.fishTags };
+    if (data.speciesTags && data.speciesTags.length > 0) {
+      update.$addToSet.speciesCollected = { $each: data.speciesTags };
     }
 
-    await UserModel.findByIdAndUpdate(data.user, update, { new: true });
+    const user: any = await UserModel.findByIdAndUpdate(data.user, update, {
+      new: true,
+    });
     return diveLog;
   }
 
   async getDiveLogById(id: string): Promise<Document | null> {
-    return DiveLog.findById(id).exec();
+    return DiveLog.findById(id).populate('speciesTags').exec();
   }
 
   async updateDiveLog(

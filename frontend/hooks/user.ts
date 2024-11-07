@@ -1,9 +1,9 @@
 import {
   getMe,
   getUserDiveLogs,
-  getUserFish,
+  getUserSpecies,
   getUserById,
-  getUserFishById,
+  getUserSpeciesById,
   getUserDiveLogsById,
   followUser,
 } from '../api/user';
@@ -18,8 +18,8 @@ export const useUserDiveLogs = () => {
   return useQueryBase(['divelogs'], getUserDiveLogs);
 };
 
-export const useUserFish = () => {
-  return useQueryBase(['fish'], getUserFish);
+export const useUserSpecies = () => {
+  return useQueryBase(['species'], getUserSpecies);
 };
 
 export const useUserById = (id: string) => {
@@ -30,8 +30,8 @@ export const useUserDivelogById = (id: string) => {
   return useQueryBase(['divelogs', id], () => getUserDiveLogsById(id));
 };
 
-export const useUserFishById = (id: string) => {
-  return useQueryBase(['fish', id], () => getUserFishById(id));
+export const useUserSpeciesById = (id: string) => {
+  return useQueryBase(['species', id], () => getUserSpeciesById(id));
 };
 
 export const useFollowUser = () => {

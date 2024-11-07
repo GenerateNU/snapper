@@ -1,20 +1,19 @@
 import { TouchableOpacity, Text } from 'react-native';
 
-interface FishTagProps {
-  id: string;
-  name: string;
+interface SpeciesTagProps {
+  text?: string;
   onPress?: () => void;
 }
 
-const FishTag: React.FC<FishTagProps> = ({ id, name, onPress }) => {
+const SpeciesTag: React.FC<SpeciesTagProps> = ({ text, onPress }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       className="rounded-md bg-slate-200 p-[3%]"
     >
-      <Text>{name}</Text>
+      <Text>{text}</Text>
     </TouchableOpacity>
   );
 };
 
-export default FishTag;
+export default SpeciesTag;

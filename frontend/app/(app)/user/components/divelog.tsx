@@ -3,8 +3,10 @@ import { View, Text, Image } from 'react-native';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import Profile from '../../../../components/profile';
 import IconButton from '../../../../components/icon-button';
-import FishTag from './fish-tag';
 import { timeAgo } from '../../../../utils/profile';
+import SpeciesTag from './species-tag';
+import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
+import InfoPopup from '../../../../components/info-popup';
 
 interface DiveLogProps {
   username: string;
@@ -12,7 +14,7 @@ interface DiveLogProps {
   description?: string;
   profilePhoto: string;
   date: Date;
-  fishTags?: any[];
+  speciesTags?: any[];
   isMyProfile: boolean;
   divelogId: string;
 }
@@ -23,7 +25,7 @@ const DiveLog: React.FC<DiveLogProps> = ({
   description,
   profilePhoto,
   date,
-  fishTags,
+  speciesTags,
   isMyProfile,
   divelogId,
 }) => {
@@ -65,10 +67,15 @@ const DiveLog: React.FC<DiveLogProps> = ({
         </View>
       )}
       {description && <Text className="pb-[5%]">{description}</Text>}
-      {fishTags && (
-        <View style={{ gap: 10 }} className="flex flex-row flex-wrap">
-          {fishTags?.map((fish: any) => (
-            <FishTag key={fish._id} id={fish._id} name={fish.commonName} />
+      {speciesTags && (
+        <View style={{ gap: 10 }} className="flex flex-row flex-wrap mt-2">
+          {speciesTags?.map((species, key) => (
+            <PopulatedInfoPopupButton
+              key={`${species.id}-${key}`}
+              speciesId={species.scientificName}
+            >
+              <SpeciesTag />
+            </PopulatedInfoPopupButton>
           ))}
         </View>
       )}

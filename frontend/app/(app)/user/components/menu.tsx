@@ -4,13 +4,14 @@ import { useAuthStore } from '../../../../auth/authStore';
 import {
   useUserById,
   useUserDivelogById,
-  useUserFishById,
+  useUserSpeciesById,
 } from '../../../../hooks/user';
 import DiveLog from './divelog';
 import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
+import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
@@ -26,14 +27,14 @@ const Menu = ({ id }: { id: string }) => {
   } = useUserDivelogById(id);
 
   const {
-    data: fishData,
-    isError: fishError,
-    isLoading: fishLoading,
-  } = useUserFishById(id);
+    data: speciesData,
+    isError: speciesError,
+    isLoading: speciesLoading,
+  } = useUserSpeciesById(id);
 
   const noData =
     (!diveLogData || diveLogData.length === 0) &&
-    (!fishData || fishData.length === 0);
+    (!speciesData || speciesData.length === 0);
 
   const profilePhoto = userData?.user.profilePicture || PROFILE_PHOTO;
   const username = userData?.user.username;
@@ -44,7 +45,7 @@ const Menu = ({ id }: { id: string }) => {
       <DiveLog
         divelogId={item._id}
         isMyProfile={isViewingOwnProfile}
-        fishTags={item?.fishTags}
+        speciesTags={item?.speciesTags}
         image={firstPhoto}
         description={item?.description}
         username={username}
@@ -54,9 +55,13 @@ const Menu = ({ id }: { id: string }) => {
     );
   };
 
-  const renderSpecies = ({ item }: { item: any }) => (
-    <Species id={item._id} name={item.commonName} />
-  );
+  const renderSpecies = ({ item }: { item: any }) => {
+    return (
+      <PopulatedInfoPopupButton key={item._id} speciesId={item.scientificName}>
+        <Species />
+      </PopulatedInfoPopupButton>
+    );
+  };
 
   if (noData) {
     return;
@@ -93,7 +98,7 @@ const Menu = ({ id }: { id: string }) => {
           <FlatList
             data={diveLogData}
             renderItem={renderDiveLog}
-            ItemSeparatorComponent={() => <View className="h-[3%]"></View>}
+            ItemSeparatorComponent={() => <View className="h-5"></View>}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: 'flex-start',
@@ -103,7 +108,7 @@ const Menu = ({ id }: { id: string }) => {
           />
         ))}
       {category === 'Species' &&
-        (fishLoading ? (
+        (speciesLoading ? (
           <FlatList
             data={[1, 2, 3, 4, 5, 6]}
             renderItem={() => <SpeciesSkeleton />}
@@ -119,13 +124,13 @@ const Menu = ({ id }: { id: string }) => {
               gap: 10,
             }}
           />
-        ) : fishError ? (
+        ) : speciesError ? (
           <Text className="text-gray-500 text-md">
             Error loading species. Please try again.
           </Text>
         ) : (
           <FlatList
-            data={fishData}
+            data={speciesData}
             renderItem={renderSpecies}
             numColumns={3}
             contentContainerStyle={{

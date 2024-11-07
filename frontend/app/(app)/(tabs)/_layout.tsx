@@ -2,7 +2,7 @@ import React from 'react';
 import Home from '../../../assets/house.svg';
 import Search from '../../../assets/search.svg';
 import Plus from '../../../assets/plus.svg';
-import Star from '../../../assets/star.svg';
+import Star from '../../../assets/Star.svg';
 import Profile from '../../../assets/profile.svg';
 import {
   faHouse,
