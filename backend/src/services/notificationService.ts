@@ -88,8 +88,8 @@ export class NotificationServiceImpl implements NotificationService {
 
     const diveLog: any = await DiveLog.findById(diveLogId)
       .populate({
-        path: 'fishTags',
-        select: 'commonName',
+        path: 'speciesTags',
+        select: 'commonNames',
       })
       .exec();
 
@@ -97,13 +97,15 @@ export class NotificationServiceImpl implements NotificationService {
       throw new Error('DiveLog not found');
     }
 
-    const fishNames =
-      diveLog.fishTags
-        .map((fish: { commonName: string }) => fish.commonName)
-        .join(', ') || 'a mysterious fish';
+    const speciesNames =
+      diveLog.speciesTags
+        .map((species: { commonNames: string[] }) => species.commonNames[0])
+        .join(', ') || 'a mysterious marine animal';
 
-    const message = `${fishNames} was found by ${actor.username}!`;
+    const message = `${speciesNames} was found by ${actor.username}!`;
 
+    console.log(message);
+    
     const notifications = actor.followers.map((followerId: any) => ({
       type: 'POST',
       message,
