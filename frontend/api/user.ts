@@ -1,5 +1,7 @@
-import { API_BASE_URL } from '../consts/onboarding';
+import { apiConfig } from './apiContext';
 import { fetchData } from './base';
+
+const API_BASE_URL = apiConfig;
 
 export async function getMe(): Promise<any> {
   return await fetchData('/user/me', 'Failed to fetch this user data');
