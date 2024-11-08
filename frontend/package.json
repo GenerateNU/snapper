@@ -38,7 +38,8 @@
     "react-native-svg-transformer": "^0.20.0",
     "zod": "^3.23.8",
     "zustand": "^3.7.2",
-    "zustand-persist": "^0.4.0"
+    "zustand-persist": "^0.4.0",
+    "expo-linear-gradient": "~13.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
