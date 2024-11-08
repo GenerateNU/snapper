@@ -19,6 +19,12 @@ import {
 } from '../../../consts/testConstant';
 import { DiveLog } from '../../../models/diveLog';
 
+jest.mock('../../../services/notificationService', () => ({
+  NotificationServiceImpl: jest.fn().mockImplementation(() => ({
+    createPostNotification: jest.fn().mockResolvedValue([]),
+  })),
+}));
+
 const app = express();
 const router = express.Router();
 
