@@ -74,13 +74,17 @@ const Menu = ({ id }: { id: string }) => {
           className={`py-[3%] w-[50%] justify-center items-center ${category === 'Dives' ? 'border-b-2 border-darkblue' : 'border-b-2 border-gray-200'}`}
           onPress={() => setCategory('Dives')}
         >
-          <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">Dives</Text>
+          <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">
+            Dives
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           className={`py-[3%] w-[50%] justify-center items-center ${category === 'Species' ? 'border-b-2 border-darkblue' : 'border-b-2 border-gray-200'}`}
           onPress={() => setCategory('Species')}
         >
-          <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">Species</Text>
+          <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">
+            Species
+          </Text>
         </TouchableOpacity>
       </View>
       {category === 'Dives' &&

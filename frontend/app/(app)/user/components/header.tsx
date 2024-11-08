@@ -46,7 +46,9 @@ const Header = ({ id }: { id: string }) => {
   if (isError) {
     return (
       <View className="flex flex-col w-full p-4">
-        <Text className="text-red-500 text-sm sm:text-base md:text-lg">Failed to load user data.</Text>
+        <Text className="text-red-500 text-sm sm:text-base md:text-lg">
+          Failed to load user data.
+        </Text>
       </View>
     );
   }
@@ -60,7 +62,9 @@ const Header = ({ id }: { id: string }) => {
             <Text className="font-bold text-darkblue text-md sm:text-lg md:text-xl">
               {formatNumber(data?.user.followers.length)}
             </Text>
-            <Text className="text-darkblue text-xs sm:text-base">Followers</Text>
+            <Text className="text-darkblue text-xs sm:text-base">
+              Followers
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
             <Text className="font-bold text-darkblue text-md sm:text-lg md:text-xl">
