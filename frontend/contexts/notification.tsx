@@ -50,10 +50,6 @@ export const NotificationProvider = ({
         const body: string | undefined =
           notification.request.content.body ?? undefined;
         const data: any = notification.request.content.data ?? undefined;
-        console.log(data);
-        console.log('Notification Title:', title);
-        console.log('Notification Body:', body);
-
         setLastNotification({ title, body, data });
       });
 

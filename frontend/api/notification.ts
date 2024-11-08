@@ -10,7 +10,6 @@ export const manageExpoToken = async (
     const requestBody = {
       token: token,
     };
-    console.log(requestBody);
 
     const response = await fetch(
       `${API_BASE_URL}/user/${userId}/expoDeviceToken`,
