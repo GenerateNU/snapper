@@ -13,8 +13,10 @@ const Species: React.FC<SpeciesProps> = ({ image, text, onPress }) => {
       onPress={onPress}
       className="bg-water mb-3 rounded-md flex flex-col w-[32%] justify-center items-center pt-[2%] pb-[5%]"
     >
-      <Fish height={100} width={100} />
-      <Text className="pt-2 font-bold">{text}</Text>
+      <Fish height={80} width={80} />
+      <Text className="text-center px-2 font-bold text-xs sm:text-sm md:text-md">
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
