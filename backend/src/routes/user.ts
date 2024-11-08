@@ -1,9 +1,6 @@
 import express from 'express';
 import { isAuthenticated } from '../middlewares/authMiddleware';
 import { getUserByID } from '../controllers/User/GetUserByID';
-import { getUserDiveLogs } from '../controllers/User/GetMyDivelog';
-import { getUserSpecies } from '../controllers/User/GetMySpecies';
-import { getUserDiveLogs } from '../controllers/User/GetMyDivelog';
 import { getUserSpecies } from '../controllers/User/GetMySpecies';
 import { PutUser } from '../controllers/User/PutUser';
 import { toggleUserFollow } from '../controllers/User/toggleUserFollow';
@@ -13,6 +10,7 @@ import { getUserDiveLogsById } from '../controllers/User/GetUserDivelog';
 import { toggleLikeDivelog } from '../controllers/User/toggleLikeDivelog';
 import { getNotifications } from '../controllers/User/getNotification';
 import { ExpoTokenController } from '../controllers/User/expoToken';
+import { getUserDiveLogs } from '../controllers/User/GetMyDivelog';
 
 export default (router: express.Router) => {
   router.get('/user/me', isAuthenticated, getUserMe); // get the current user
