@@ -35,8 +35,8 @@ const BigText = forwardRef<TextInput, TextInputProps>((props, ref) => {
         ref={ref}
         placeholder={placeholder}
         placeholderTextColor="#a09b9b"
-        className={`h-[17vh] pt-[1.5vh] border rounded-[18px] px-[5%] bg-gray-200 ${
-          error ? 'border-red-500' : 'border-gray-300'
+        className={`h-[15vh] pt-[1.5vh] border rounded-md px-[5%] bg-white ${
+          error ? 'border-red-500' : 'border-gray-400'
         }`}
         onChangeText={onChangeText}
         value={value}
