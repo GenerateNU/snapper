@@ -28,7 +28,7 @@ const Button: React.FC<ButtonProps> = ({
     <>
       {!textOnly && (
         <TouchableOpacity
-          className={`items-center h-10 justify-center ${small ? 'w-[20%]' : 'w-full'} py-[2%] rounded-lg
+          className={`items-center h-10 justify-center ${small ? 'w-[25%]' : 'w-full'} py-[2%] rounded-lg
             ${isOutlined ? 'bg-transparent border' : backgroundColor ? `bg-${backgroundColor}` : 'bg-ocean'}
             ${isOutlined ? `border border-${backgroundColor || 'ocean'}` : ''}`}
           disabled={disabled}

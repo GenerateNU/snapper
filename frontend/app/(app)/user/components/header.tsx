@@ -46,7 +46,7 @@ const Header = ({ id }: { id: string }) => {
   if (isError) {
     return (
       <View className="flex flex-col w-full p-4">
-        <Text className="text-red-500">Failed to load user data.</Text>
+        <Text className="text-red-500 text-sm sm:text-base md:text-lg">Failed to load user data.</Text>
       </View>
     );
   }
@@ -57,25 +57,25 @@ const Header = ({ id }: { id: string }) => {
         <Profile image={data?.user.profilePicture || PROFILE_PHOTO} />
         <View className="flex flex-row ml-[5%] justify-around w-3/4">
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
-            <Text className="font-bold text-darkblue">
+            <Text className="font-bold text-darkblue text-md sm:text-lg md:text-xl">
               {formatNumber(data?.user.followers.length)}
             </Text>
-            <Text className="text-darkblue">Followers</Text>
+            <Text className="text-darkblue text-xs sm:text-base">Followers</Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
-            <Text className="font-bold text-darkblue">
+            <Text className="font-bold text-darkblue text-md sm:text-lg md:text-xl">
               {formatNumber(data?.user.following.length)}
             </Text>
-            <Text className="text-darkblue">Following</Text>
+            <Text className="text-darkblue text-xs sm:text-md">Following</Text>
           </TouchableOpacity>
         </View>
       </View>
       <View className="flex flex-row justify-between py-[5%]">
         <View>
-          <Text className="font-bold text-xl text-darkblue">
+          <Text className="font-bold text-lg sm:text-xl md:text-2xl text-darkblue">
             {data?.user.name || 'First Last'}
           </Text>
-          <Text className="text-ocean">{`@${data?.user.username}`}</Text>
+          <Text className="text-ocean text-sm sm:text-base">{`@${data?.user.username}`}</Text>
         </View>
         {id !== supabaseId && (
           <Button
