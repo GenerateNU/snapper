@@ -50,8 +50,8 @@ const Layout = () => {
               <Arrow
                 direction="left"
                 onPress={() => {
-                  router.back();
                   clearError();
+                  router.back();
                 }}
               />
             ),
@@ -68,8 +68,8 @@ const Layout = () => {
               <Arrow
                 direction="left"
                 onPress={() => {
-                  router.back();
                   clearError();
+                  router.back();
                 }}
               />
             ),

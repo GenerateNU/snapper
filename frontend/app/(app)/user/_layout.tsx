@@ -6,12 +6,9 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="index"
+        name="[id]"
         options={{
           headerShown: false,
-          headerTitle: '',
-          headerTransparent: true,
-          gestureEnabled: false,
         }}
       />
     </Stack>

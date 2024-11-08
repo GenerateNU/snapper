@@ -19,6 +19,8 @@ db = client["test"]
 def populate_wikidata():
     wikidata = db["species"]
 
+    wikidata.drop()
+
     wikidata_iter = iter(Wikidata())
 
     for batch in wikidata_iter:
@@ -46,7 +48,7 @@ def populate_wikidata():
             info["locationLabel"] = info["locationLabel"].replace({np.nan: None})
 
             out['fish'] = out['fish'].str.split('/').str[-1]
-            out = out.rename(columns={"fish": "_id" })
+            out = out.rename(columns={"fish": "fish" })
             out = out.iloc[0].to_dict()
             out["commonNames"] = list(set(info["common_name"].to_list()))
             out["imageUrls"] = list(set(info["image_url"].to_list()))

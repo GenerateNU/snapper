@@ -55,7 +55,7 @@ export default function FishSearch() {
       <View className="flex flex-row border border-[#d2d9e2] rounded-t-[12px] basis-1/5 items-center pl-2">
         <Image
           className="h-[2.5vh] w-[2.5vh]"
-          source={require('../../../assets/search.png')}
+          source={require('../../../../assets/search.png')}
         />
         <TextInput
           placeholder="Search"

@@ -21,3 +21,5 @@ export const ONBOARDING_DATA = [
     image: require('../assets/Onboarding 4.png'),
   },
 ];
+
+export const API_BASE_URL = 'http://localhost:3000';

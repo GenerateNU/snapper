@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text } from 'react-native';
-import Tag from '../../../components/tag';
+import Tag from '../../../../components/tag';
 import { useFormContext } from 'react-hook-form';
 
 export default function FishTags() {
