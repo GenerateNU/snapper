@@ -6,7 +6,11 @@ export type PushNotification = {
   to: ExpoPushToken;
   title: string;
   body: string;
-  data?: any;
+  sound?: string;
+  data?: {
+    target?: mongoose.Types.ObjectId;
+    targetModel?: 'DiveLog' | 'User';
+  };
 };
 
 export interface Notification {
@@ -43,7 +47,7 @@ export class ExpoServiceImpl implements ExpoService {
   }
 
   async sendPostNotification(notification: Notification): Promise<any> {
-    const { message, actor } = notification;
+    const { message, actor, target, targetModel } = notification;
     const followers = await UserModel.find(
       { following: actor },
       'deviceTokens',
@@ -58,7 +62,12 @@ export class ExpoServiceImpl implements ExpoService {
       (token: string) => ({
         to: token as ExpoPushToken,
         title,
+        sound: 'default',
         body: message,
+        data: {
+          target,
+          targetModel,
+        },
       }),
     );
 
@@ -77,6 +86,7 @@ export class ExpoServiceImpl implements ExpoService {
     const pushNotifications: PushNotification[] = user.deviceTokens.map(
       (token: string) => ({
         to: token as ExpoPushToken,
+        sound: 'default',
         title: 'You have a new like!',
         body: message,
       }),
@@ -97,6 +107,7 @@ export class ExpoServiceImpl implements ExpoService {
     const pushNotifications: PushNotification[] = user.deviceTokens.map(
       (token: string) => ({
         to: token as ExpoPushToken,
+        sound: 'default',
         title: 'You have a new follower!',
         body: message,
       }),
