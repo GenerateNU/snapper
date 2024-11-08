@@ -6,8 +6,8 @@ export type PushNotification = {
   to: ExpoPushToken;
   title: string;
   body: string;
-  sound?: "default" | null;
-  priority?: "default" | "normal" | "high";
+  sound?: 'default' | null;
+  priority?: 'default' | 'normal' | 'high';
   data?: {
     target?: mongoose.Types.ObjectId;
     targetModel?: 'DiveLog' | 'User';
@@ -39,16 +39,16 @@ export class ExpoServiceImpl implements ExpoService {
     this.expo = new Expo();
   }
 
-  async sendPushNotification(notifications: PushNotification[]): Promise<any> {    
+  async sendPushNotification(notifications: PushNotification[]): Promise<any> {
     if (notifications.length > 0) {
-      const messages = notifications.filter(notification => 
-        Expo.isExpoPushToken(notification.to)
-      ).map(notification => ({
-        ...notification,
-        data: {
-          ...notification.data,
-        }
-      }));
+      const messages = notifications
+        .filter((notification) => Expo.isExpoPushToken(notification.to))
+        .map((notification) => ({
+          ...notification,
+          data: {
+            ...notification.data,
+          },
+        }));
 
       const chunks = this.expo.chunkPushNotifications(messages);
       const tickets = [];

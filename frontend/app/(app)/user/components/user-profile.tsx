@@ -21,7 +21,7 @@ const User = ({ id }: { id: string }) => {
   ];
 
   const renderItem = ({ item }: { item: any }) => (
-      <View className="px-[7%]">{item.component}</View>
+    <View className="px-[7%]">{item.component}</View>
   );
 
   return (

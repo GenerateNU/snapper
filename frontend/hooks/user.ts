@@ -6,6 +6,7 @@ import {
   getUserSpeciesById,
   getUserDiveLogsById,
   followUser,
+  getUserNotifications,
 } from '../api/user';
 import { useQueryBase } from './base';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -32,6 +33,10 @@ export const useUserDivelogById = (id: string) => {
 
 export const useUserSpeciesById = (id: string) => {
   return useQueryBase(['species', id], () => getUserSpeciesById(id));
+};
+
+export const useUserNotifications = (id: string) => {
+  return useQueryBase(['notification', id], () => getUserNotifications(id));
 };
 
 export const useFollowUser = () => {

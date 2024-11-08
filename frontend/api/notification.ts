@@ -9,17 +9,20 @@ export const manageExpoToken = async (
   try {
     const requestBody = {
       token: token,
-    }
-    console.log(requestBody); 
+    };
+    console.log(requestBody);
 
-    const response = await fetch(`${API_BASE_URL}/user/${userId}/expoDeviceToken`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${API_BASE_URL}/user/${userId}/expoDeviceToken`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
       },
-      body: JSON.stringify(requestBody),
-    });
-    
+    );
+
     const data = await response.json();
 
     if (!response.ok) {

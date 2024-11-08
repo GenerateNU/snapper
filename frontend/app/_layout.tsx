@@ -7,7 +7,10 @@ import { useAuthStore } from '../auth/authStore';
 import { InfoPopupProvider } from '../contexts/info-popup-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
-import { registerForPushNotifications, unregisterForPushNotifications } from '../utils/notification';
+import {
+  registerForPushNotifications,
+  unregisterForPushNotifications,
+} from '../utils/notification';
 import { NOTIFICATION_TOKEN_KEY } from '../consts/notification';
 import { NotificationProvider } from '../contexts/notification';
 
@@ -34,7 +37,7 @@ const InitialLayout = () => {
 
         const { status } = await Notifications.getPermissionsAsync();
         const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
-        
+
         if (status === 'granted') {
           // register for notifications if user does not have a token
           if (!savedToken) {
@@ -61,9 +64,11 @@ const InitialLayout = () => {
 
     if (isAuthenticated && user?.supabaseId) {
       handleNotificationPermissions();
-      subscription = Notifications.addNotificationResponseReceivedListener(() => {
-        handleNotificationPermissions();
-      });
+      subscription = Notifications.addNotificationResponseReceivedListener(
+        () => {
+          handleNotificationPermissions();
+        },
+      );
     }
 
     return () => {
@@ -75,9 +80,16 @@ const InitialLayout = () => {
 
   useEffect(() => {
     const cleanupNotifications = async () => {
-      if (!isAuthenticated && notificationTokenRef.current && user?.supabaseId) {
+      if (
+        !isAuthenticated &&
+        notificationTokenRef.current &&
+        user?.supabaseId
+      ) {
         try {
-          await unregisterForPushNotifications(user.supabaseId, notificationTokenRef.current);
+          await unregisterForPushNotifications(
+            user.supabaseId,
+            notificationTokenRef.current,
+          );
           await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
           notificationTokenRef.current = null;
         } catch (error) {
@@ -122,11 +134,11 @@ const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-      <NotificationProvider>
-        <InfoPopupProvider>
-          <StatusBar />
-          <InitialLayout />
-        </InfoPopupProvider>
+        <NotificationProvider>
+          <InfoPopupProvider>
+            <StatusBar />
+            <InitialLayout />
+          </InfoPopupProvider>
         </NotificationProvider>
       </AuthProvider>
     </QueryClientProvider>
