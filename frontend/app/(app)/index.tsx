@@ -20,11 +20,10 @@ const Home = () => {
         text={loading ? 'Logging out' : 'Logout'}
       />
       <Button
-        onPress = {() => router.push('/postcreation')}
+        onPress={() => router.push('/postcreation')}
         textOnly
-        text="PostCreation">
-
-      </Button>
+        text="PostCreation"
+      ></Button>
     </View>
   );
 };
