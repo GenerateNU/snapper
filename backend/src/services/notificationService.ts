@@ -104,8 +104,6 @@ export class NotificationServiceImpl implements NotificationService {
 
     const message = `${speciesNames} was found by ${actor.username}!`;
 
-    console.log(message);
-    
     const notifications = actor.followers.map((followerId: any) => ({
       type: 'POST',
       message,
@@ -127,7 +125,7 @@ export class NotificationServiceImpl implements NotificationService {
       .sort({ time: -1 })
       .limit(limit)
       .skip((page - 1) * limit)
-      .populate('actor', 'supabaseId username')
+      .populate('actor', 'supabaseId username profilePicture')
       .exec();
     return notifications;
   }

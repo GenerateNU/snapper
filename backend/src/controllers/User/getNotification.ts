@@ -19,7 +19,7 @@ export const getNotifications = async (
     const user = await findUserBySupabaseId(userId);
 
     if (!user) {
-      return res.status(404).json({error: 'User not found'});
+      return res.status(404).json({ error: 'User not found' });
     }
 
     const userMongoDBId = user._id.toString();

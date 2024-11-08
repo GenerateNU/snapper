@@ -8,9 +8,11 @@ import {
   NotificationService,
   NotificationServiceImpl,
 } from '../../services/notificationService';
+import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
 
 const divelogService: DiveLogService = new DiveLogServiceImpl();
 const notificationService: NotificationService = new NotificationServiceImpl();
+const expoService: ExpoService = new ExpoServiceImpl();
 
 export const toggleLikeDivelog = async (
   req: express.Request,
@@ -46,15 +48,17 @@ export const toggleLikeDivelog = async (
       return res
         .status(200)
         .json({ message: 'Dive log unliked successfully.' });
-    } 
-    else {
+    } else {
       // like if not already liked
       await divelogService.likeDiveLog(currentUserMongoId, divelogId);
-      await notificationService.createLikeNotification(
+      const notification = await notificationService.createLikeNotification(
         currentUserMongoId,
         divelog.user,
         divelog._id,
       );
+      if (notification) {
+        await expoService.sendLikeNotification(notification);
+      }
       return res.status(200).json({ message: 'Dive log liked successfully.' });
     }
   } catch (error) {

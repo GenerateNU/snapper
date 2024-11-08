@@ -1,4 +1,6 @@
-import { API_BASE_URL } from '../consts/onboarding';
+import { apiConfig } from './apiContext';
+
+const API_BASE_URL = apiConfig;
 
 export const sendExpoToken = async (
   token: string,

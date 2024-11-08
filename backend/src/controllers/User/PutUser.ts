@@ -25,7 +25,7 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
       'following',
       'profilePicture',
       'deviceTokens',
-      'name'
+      'name',
     ];
 
     //TODO: Will not change with schema
