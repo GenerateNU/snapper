@@ -39,6 +39,7 @@ export interface UserService {
   getDiveLogs(id: string): Promise<Document[] | null>;
   saveExpoToken(id: string, deviceToken: string): Promise<Document | null>;
   removeExpoToken(id: string, deviceToken: string): Promise<Document | null>;
+  tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -131,5 +132,13 @@ export class UserServiceImpl implements UserService {
       await user.save();
     }
     return user;
+  }
+
+  async tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean> {
+    const user = await UserModel.findById(id);
+    if (user) {
+      return user.deviceTokens.includes(deviceToken);
+    }
+    return false;
   }
 }

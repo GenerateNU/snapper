@@ -29,13 +29,8 @@ export default (router: express.Router) => {
   router.patch('/user/:id/like/:divelogId', isAuthenticated, toggleLikeDivelog);
   router.get('/user/:id/notifications', isAuthenticated, getNotifications);
   router.post(
-    '/user/:id/registerExpoToken',
+    '/user/:id/expoDeviceToken',
     isAuthenticated,
-    new ExpoTokenController().saveExpoToken,
-  );
-  router.post(
-    '/user/:id/removeExpoToken',
-    isAuthenticated,
-    new ExpoTokenController().deleteExpoToken,
+    ExpoTokenController.handleExpoToken,
   );
 };

@@ -34,11 +34,11 @@ const InitialLayout = () => {
 
         const { status } = await Notifications.getPermissionsAsync();
         const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
-
+        
         if (status === 'granted') {
           // register for notifications if user does not have a token
           if (!savedToken) {
-            const token = await registerForPushNotifications(user.id);
+            const token = await registerForPushNotifications(user.supabaseId);
             if (token) {
               await AsyncStorage.setItem(NOTIFICATION_TOKEN_KEY, token);
               notificationTokenRef.current = token;
@@ -49,7 +49,7 @@ const InitialLayout = () => {
         } else {
           // unregister if permissions are revoked and have a saved token
           if (savedToken) {
-            await unregisterForPushNotifications(user.id, savedToken);
+            await unregisterForPushNotifications(user.supabaseId, savedToken);
             await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
             notificationTokenRef.current = null;
           }

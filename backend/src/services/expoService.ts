@@ -1,4 +1,4 @@
-import { ExpoPushToken } from 'expo-server-sdk';
+import Expo, { ExpoPushToken } from 'expo-server-sdk';
 import mongoose from 'mongoose';
 import { UserModel } from '../models/users';
 
@@ -6,7 +6,8 @@ export type PushNotification = {
   to: ExpoPushToken;
   title: string;
   body: string;
-  sound?: string;
+  sound?: "default" | null;
+  priority?: "default" | "normal" | "high";
   data?: {
     target?: mongoose.Types.ObjectId;
     targetModel?: 'DiveLog' | 'User';
@@ -32,18 +33,39 @@ export interface ExpoService {
 }
 
 export class ExpoServiceImpl implements ExpoService {
-  async sendPushNotification(notification: PushNotification[]): Promise<any> {
-    if (notification.length > 0) {
-      await fetch('https://exp.host/--/api/v2/push/send', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Accept-encoding': 'gzip, deflate',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(notification),
-      });
+  private expo: Expo;
+
+  constructor() {
+    this.expo = new Expo();
+  }
+
+  async sendPushNotification(notifications: PushNotification[]): Promise<any> {    
+    if (notifications.length > 0) {
+      const messages = notifications.filter(notification => 
+        Expo.isExpoPushToken(notification.to)
+      ).map(notification => ({
+        ...notification,
+        data: {
+          ...notification.data,
+        }
+      }));
+
+      const chunks = this.expo.chunkPushNotifications(messages);
+      const tickets = [];
+
+      for (const chunk of chunks) {
+        try {
+          const ticketChunk = await this.expo.sendPushNotificationsAsync(chunk);
+          tickets.push(...ticketChunk);
+          console.log('Notification sent:', ticketChunk);
+        } catch (error) {
+          console.error('Error sending notification:', error);
+        }
+      }
+
+      return tickets;
     }
+    return [];
   }
 
   async sendPostNotification(notification: Notification): Promise<any> {
@@ -62,8 +84,9 @@ export class ExpoServiceImpl implements ExpoService {
       (token: string) => ({
         to: token as ExpoPushToken,
         title,
-        sound: 'default',
         body: message,
+        sound: 'default',
+        priority: 'high',
         data: {
           target,
           targetModel,
@@ -71,12 +94,11 @@ export class ExpoServiceImpl implements ExpoService {
       }),
     );
 
-    await this.sendPushNotification(pushNotifications);
+    return this.sendPushNotification(pushNotifications);
   }
 
   async sendLikeNotification(notification: Notification): Promise<any> {
-    const message = notification.message;
-    const receiver = notification.receiver;
+    const { message, receiver } = notification;
 
     const user = await UserModel.findById(receiver);
     if (!user) {
@@ -86,18 +108,18 @@ export class ExpoServiceImpl implements ExpoService {
     const pushNotifications: PushNotification[] = user.deviceTokens.map(
       (token: string) => ({
         to: token as ExpoPushToken,
-        sound: 'default',
         title: 'You have a new like!',
         body: message,
+        sound: 'default',
+        priority: 'high',
       }),
     );
 
-    await this.sendPushNotification(pushNotifications);
+    return this.sendPushNotification(pushNotifications);
   }
 
   async sendFollowNotification(notification: Notification): Promise<any> {
-    const message = notification.message;
-    const receiver = notification.receiver;
+    const { message, receiver } = notification;
 
     const user = await UserModel.findById(receiver);
     if (!user) {
@@ -107,12 +129,13 @@ export class ExpoServiceImpl implements ExpoService {
     const pushNotifications: PushNotification[] = user.deviceTokens.map(
       (token: string) => ({
         to: token as ExpoPushToken,
-        sound: 'default',
         title: 'You have a new follower!',
         body: message,
+        sound: 'default',
+        priority: 'high',
       }),
     );
 
-    await this.sendPushNotification(pushNotifications);
+    return this.sendPushNotification(pushNotifications);
   }
 }

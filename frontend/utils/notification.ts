@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
-import { deleteExpoToken, sendExpoToken } from '../api/notification';
+import { manageExpoToken } from '../api/notification';
 import Constants from 'expo-constants';
 
 export async function registerForPushNotifications(id: string) {
@@ -41,7 +41,7 @@ export async function registerForPushNotifications(id: string) {
       })
     ).data;
 
-    const response = await sendExpoToken(token, id);
+    const response = await manageExpoToken(token, id);
     if (response.success) {
       console.log(response.message);
     } else {
@@ -59,7 +59,7 @@ export async function unregisterForPushNotifications(
   token: string,
 ) {
   try {
-    const response = await deleteExpoToken(token, id);
+    const response = await manageExpoToken(token, id);
     if (response.success) {
       console.log(response.message);
     } else {

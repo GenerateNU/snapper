@@ -4,8 +4,6 @@ import { UserModel } from '../models/users';
 import { DiveLog } from '../models/diveLog';
 import { Expo } from 'expo-server-sdk';
 
-const expoAPI = new Expo();
-
 export interface NotificationService {
   createLikeNotification(
     actorId: string,
@@ -26,8 +24,6 @@ export interface NotificationService {
     page: number,
   ): Promise<Document[]>;
   clearAllNotification(): Promise<void>;
-  sendNotifications(expoPushToken: string, message: string): Promise<any[]>;
-  sendNotificationToUser(userId: string, message: string): Promise<any[]>;
 }
 
 export class NotificationServiceImpl implements NotificationService {
@@ -132,49 +128,5 @@ export class NotificationServiceImpl implements NotificationService {
 
   async clearAllNotification(): Promise<void> {
     await Notification.deleteMany({});
-  }
-
-  async sendNotifications(
-    expoPushToken: string,
-    message: string,
-  ): Promise<any[]> {
-    if (!Expo.isExpoPushToken(expoPushToken)) {
-      throw new Error(`Invalid Expo Push Token: ${expoPushToken}`);
-    }
-    const messages = [
-      {
-        to: expoPushToken,
-        body: message,
-        data: { message },
-      },
-    ];
-
-    const chunks = expoAPI.chunkPushNotifications(messages);
-    const receipts: any[] = [];
-    for (const chunk of chunks) {
-      try {
-        const ticketChunk = await expoAPI.sendPushNotificationsAsync(chunk);
-        receipts.push(...ticketChunk);
-      } catch (error) {
-        console.error('Error sending notification:', error);
-      }
-    }
-    return receipts;
-  }
-
-  async sendNotificationToUser(
-    userId: string,
-    message: string,
-  ): Promise<any[]> {
-    const user = await UserModel.findById(userId);
-    if (!user) {
-      throw new Error('User not found');
-    }
-    const promises = user.deviceTokens.map((token: string) =>
-      this.sendNotifications(token, message),
-    );
-    const receiptResponses = await Promise.all(promises);
-    const receipts = receiptResponses.flat();
-    return receipts;
   }
 }

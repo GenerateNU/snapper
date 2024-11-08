@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import * as Notifications from 'expo-notifications';
+import { router } from 'expo-router';
 
 type NotificationData = {
   title?: string,
@@ -21,7 +22,7 @@ Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
-    shouldSetBadge: true,
+    shouldSetBadge: true,   
   }),
 });
 
@@ -33,17 +34,21 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   useEffect(() => {
     notificationListener.current = Notifications.addNotificationReceivedListener(
       notification => {
-        const data = notification.request.content.data as NotificationData;
-        console.log('Received notification:', data);
-        setLastNotification(data);
+        const title: string | undefined = notification.request.content.title ?? undefined;
+        const body: string | undefined = notification.request.content.body ?? undefined;
+
+        console.log('Notification Title:', title);
+        console.log('Notification Body:', body);
+
+        setLastNotification({ title, body });
       }
     );
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       response => {
         const data = response.notification.request.content.data as NotificationData;
-        console.log('Notification response:', data);
-        setLastNotification(data);
+        setLastNotification(data); 
+        router.push('/(tabs)/notification');
       }
     );
 

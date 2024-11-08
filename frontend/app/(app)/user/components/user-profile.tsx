@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Header from '.././components/header';
 import Badges from '.././components/badges';
@@ -20,9 +20,9 @@ const User = ({ id }: { id: string }) => {
     { id: 'menu', component: <Menu id={id} /> },
   ];
 
-  const renderItem = ({ item }: { item: any }) => {
-    return <View className="px-[7%]">{item.component}</View>;
-  };
+  const renderItem = ({ item }: { item: any }) => (
+      <View className="px-[7%]">{item.component}</View>
+  );
 
   return (
     <LinearGradient

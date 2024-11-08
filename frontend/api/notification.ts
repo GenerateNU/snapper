@@ -2,64 +2,36 @@ import { apiConfig } from './apiContext';
 
 const API_BASE_URL = apiConfig;
 
-export const sendExpoToken = async (
+export const manageExpoToken = async (
   token: string,
   userId: string,
 ): Promise<any> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/user/${userId}/expoToken`, {
-      method: 'POST',
-      body: JSON.stringify({ token }),
-    });
+    const requestBody = {
+      token: token,
+    }
+    console.log(requestBody); 
 
+    const response = await fetch(`${API_BASE_URL}/user/${userId}/expoDeviceToken`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+    
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Failed to register token');
+      throw new Error(data.error);
     }
 
     return {
       success: true,
-      message: 'Token registered successfully',
+      message: data.message,
     };
   } catch (error) {
     console.error('Error registering token:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-    };
-  }
-};
-
-export const deleteExpoToken = async (
-  token: string,
-  userId: string,
-): Promise<any> => {
-  try {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    const response = await fetch(`${API_BASE_URL}/user/${userId}/expoToken`, {
-      method: 'DELETE',
-      headers,
-      body: JSON.stringify({
-        token,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to delete token');
-    }
-
-    return {
-      success: true,
-      message: 'Token deleted successfully',
-    };
-  } catch (error) {
-    console.error('Error deleting token:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',
