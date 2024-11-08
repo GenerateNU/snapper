@@ -9,13 +9,17 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
 }));
 
 const mockExec = jest.fn();
-const mockFindById = jest.fn(() => ({ exec: mockExec }));
 
 jest.mock('../../../models/diveLog', () => ({
   DiveLog: {
     create: jest.fn(),
     deleteMany: jest.fn(),
-    findById: mockFindById,
+    findById: jest.fn(() => ({
+      populate: jest.fn(function () {
+        return this;
+      }),
+      exec: mockExec,
+    })),
   },
 }));
 

@@ -51,6 +51,14 @@ describe('POST /divelog', () => {
       supabaseId: 'e49be72b-ab52-48d8-b7c4-7f4242dd6e92',
       username: 'testuser1',
     });
+
+    UserModel.findByIdAndUpdate = jest.fn().mockResolvedValue({
+      _id: testUserId,
+      email: 'testuser1@example.com',
+      password: 'testpassword123',
+      supabaseId: 'e49be72b-ab52-48d8-b7c4-7f4242dd6e92',
+      username: 'testuser1',
+    });
   });
 
   it('201 with authentication and valid JSON payload', async () => {

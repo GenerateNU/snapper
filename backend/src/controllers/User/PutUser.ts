@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  editUSerBySupabaseId,
+  editUserBySupabaseId,
   findUserBySupabaseId,
 } from '../../services/userService';
 import { UserModel } from '../../models/users';
@@ -20,10 +20,11 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
       'supabaseId',
       'badges',
       'diveLogs',
-      'fishCollected',
+      'speciesCollected',
       'followers',
       'following',
       'profilePicture',
+      'name',
     ];
 
     //TODO: Will not change with schema
@@ -48,7 +49,7 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
     }
 
     //Should mutate the id with the given request
-    await editUSerBySupabaseId(userId, req.body);
+    const user = await editUserBySupabaseId(userId, req.body);
     //Return the OK status
     return res.status(200).json({
       message: 'Successfully updated user:' + userId,

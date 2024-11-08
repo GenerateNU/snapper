@@ -1,9 +1,10 @@
 import { router, Stack } from 'expo-router';
-import { AppState, StatusBar } from 'react-native';
+import { AppState, StatusBar, View } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from '../auth/authProvider';
 import { useEffect } from 'react';
 import { useAuthStore } from '../auth/authStore';
+import { InfoPopupProvider } from '../contexts/info-popup-context';
 
 const queryClient = new QueryClient();
 
@@ -19,12 +20,18 @@ const InitialLayout = () => {
   }, [isAuthenticated]);
 
   return (
-    <Stack>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(app)" options={{ headerShown: false }} />
-      <Stack.Screen name="(postcreation)" />
-
-    </Stack>
+    <View className="h-full w-full flex flex-col">
+      <Stack>
+        <Stack.Screen
+          name="(auth)"
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+        <Stack.Screen
+          name="(app)"
+          options={{ headerShown: false, gestureEnabled: false }}
+        />
+      </Stack>
+    </View>
   );
 };
 
@@ -45,8 +52,10 @@ const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StatusBar />
-        <InitialLayout />
+        <InfoPopupProvider>
+          <StatusBar />
+          <InitialLayout />
+        </InfoPopupProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

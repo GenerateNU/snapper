@@ -7,7 +7,7 @@ import {
   idFormatValidation,
   updateDiveLogValidation,
 } from '../validators/divelog';
-import { DiveLogController } from '../controllers/divelog';
+import { DiveLogController } from '../controllers/divelogs/divelog';
 
 /**
  * @swagger
@@ -50,11 +50,11 @@ import { DiveLogController } from '../controllers/divelog';
  *               duration:
  *                 type: number
  *                 description: Duration of the dive
- *               fishTags:
+ *               speciesTags:
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: Array of IDs referencing fish tags
+ *                 description: Array of IDs referencing species tags
  *               photos:
  *                 type: array
  *                 items:
@@ -140,11 +140,11 @@ import { DiveLogController } from '../controllers/divelog';
  *               duration:
  *                 type: number
  *                 description: Duration of the dive
- *               fishTags:
+ *               speciesTags:
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: Array of IDs referencing fish tags
+ *                 description: Array of IDs referencing species tags
  *               photos:
  *                 type: array
  *                 items:

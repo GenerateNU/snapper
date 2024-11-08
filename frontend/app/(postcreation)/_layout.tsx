@@ -10,8 +10,6 @@ type FormFields = {
     description: string,
 }
 
-
-
 export default function Layout() {
     const methods = useForm<FormFields>();
 
