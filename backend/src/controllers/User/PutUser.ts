@@ -24,6 +24,7 @@ export const PutUser = async (req: express.Request, res: express.Response) => {
       'followers',
       'following',
       'profilePicture',
+      'deviceTokens',
       'name',
     ];
 

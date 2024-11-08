@@ -37,6 +37,9 @@ export interface UserService {
   ): Promise<boolean>;
   getSpecies(id: string): Promise<Document[] | null>;
   getDiveLogs(id: string): Promise<Document[] | null>;
+  saveExpoToken(id: string, deviceToken: string): Promise<Document | null>;
+  removeExpoToken(id: string, deviceToken: string): Promise<Document | null>;
+  tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -106,5 +109,36 @@ export class UserServiceImpl implements UserService {
       })
       .exec();
     return user ? user.diveLogs : null;
+  }
+
+  async saveExpoToken(
+    id: string,
+    deviceToken: string,
+  ): Promise<Document | null> {
+    const user = await UserModel.findById(id);
+    if (user && !user.deviceTokens.includes(deviceToken)) {
+      user.deviceTokens.push(deviceToken);
+      await user.save();
+    }
+    return user;
+  }
+
+  async removeExpoToken(id: string, deviceToken: string): Promise<any> {
+    const user = await UserModel.findById(id);
+    if (user) {
+      user.deviceTokens = user.deviceTokens.filter(
+        (token) => token !== deviceToken,
+      );
+      await user.save();
+    }
+    return user;
+  }
+
+  async tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean> {
+    const user = await UserModel.findById(id);
+    if (user) {
+      return user.deviceTokens.includes(deviceToken);
+    }
+    return false;
   }
 }
