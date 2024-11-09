@@ -141,7 +141,8 @@ export class NotificationServiceImpl implements NotificationService {
       .sort({ time: -1 })
       .limit(limit)
       .skip((page - 1) * limit)
-      .populate('actor', 'supabaseId username profilePicture')
+      .populate('actor', '-_id supabaseId username profilePicture')
+      .populate('target', 'photos')
       .exec();
     return notifications;
   }

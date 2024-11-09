@@ -115,22 +115,23 @@ export class UserServiceImpl implements UserService {
     id: string,
     deviceToken: string,
   ): Promise<Document | null> {
-    const user = await UserModel.findById(id);
-    if (user && !user.deviceTokens.includes(deviceToken)) {
-      user.deviceTokens.push(deviceToken);
-      await user.save();
-    }
+    const user = await UserModel.findByIdAndUpdate(
+      { _id: id },
+      { $addToSet: { deviceTokens: deviceToken } },
+      { new: true },
+    );
     return user;
   }
 
-  async removeExpoToken(id: string, deviceToken: string): Promise<any> {
-    const user = await UserModel.findById(id);
-    if (user) {
-      user.deviceTokens = user.deviceTokens.filter(
-        (token) => token !== deviceToken,
-      );
-      await user.save();
-    }
+  async removeExpoToken(
+    id: string,
+    deviceToken: string,
+  ): Promise<Document | null> {
+    const user = await UserModel.findByIdAndUpdate(
+      id,
+      { $pull: { deviceTokens: deviceToken } },
+      { new: true },
+    );
     return user;
   }
 

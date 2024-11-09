@@ -28,7 +28,7 @@ export class DiveLogServiceImpl implements DiveLogService {
       update.$addToSet.speciesCollected = { $each: data.speciesTags };
     }
 
-    const user: any = await UserModel.findByIdAndUpdate(data.user, update, {
+    await UserModel.findByIdAndUpdate(data.user, update, {
       new: true,
     });
     return diveLog;
