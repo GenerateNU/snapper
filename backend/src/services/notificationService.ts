@@ -2,14 +2,13 @@ import { Document } from 'mongoose';
 import { Notification } from '../models/notification';
 import { UserModel } from '../models/users';
 import { DiveLog } from '../models/diveLog';
-import { Expo } from 'expo-server-sdk';
 
 export interface NotificationService {
   createLikeNotification(
     actorId: string,
     receiverId: string,
     diveLogId: string,
-  ): Promise<Document>;
+  ): Promise<Document | null>;
   createFollowNotification(
     actorId: string,
     receiverId: string,
@@ -31,10 +30,22 @@ export class NotificationServiceImpl implements NotificationService {
     actorId: string,
     receiverId: string,
     diveLogId: string,
-  ): Promise<Document> {
+  ): Promise<Document | null> {
     const actor = await UserModel.findById(actorId).select('username');
     if (!actor) {
       throw new Error('Actor not found');
+    }
+
+    const existingNotification = await Notification.findOne({
+      type: 'LIKE',
+      receiver: receiverId,
+      actor: actorId,
+      target: diveLogId,
+      targetModel: 'DiveLog',
+    });
+
+    if (existingNotification) {
+      return null;
     }
 
     const message = `${actor.username} liked your post.`;
@@ -58,9 +69,17 @@ export class NotificationServiceImpl implements NotificationService {
     if (!actor) {
       throw new Error('Actor not found');
     }
-
+  
+    await Notification.findOneAndDelete({
+      type: 'FOLLOW',
+      receiver: receiverId,
+      actor: actorId,
+      target: receiverId,
+      targetModel: 'User',
+    });
+  
     const message = `${actor.username} started following you.`;
-
+  
     const notification = new Notification({
       type: 'FOLLOW',
       message,
@@ -69,6 +88,7 @@ export class NotificationServiceImpl implements NotificationService {
       target: receiverId,
       targetModel: 'User',
     });
+  
     return notification.save();
   }
 
