@@ -26,10 +26,11 @@ const Badges = ({ id }: { id: string }) => {
   }
 
   return (
-    <View className="flex flex-col w-full">
+    <View>
       <Text className="font-bold text-base sm:text-lg md:text-xl pb-[2%] text-darkblue">
         Badges
       </Text>
+    <View className="flex flex-row w-full">
       <View className="flex flex-row items-start w-full bg-water rounded-xl justify-between p-[5%] shadow-md flex-wrap">
         {badges.map((badge: any, key: number) => (
           <View
@@ -44,6 +45,7 @@ const Badges = ({ id }: { id: string }) => {
           </View>
         ))}
       </View>
+    </View>
     </View>
   );
 };
