@@ -69,7 +69,7 @@ export class NotificationServiceImpl implements NotificationService {
     if (!actor) {
       throw new Error('Actor not found');
     }
-  
+
     await Notification.findOneAndDelete({
       type: 'FOLLOW',
       receiver: receiverId,
@@ -77,9 +77,9 @@ export class NotificationServiceImpl implements NotificationService {
       target: receiverId,
       targetModel: 'User',
     });
-  
+
     const message = `${actor.username} started following you.`;
-  
+
     const notification = new Notification({
       type: 'FOLLOW',
       message,
@@ -88,7 +88,7 @@ export class NotificationServiceImpl implements NotificationService {
       target: receiverId,
       targetModel: 'User',
     });
-  
+
     return notification.save();
   }
 
