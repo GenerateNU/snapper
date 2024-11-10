@@ -36,9 +36,6 @@ export class NotificationServiceImpl implements NotificationService {
       throw new Error('Actor not found');
     }
 
-    console.log(actorId);
-    console.log(receiverId);
-
     if (actorId === receiverId) {
       return null;
     }
