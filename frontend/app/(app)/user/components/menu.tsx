@@ -6,12 +6,12 @@ import {
   useUserDivelogById,
   useUserSpeciesById,
 } from '../../../../hooks/user';
-import DiveLog from '../../../../components/divelog';
 import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
+import DiveLog from '../../../../components/divelog/divelog';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');

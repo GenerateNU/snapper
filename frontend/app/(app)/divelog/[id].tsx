@@ -10,19 +10,27 @@ import {
 import { useDiveLog } from '../../../hooks/divelog';
 import Profile from '../../../components/profile';
 import { PROFILE_PHOTO } from '../../../consts/profile';
-import SpeciesTag from '../user/components/species-tag';
 import PopulatedInfoPopupButton from '../../../components/populated-info-popup';
 import InfoPopup from '../../../components/info-popup';
+import IconButton from '../../../components/icon-button';
+import {
+  faArrowUpFromBracket,
+  faHeart,
+} from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartOutlined } from '@fortawesome/free-regular-svg-icons';
+import { useAuthStore } from '../../../auth/authStore';
+import useLike from '../../../hooks/like';
+import LikeAndShare from '../../../components/divelog/like-share';
 
 const DiveLog = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { supabaseId } = useAuthStore();
+  const { id: diveLogId } = useLocalSearchParams<{ id: string }>();
 
-  const { data, isLoading, error } = useDiveLog(id);
+  const { data, isLoading, error } = useDiveLog(diveLogId);
 
   const navigateUserProfile = () =>
     router.push(`/user/${data?.user.supabaseId}`);
 
-  // Render a single tag in a TouchableOpacity
   const renderTag = (item: any) => {
     return (
       <PopulatedInfoPopupButton
@@ -56,7 +64,6 @@ const DiveLog = () => {
           </Pressable>
         </View>
 
-        {/* Display the first photo */}
         <Image
           className="rounded-2xl w-full mb-2"
           source={{ uri: data?.photos[0] }}
@@ -65,13 +72,15 @@ const DiveLog = () => {
 
         <View
           style={{
-            flexDirection: 'row', // Arrange items in a row
-            flexWrap: 'wrap', // Allow wrapping when there's no space
-            gap: 8, // Space between items
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 8,
           }}
         >
           {data?.speciesTags?.map((item: any) => renderTag(item))}
         </View>
+
+        <LikeAndShare diveLogId={diveLogId} />
 
         <Text className="text-base">
           <Text className="font-bold text-base">
@@ -80,7 +89,6 @@ const DiveLog = () => {
           <Text>{data?.description}</Text>
         </Text>
       </SafeAreaView>
-
       <InfoPopup />
     </>
   );

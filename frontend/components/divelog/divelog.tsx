@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, Pressable } from 'react-native';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
-import Profile from './profile';
-import IconButton from './icon-button';
-import { timeAgo } from '../utils/profile';
-import SpeciesTag from '../app/(app)/user/components/species-tag';
-import PopulatedInfoPopupButton from './populated-info-popup';
 import { router } from 'expo-router';
+import Profile from '../profile';
+import { timeAgo } from '../../utils/profile';
+import IconButton from '../icon-button';
+import PopulatedInfoPopupButton from '../populated-info-popup';
+import SpeciesTag from '../../app/(app)/user/components/species-tag';
+import LikeAndShare from './like-share';
 
 interface DiveLogProps {
   username: string;
@@ -83,6 +84,9 @@ const DiveLog: React.FC<DiveLogProps> = React.memo(
             ))}
           </View>
         )}
+        <View className="pt-5">
+          <LikeAndShare diveLogId={divelogId} />
+        </View>
       </Pressable>
     );
   },
