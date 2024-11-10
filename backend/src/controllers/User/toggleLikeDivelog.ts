@@ -53,7 +53,7 @@ export const toggleLikeDivelog = async (
       await divelogService.likeDiveLog(currentUserMongoId, divelogId);
       const notification = await notificationService.createLikeNotification(
         currentUserMongoId,
-        divelog.user,
+        divelog.user._id.toString(),
         divelog._id,
       );
       if (notification) {

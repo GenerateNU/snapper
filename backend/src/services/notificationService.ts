@@ -36,6 +36,13 @@ export class NotificationServiceImpl implements NotificationService {
       throw new Error('Actor not found');
     }
 
+    console.log(actorId);
+    console.log(receiverId);
+
+    if (actorId === receiverId) {
+      return null;
+    }
+
     const existingNotification = await Notification.findOne({
       type: 'LIKE',
       receiver: receiverId,
