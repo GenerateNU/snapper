@@ -8,6 +8,7 @@ import Button from "../../../components/button";
 import PageButton from "./page-button";
 import { router } from 'expo-router';
 import Tag from "../../../components/tag";
+import { apiConfig } from "../../../api/apiContext";
 
 
 type FormFields = {
@@ -36,8 +37,9 @@ export default function PostCreationForm() {
 
     const submitPost = async (postData: FormFields) => {
         try {
+            const baseAPI = apiConfig;
             const response = await fetch(
-                'http://localhost:3000/divelog', {
+                `${apiConfig}/divelog`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

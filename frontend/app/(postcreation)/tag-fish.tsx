@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, TextInput } from "react-native";
 import { useFormContext } from "react-hook-form";
 import Tag from "../../components/tag";
-import FishSearch from "../(app)/postcreation/components/fish-search";
+import FishSearch from "./components/fish-search";
 
 type FormFields = {
     tags: string[],

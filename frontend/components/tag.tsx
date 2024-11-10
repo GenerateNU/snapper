@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { styled } from 'nativewind';
 
 interface TagProps {
   fish?: string;
