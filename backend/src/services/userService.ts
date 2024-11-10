@@ -5,6 +5,8 @@ export const createUser = async (userData: {
   email: string;
   username: string;
   supabaseId: string;
+  firstName: string;
+  lastName: string;
 }) => {
   const user = new UserModel(userData);
   return user.save();

@@ -4,12 +4,12 @@ import { createUser } from '../../services/userService';
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
-    const { email, password, username } = req.body;
+    const { email, password, username, firstName, lastName } = req.body;
 
-    if (!email || !password || !username) {
+    if (!email || !password || !username || !firstName || !lastName) {
       return res
         .status(400)
-        .json({ error: 'Email, password, and username are required.' });
+        .json({ error: 'First name, last name, email, password, and username are required.' });
     }
 
     const { data, error } = await supabase.auth.signUp({ email, password });
@@ -29,7 +29,7 @@ export const register = async (req: express.Request, res: express.Response) => {
         .json({ error: 'Internal error during user creation.' });
     }
 
-    await createUser({ email, username, supabaseId: user.id });
+    await createUser({ email, username, supabaseId: user.id, firstName, lastName});
 
     req.session.userId = req.session ? user.id : undefined;
 

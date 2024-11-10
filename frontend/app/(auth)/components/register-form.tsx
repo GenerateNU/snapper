@@ -55,8 +55,8 @@ const RegisterForm = () => {
   const onSignUpPress = async (signupData: RegisterFormData) => {
     try {
       const validData = REGISTER_SCHEMA.parse(signupData);
-
-      const { firstName, lastName, ...apiData } = validData;
+      console.log(validData);
+      const {...apiData } = validData;
 
       await register(apiData);
       const isAuthenticated = useAuthStore.getState().isAuthenticated;
