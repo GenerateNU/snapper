@@ -35,7 +35,10 @@ export class DiveLogServiceImpl implements DiveLogService {
   }
 
   async getDiveLogById(id: string): Promise<Document | null> {
-    return DiveLog.findById(id).populate('speciesTags').exec();
+    return DiveLog.findById(id)
+      .populate('speciesTags')
+      .populate('user', 'supabaseId profilePicture username')
+      .exec();
   }
 
   async updateDiveLog(

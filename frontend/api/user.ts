@@ -67,3 +67,17 @@ export async function followUser(
     throw new Error(errorData.error || 'Failed to follow user');
   }
 }
+
+export async function toggleLikeDivelog(
+  id: string,
+  divelogId: string,
+): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/user/${id}/like/${divelogId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to like or unlike divelog');
+  }
+}

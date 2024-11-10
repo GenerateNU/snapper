@@ -33,7 +33,7 @@ const InitialLayout = () => {
 
     const handleNotificationPermissions = async () => {
       try {
-        if (!user?.supabaseId) return;
+        if (!user?.supabaseId) return null;
 
         const { status } = await Notifications.getPermissionsAsync();
         const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);

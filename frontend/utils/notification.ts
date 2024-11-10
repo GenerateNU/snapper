@@ -28,7 +28,7 @@ export async function registerForPushNotifications(id: string) {
 
     if (finalStatus !== 'granted') {
       alert('Failed to get push token for push notification!');
-      return;
+      return null;
     }
 
     const projectId =

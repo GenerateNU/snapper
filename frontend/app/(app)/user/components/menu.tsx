@@ -6,7 +6,7 @@ import {
   useUserDivelogById,
   useUserSpeciesById,
 } from '../../../../hooks/user';
-import DiveLog from './divelog';
+import DiveLog from '../../../../components/divelog';
 import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';

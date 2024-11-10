@@ -7,6 +7,7 @@ import {
   getUserDiveLogsById,
   followUser,
   getUserNotifications,
+  toggleLikeDivelog,
 } from '../api/user';
 import { useQueryBase } from './base';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -37,6 +38,22 @@ export const useUserSpeciesById = (id: string) => {
 
 export const useUserNotifications = (id: string) => {
   return useQueryBase(['notification', id], () => getUserNotifications(id));
+};
+
+export const useLikeDivelog = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, divelogId }: { id: string; divelogId: string }) =>
+      toggleLikeDivelog(id, divelogId),
+    onSuccess: (_, { divelogId }) => {
+      queryClient.invalidateQueries({ queryKey: ['divelog'] });
+    },
+    onError: (error: any) => {
+      console.error('Error toggling like status:', error);
+      queryClient.invalidateQueries({ queryKey: ['divelog'] });
+    },
+  });
 };
 
 export const useFollowUser = () => {
