@@ -2,6 +2,7 @@ import { Document } from 'mongoose';
 import { Notification } from '../models/notification';
 import { UserModel } from '../models/users';
 import { DiveLog } from '../models/diveLog';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../consts/pagination';
 
 export interface NotificationService {
   createLikeNotification(
@@ -138,8 +139,8 @@ export class NotificationServiceImpl implements NotificationService {
 
   async getUserNotification(
     userId: string,
-    limit: number = 10,
-    page: number = 1,
+    limit: number = DEFAULT_LIMIT,
+    page: number = DEFAULT_PAGE,
   ): Promise<Document[]> {
     const notifications = await Notification.find({ receiver: userId })
       .sort({ time: -1 })

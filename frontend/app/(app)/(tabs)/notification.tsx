@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { SafeAreaView, SectionList, FlatList, Text, View } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import { categorizeTime } from '../../../utils/profile';
-import { usePaginatedNotifications } from '../../../hooks/user';
+import { useUserNotification } from '../../../hooks/user';
 import { useFocusEffect } from 'expo-router';
 import React from 'react';
 import NotificationSkeleton from '../../../components/notification/skeleton';
@@ -23,7 +23,7 @@ const Notification = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = usePaginatedNotifications(supabaseId || '');
+  } = useUserNotification(supabaseId || '');
 
   const groupNotificationsAndSetSections = (pages: any) => {
     if (!pages) return;

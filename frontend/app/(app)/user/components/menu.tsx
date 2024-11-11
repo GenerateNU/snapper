@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useAuthStore } from '../../../../auth/authStore';
 import {
-  usePaginatedDiveLogs,
-  usePaginatedSpecies,
   useUserById,
+  useUserDiveLogs,
+  useUserSpecies,
 } from '../../../../hooks/user';
 import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
@@ -24,21 +24,19 @@ const Menu = ({ id }: { id: string }) => {
     data: diveLogPages,
     isLoading: diveLogIsLoading,
     error: diveLogError,
-    refetch: diveLogRefetch,
     fetchNextPage: diveLogFetchNextPage,
     hasNextPage: diveLogHasNextPage,
     isFetchingNextPage: diveLogIsFetchingNextPage,
-  } = usePaginatedDiveLogs(id);
+  } = useUserDiveLogs(id);
 
   const {
     data: speciesPages,
     isLoading: speciesIsLoading,
     error: speciesError,
-    refetch: speciesRefetch,
     fetchNextPage: speciesFetchNextPage,
     hasNextPage: speciesHasNextPage,
     isFetchingNextPage: speciesIsFetchingNextPage,
-  } = usePaginatedSpecies(id);
+  } = useUserSpecies(id);
 
   const diveLogData = diveLogPages?.pages.flatMap((page) => page) ?? [];
   const speciesData = speciesPages?.pages.flatMap((page) => page) ?? [];
@@ -126,7 +124,6 @@ const Menu = ({ id }: { id: string }) => {
           </Text>
         </TouchableOpacity>
       </View>
-
       {category === 'Dives' &&
         (diveLogIsLoading ? (
           <FlatList

@@ -7,12 +7,8 @@ import {
   getUserNotifications,
   toggleLikeDivelog,
 } from '../api/user';
-import { useQueryBase } from './base';
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useQueryBase, useQueryPagination } from './base';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useUserData = () => {
   return useQueryBase(['user'], getMe);
@@ -22,46 +18,33 @@ export const useUserById = (id: string) => {
   return useQueryBase(['user', id], () => getUserById(id));
 };
 
-export const usePaginatedDiveLogs = (id: string) => {
-  return useInfiniteQuery({
-    queryKey: ['divelogs', id],
-    queryFn: async ({ pageParam = 1 }) => {
-      const response = await getUserDiveLogsById(id, pageParam);
+export const useUserDiveLogs = (id: string) => {
+  return useQueryPagination(
+    id,
+    'divelogs',
+    async (id, page): Promise<any[]> => {
+      const response = await getUserDiveLogsById(id, page);
       return response;
     },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length > 0 ? allPages.length + 1 : undefined;
-    },
+  );
+};
+
+export const useUserSpecies = (id: string) => {
+  return useQueryPagination(id, 'species', async (id, page): Promise<any[]> => {
+    const response = await getUserSpeciesById(id, page);
+    return response;
   });
 };
 
-export const usePaginatedSpecies = (id: string) => {
-  return useInfiniteQuery({
-    queryKey: ['species', id],
-    queryFn: async ({ pageParam = 1 }) => {
-      const response = await getUserSpeciesById(id, pageParam);
+export const useUserNotification = (id: string) => {
+  return useQueryPagination(
+    id,
+    'notifications',
+    async (id, page): Promise<any[]> => {
+      const response = await getUserNotifications(id, page);
       return response;
     },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length > 0 ? allPages.length + 1 : undefined;
-    },
-  });
-};
-
-export const usePaginatedNotifications = (id: string) => {
-  return useInfiniteQuery({
-    queryKey: ['notifications', id],
-    queryFn: async ({ pageParam = 1 }) => {
-      const response = await getUserNotifications(id, pageParam);
-      return response;
-    },
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length > 0 ? allPages.length + 1 : undefined;
-    },
-  });
+  );
 };
 
 export const useLikeDivelog = () => {
@@ -70,7 +53,7 @@ export const useLikeDivelog = () => {
   return useMutation({
     mutationFn: ({ id, divelogId }: { id: string; divelogId: string }) =>
       toggleLikeDivelog(id, divelogId),
-    onSuccess: (_, { divelogId }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['divelog'] });
     },
     onError: (error: any) => {
@@ -89,39 +72,6 @@ export const useFollowUser = () => {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['user', id] });
       queryClient.invalidateQueries({ queryKey: ['user'] });
-
-      queryClient.setQueryData(['user', id], (oldData: any) => {
-        if (
-          !oldData ||
-          !oldData.user ||
-          !Array.isArray(oldData.user.followers)
-        ) {
-          return oldData;
-        }
-
-        const currentUser = queryClient.getQueryData(['user']) as any;
-        const currentUserId = currentUser?.user?.id;
-
-        if (!currentUserId) return oldData;
-
-        const isCurrentlyFollowing = oldData.user.followers.some(
-          (follower: { id: string }) => follower.id === currentUserId,
-        );
-
-        const updatedFollowers = isCurrentlyFollowing
-          ? oldData.user.followers.filter(
-              (follower: { id: string }) => follower.id !== currentUserId,
-            )
-          : [...oldData.user.followers, { id: currentUserId }];
-
-        return {
-          ...oldData,
-          user: {
-            ...oldData.user,
-            followers: updatedFollowers,
-          },
-        };
-      });
     },
     onError: (error: any) => {
       console.error('Error toggling follow status:', error);

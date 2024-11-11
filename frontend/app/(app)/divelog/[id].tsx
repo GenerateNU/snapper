@@ -12,14 +12,7 @@ import Profile from '../../../components/profile';
 import { PROFILE_PHOTO } from '../../../consts/profile';
 import PopulatedInfoPopupButton from '../../../components/populated-info-popup';
 import InfoPopup from '../../../components/info-popup';
-import IconButton from '../../../components/icon-button';
-import {
-  faArrowUpFromBracket,
-  faHeart,
-} from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartOutlined } from '@fortawesome/free-regular-svg-icons';
 import { useAuthStore } from '../../../auth/authStore';
-import useLike from '../../../hooks/like';
 import LikeAndShare from '../../../components/divelog/like-share';
 
 const DiveLog = () => {
@@ -50,16 +43,16 @@ const DiveLog = () => {
         <View style={{ gap: 12 }} className="w-full flex-row items-center">
           <Pressable
             style={{ gap: 12 }}
-            className="flex-row"
+            className="flex-row items-center"
             onPress={navigateUserProfile}
           >
             <Profile
               size="md"
               image={data?.user.profilePicture || PROFILE_PHOTO}
             />
-            <View className="flex flex-col">
-              <Text className="font-bold text-base">{data?.user.username}</Text>
-              <Text>Western Reefs</Text>
+            <View className="flex flex-col items-start">
+              <Text className="font-bold text-md">{data?.user.username}</Text>
+              <Text className="text-gray-700">Western Reefs</Text>
             </View>
           </Pressable>
         </View>
@@ -82,10 +75,8 @@ const DiveLog = () => {
 
         <LikeAndShare diveLogId={diveLogId} />
 
-        <Text className="text-base">
-          <Text className="font-bold text-base">
-            {data?.user.username + ' '}
-          </Text>
+        <Text className="text-md">
+          <Text className="font-bold">{data?.user.username + ' '}</Text>
           <Text>{data?.description}</Text>
         </Text>
       </SafeAreaView>

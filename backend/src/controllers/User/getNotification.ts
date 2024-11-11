@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from './../../consts/pagination';
 import { findUserBySupabaseId } from '../../services/userService';
 import {
   NotificationService,
@@ -13,8 +14,8 @@ export const getNotifications = async (
 ) => {
   try {
     const userId = req.params.id;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
+    const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
 
     const user = await findUserBySupabaseId(userId);
 

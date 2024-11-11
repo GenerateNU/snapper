@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../consts/pagination';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 
@@ -101,8 +102,8 @@ export class UserServiceImpl implements UserService {
 
   async getSpecies(
     id: string,
-    limit: number = 10,
-    page: number = 1,
+    limit: number = DEFAULT_LIMIT,
+    page: number = DEFAULT_PAGE,
   ): Promise<Document[] | null> {
     const user = await UserModel.findById(id);
     if (!user) return null;
@@ -123,8 +124,8 @@ export class UserServiceImpl implements UserService {
 
   async getDiveLogs(
     userId: string,
-    limit: number = 10,
-    page: number = 1,
+    limit: number = DEFAULT_LIMIT,
+    page: number = DEFAULT_PAGE,
   ): Promise<Document[] | null> {
     const user = await UserModel.findById(userId);
     if (!user) return null;
