@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { SafeAreaView, SectionList, FlatList, Text, View } from 'react-native';
-import NotificationEntry from '../../../components/notification/notification';
-import { useUserNotifications } from '../../../hooks/user';
 import { useAuthStore } from '../../../auth/authStore';
 import { categorizeTime } from '../../../utils/profile';
-import Divider from '../../../components/divider';
-import NotificationSkeleton from '../../../components/notification/skeleton';
-import { useFocusEffect } from '@react-navigation/native';
+import { usePaginatedNotifications } from '../../../hooks/user';
+import { useFocusEffect } from 'expo-router';
 import React from 'react';
+import NotificationSkeleton from '../../../components/notification/skeleton';
+import NotificationEntry from '../../../components/notification/notification';
+import Divider from '../../../components/divider';
 
 const Notification = () => {
   const { supabaseId } = useAuthStore();
@@ -15,40 +15,65 @@ const Notification = () => {
     [],
   );
 
-  const { data, isLoading, error, refetch } = useUserNotifications(
-    supabaseId || '',
-  );
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = usePaginatedNotifications(supabaseId || '');
 
-  const groupNotificationsAndSetSections = (data: any) => {
-    if (Array.isArray(data)) {
-      const groupedNotifications = data.reduce((acc: any, item: any) => {
+  const groupNotificationsAndSetSections = (pages: any) => {
+    if (!pages) return;
+
+    const allNotifications = pages.pages.flat();
+
+    const groupedNotifications = allNotifications.reduce(
+      (acc: any, item: any) => {
         const timeCategory = categorizeTime(item.time);
         if (!acc[timeCategory]) {
           acc[timeCategory] = [];
         }
         acc[timeCategory].push(item);
         return acc;
-      }, {});
+      },
+      {},
+    );
 
-      const sectionsData = Object.keys(groupedNotifications).map((key) => ({
-        title: key,
-        data: groupedNotifications[key],
-      }));
+    const sectionsData = Object.keys(groupedNotifications).map((key) => ({
+      title: key,
+      data: groupedNotifications[key],
+    }));
 
-      setSections(sectionsData);
-    }
+    setSections(sectionsData);
   };
 
   useFocusEffect(
     React.useCallback(() => {
       refetch();
-      groupNotificationsAndSetSections(data);
-    }, [data, refetch]),
+    }, [refetch]),
   );
 
   useEffect(() => {
     groupNotificationsAndSetSections(data);
   }, [data]);
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+    return (
+      <View className="py-4">
+        <NotificationSkeleton />
+      </View>
+    );
+  };
 
   const renderNotification = ({ item }: { item: any }) => {
     return (
@@ -92,14 +117,17 @@ const Notification = () => {
         <SectionList
           showsVerticalScrollIndicator={false}
           sections={sections}
-          onEndReachedThreshold={0.7}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.9}
           stickySectionHeadersEnabled={false}
           renderItem={renderNotification}
           renderSectionHeader={renderSectionHeader}
-          ItemSeparatorComponent={() => <View className="h-5"></View>}
+          ListFooterComponent={renderFooter}
+          ItemSeparatorComponent={() => <View className="h-5" />}
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: 'flex-start',
+            paddingBottom: 30,
           }}
           keyExtractor={(_, index) => index.toString()}
         />

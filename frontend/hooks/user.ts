@@ -1,7 +1,5 @@
 import {
   getMe,
-  getUserDiveLogs,
-  getUserSpecies,
   getUserById,
   getUserSpeciesById,
   getUserDiveLogsById,
@@ -20,36 +18,47 @@ export const useUserData = () => {
   return useQueryBase(['user'], getMe);
 };
 
-export const useUserDiveLogs = () => {
-  return useQueryBase(['divelogs'], getUserDiveLogs);
-};
-
-export const useUserSpecies = () => {
-  return useQueryBase(['species'], getUserSpecies);
-};
-
 export const useUserById = (id: string) => {
   return useQueryBase(['user', id], () => getUserById(id));
 };
 
-export const useUserDivelogById = (id: string) => {
-  return useQueryBase(['divelogs', id], () => getUserDiveLogsById(id));
-};
-
-export const useUserSpeciesById = (id: string) => {
-  return useQueryBase(['species', id], () => getUserSpeciesById(id));
-};
-
-export const useUserNotifications = (id: string) => {
-  return useQueryBase(['notification', id], () => getUserNotifications(id, 1));
-};
-
-export const usePaginationNotification = (id: string, page: number) => {
+export const usePaginatedDiveLogs = (id: string) => {
   return useInfiniteQuery({
-    queryKey: ['notification', id, page],
-    queryFn: () => getUserNotifications(id, 1),
+    queryKey: ['divelogs', id],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getUserDiveLogsById(id, pageParam);
+      return response;
+    },
     initialPageParam: 1,
-    getNextPageParam(lastPage, allPages) {
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.length > 0 ? allPages.length + 1 : undefined;
+    },
+  });
+};
+
+export const usePaginatedSpecies = (id: string) => {
+  return useInfiniteQuery({
+    queryKey: ['species', id],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getUserSpeciesById(id, pageParam);
+      return response;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.length > 0 ? allPages.length + 1 : undefined;
+    },
+  });
+};
+
+export const usePaginatedNotifications = (id: string) => {
+  return useInfiniteQuery({
+    queryKey: ['notifications', id],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getUserNotifications(id, pageParam);
+      return response;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
       return lastPage.length > 0 ? allPages.length + 1 : undefined;
     },
   });

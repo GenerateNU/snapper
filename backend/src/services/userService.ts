@@ -35,8 +35,16 @@ export interface UserService {
     currentUserId: string,
     targetUserId: string,
   ): Promise<boolean>;
-  getSpecies(id: string): Promise<Document[] | null>;
-  getDiveLogs(id: string): Promise<Document[] | null>;
+  getSpecies(
+    id: string,
+    limit: number,
+    page: number,
+  ): Promise<Document[] | null>;
+  getDiveLogs(
+    id: string,
+    limit: number,
+    page: number,
+  ): Promise<Document[] | null>;
   saveExpoToken(id: string, deviceToken: string): Promise<Document | null>;
   removeExpoToken(id: string, deviceToken: string): Promise<Document | null>;
   tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean>;
@@ -91,24 +99,53 @@ export class UserServiceImpl implements UserService {
     return !!user;
   }
 
-  async getSpecies(id: string): Promise<Document[] | null> {
-    const user = await UserModel.findById(id)
-      .populate('speciesCollected')
+  async getSpecies(
+    id: string,
+    limit: number = 10,
+    page: number = 1,
+  ): Promise<Document[] | null> {
+    const user = await UserModel.findById(id);
+    if (!user) return null;
+
+    const species = await UserModel.findById(id)
+      .populate({
+        path: 'speciesCollected',
+        options: {
+          sort: { createdAt: -1 },
+          limit: limit,
+          skip: (page - 1) * limit,
+        },
+      })
       .exec();
-    return user ? user.speciesCollected : null;
+
+    return species?.speciesCollected || null;
   }
 
-  async getDiveLogs(userId: string): Promise<Document[] | null> {
-    const user = await UserModel.findById(userId)
+  async getDiveLogs(
+    userId: string,
+    limit: number = 10,
+    page: number = 1,
+  ): Promise<Document[] | null> {
+    const user = await UserModel.findById(userId);
+    if (!user) return null;
+
+    const calculatedSkip = (page - 1) * limit;
+    const userWithDiveLogs = await UserModel.findById(userId)
       .populate({
         path: 'diveLogs',
+        options: {
+          sort: { createdAt: -1 },
+          limit: limit,
+          skip: calculatedSkip,
+        },
         populate: {
           path: 'speciesTags',
           select: 'commonNames scientificName',
         },
       })
       .exec();
-    return user ? user.diveLogs : null;
+
+    return userWithDiveLogs?.diveLogs || null;
   }
 
   async saveExpoToken(

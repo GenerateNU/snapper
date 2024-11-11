@@ -12,6 +12,8 @@ export const getUserSpecies = async (
   try {
     //Get the ID from the body of the request
     const userID = req.session.userId;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const page = parseInt(req.query.page as string) || 1;
 
     //Check to make sure that the id is defined
     if (!userID) {
@@ -33,6 +35,8 @@ export const getUserSpecies = async (
 
     const speciesCollected = await userService.getSpecies(
       foundUser._id.toString(),
+      limit,
+      page,
     );
 
     //Return the OK status

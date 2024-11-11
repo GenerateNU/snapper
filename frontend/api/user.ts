@@ -22,36 +22,37 @@ export async function getUserDiveLogs(): Promise<any> {
 export async function getUserNotifications(
   id: string,
   page: number,
+  limit: number = 10,
 ): Promise<any> {
   const data = await fetchData(
-    `/user/${id}/notifications?page=${page}`,
+    `/user/${id}/notifications?page=${page}&limit=${limit}`,
     'Failed to fetch user notifications',
   );
   return data;
 }
 
-export async function getUserSpeciesById(id: string): Promise<any> {
+export async function getUserSpeciesById(
+  id: string,
+  page: number,
+  limit: number = 10,
+): Promise<any> {
   const data = await fetchData(
-    `/user/${id}/species`,
+    `/user/${id}/species?page=${page}&limit=${limit}`,
     "Failed to fetch user's species",
   );
   return data.species;
 }
 
-export async function getUserDiveLogsById(id: string): Promise<any> {
+export async function getUserDiveLogsById(
+  id: string,
+  page: number,
+  limit: number = 10,
+): Promise<any> {
   const data = await fetchData(
-    `/user/${id}/divelogs`,
+    `/user/${id}/divelogs?page=${page}&limit=${limit}`,
     "Failed to fetch user's divelogs",
   );
   return data.divelogs;
-}
-
-export async function getUserSpecies(): Promise<any> {
-  const data = await fetchData(
-    '/user/items/species',
-    "Failed to fetch user's species",
-  );
-  return data.species;
 }
 
 export async function followUser(
