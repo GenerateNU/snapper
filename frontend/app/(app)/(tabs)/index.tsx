@@ -15,23 +15,9 @@ const Home = () => {
       )}
       <Button
         textOnly
-        text="Empty user profile"
+        text="Another user's profile"
         onPress={() =>
           router.push('/user/9eb15c34-56ad-4673-8c5a-4243806fbd14')
-        }
-      />
-      <Button
-        textOnly
-        text="Profile with data"
-        onPress={() =>
-          router.push('/user/ea5a57c1-f727-4a76-a4f4-ccbde58202b5')
-        }
-      />
-      <Button
-        textOnly
-        text="Profile with data"
-        onPress={() =>
-          router.push('/user/cdecea90-2f3c-45f5-b534-da0f437c297f')
         }
       />
       <Button

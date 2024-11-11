@@ -41,6 +41,10 @@ const Menu = ({ id }: { id: string }) => {
   const diveLogData = diveLogPages?.pages.flatMap((page) => page) ?? [];
   const speciesData = speciesPages?.pages.flatMap((page) => page) ?? [];
 
+  if (diveLogData.length === 0 && speciesData.length === 0) {
+    return;
+  }
+
   const profilePhoto = userData?.user.profilePicture || PROFILE_PHOTO;
   const username = userData?.user.username;
 
