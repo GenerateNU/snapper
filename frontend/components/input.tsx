@@ -14,6 +14,7 @@ interface TextInputProps {
   secureTextEntry?: boolean;
   onSubmitEditing?: () => void;
   returnKeyType?: ReturnKeyTypeOptions;
+  border?: string;
 }
 
 const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
@@ -30,6 +31,7 @@ const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
     secureTextEntry,
     onSubmitEditing,
     returnKeyType,
+    border
   } = props;
 
   return (
@@ -40,7 +42,7 @@ const Input = forwardRef<TextInput, TextInputProps>((props, ref) => {
         placeholder={placeholder}
         placeholderTextColor="#a09b9b"
         className={`border py-[3%] rounded-md px-[5%] ${
-          error ? 'border-red-500' : 'border-gray-200'
+          error ? 'border-red-500' : border ? `border-${border}` : 'border-gray-200'
         }`}
         onSubmitEditing={onSubmitEditing}
         onChangeText={onChangeText}

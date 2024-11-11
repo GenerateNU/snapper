@@ -9,14 +9,15 @@ import PageButton from "./page-button";
 import { router } from 'expo-router';
 import Tag from "../../../components/tag";
 import { apiConfig } from "../../../api/apiContext";
-
-
+import { useAuthStore } from '../../../auth/authStore';
+import Map from "../../../components/map";
 type FormFields = {
     tags: string[],
     image: string,
     date: Date,
     location: string,
     description: string,
+    user: string,
 }
 
 
@@ -36,23 +37,24 @@ export default function PostCreationForm() {
     const { control, trigger, register, handleSubmit } = useFormContext<FormFields>();
 
     const submitPost = async (postData: FormFields) => {
+        const mongoDBId = useAuthStore.getState().mongoDBId
+        //console.log(mongoDBId);
+        if(mongoDBId){
+           postData.user = mongoDBId;
+       }
         try {
-            const baseAPI = apiConfig;
-            const response = await fetch(
-                `${apiConfig}/divelog`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(postData)
-            })
-        } catch (error) {
-            console.error(error);
-        }
-        console.log(postData);
-        reset();
-    };
-
+             const response = await fetch(
+             'http://localhost:3000/divelog', {
+                 method: 'POST', 
+                 headers: {
+                 'Content-Type': 'application/json'}, 
+                 body: JSON.stringify(postData)})
+         } catch (error) {
+             console.error(error);
+         }
+         //console.log(postData);
+         reset();
+     };
 
 
     return (
@@ -88,6 +90,7 @@ export default function PostCreationForm() {
                                 onChange(text);
                                 trigger('location');
                             }}
+                            border = "gray-400"
                             value={value}
                         />
                     )}
@@ -96,7 +99,7 @@ export default function PostCreationForm() {
             <Text className="text-[16px] ">Tag Fish</Text>
             <View className="w-full mb-[4vh]">
                 {tags.length == 0 ?
-                    <PageButton outline='gray-300' text="Choose Fish" backgroundColor="white" onPress={() => router.push('/tag-fish')} /> :
+                    <PageButton outline='gray-400' text="Choose Fish" backgroundColor="white" onPress={() => router.push('/tag-fish')} /> :
                     <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-5">
                         <View className="flex h-full w-full flex-row items-center flex-wrap items-center gap-2 p-2">
                             {tags.map((item, index) => {
@@ -112,6 +115,9 @@ export default function PostCreationForm() {
                         </View>
                     </View>
                 }
+            </View>
+            <View className = "h-[50vh] w-[50vh]"> 
+                <Map/>
             </View>
             <View className="pb-10">
                 <Button text="Post" onPress={handleSubmit(submitPost)} />

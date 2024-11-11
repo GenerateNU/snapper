@@ -14,13 +14,20 @@
     "scheme": "snapper",
     "ios": {
       "supportsTablet": true,
-      "bundlerIdentifier": "com.generate.snapper"
+      "bundlerIdentifier": "com.generate.snapper",
+      "googleMapsApiKey": "process.env.GOOGLEMAPS_APIKEY"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "process.env.GOOGLEMAPS_APIKEY"
+        }
       }
+
     },
     "web": {
       "favicon": "./assets/favicon.png"

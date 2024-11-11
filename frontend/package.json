@@ -23,6 +23,7 @@
     "axios": "^1.7.7",
     "expo": "~51.0.36",
     "expo-image-picker": "~15.0.7",
+    "expo-linear-gradient": "~13.0.2",
     "expo-router": "~3.5.23",
     "expo-status-bar": "~1.12.1",
     "nativewind": "^2.0.11",
@@ -35,7 +36,7 @@
     "zod": "^3.23.8",
     "zustand": "^3.7.2",
     "zustand-persist": "^0.4.0",
-    "expo-linear-gradient": "~13.0.2"
+    "react-native-maps": "1.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
