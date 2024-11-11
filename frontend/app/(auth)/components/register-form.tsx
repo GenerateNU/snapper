@@ -56,7 +56,7 @@ const RegisterForm = () => {
     try {
       const validData = REGISTER_SCHEMA.parse(signupData);
       console.log(validData);
-      const {...apiData } = validData;
+      const { ...apiData } = validData;
 
       await register(apiData);
       const isAuthenticated = useAuthStore.getState().isAuthenticated;

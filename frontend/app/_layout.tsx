@@ -24,7 +24,6 @@ const InitialLayout = () => {
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(app)" options={{ headerShown: false }} />
       <Stack.Screen name="(postcreation)" />
-
     </Stack>
   );
 };
