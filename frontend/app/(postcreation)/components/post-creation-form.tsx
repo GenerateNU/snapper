@@ -13,7 +13,7 @@ import { apiConfig } from "../../../api/apiContext";
 
 type FormFields = {
     tags: string[],
-    image: string,
+    images: File[],
     date: Date,
     location: string,
     description: string,
@@ -33,7 +33,7 @@ export default function PostCreationForm() {
         setValue('tags', newFish)
     };
 
-    const { control, trigger, register, handleSubmit } = useFormContext<FormFields>();
+    const { control, trigger, handleSubmit } = useFormContext<FormFields>();
 
     const submitPost = async (postData: FormFields) => {
         try {

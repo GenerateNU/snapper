@@ -15,6 +15,7 @@ export const DiveLogController = {
     req: express.Request,
     res: express.Response,
   ): Promise<void> => {
+    // console.log("HIT");
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
