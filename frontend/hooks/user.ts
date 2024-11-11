@@ -10,7 +10,11 @@ import {
   toggleLikeDivelog,
 } from '../api/user';
 import { useQueryBase } from './base';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 export const useUserData = () => {
   return useQueryBase(['user'], getMe);
@@ -37,7 +41,18 @@ export const useUserSpeciesById = (id: string) => {
 };
 
 export const useUserNotifications = (id: string) => {
-  return useQueryBase(['notification', id], () => getUserNotifications(id));
+  return useQueryBase(['notification', id], () => getUserNotifications(id, 1));
+};
+
+export const usePaginationNotification = (id: string, page: number) => {
+  return useInfiniteQuery({
+    queryKey: ['notification', id, page],
+    queryFn: () => getUserNotifications(id, 1),
+    initialPageParam: 1,
+    getNextPageParam(lastPage, allPages) {
+      return lastPage.length > 0 ? allPages.length + 1 : undefined;
+    },
+  });
 };
 
 export const useLikeDivelog = () => {

@@ -6,7 +6,7 @@ import { useAuthStore } from '../../../auth/authStore';
 import { categorizeTime } from '../../../utils/profile';
 import Divider from '../../../components/divider';
 import NotificationSkeleton from '../../../components/notification/skeleton';
-import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
+import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 
 const Notification = () => {
@@ -91,7 +91,8 @@ const Notification = () => {
       ) : (
         <SectionList
           showsVerticalScrollIndicator={false}
-          sections={sections} // Use the state here
+          sections={sections}
+          onEndReachedThreshold={0.7}
           stickySectionHeadersEnabled={false}
           renderItem={renderNotification}
           renderSectionHeader={renderSectionHeader}

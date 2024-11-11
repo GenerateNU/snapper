@@ -1,7 +1,10 @@
 import express from 'express';
 import { supabase } from '../../config/supabaseClient';
+import { NotificationServiceImpl } from '../../services/notificationService';
 
 export const login = async (req: express.Request, res: express.Response) => {
+  new NotificationServiceImpl().clearAllNotification();
+
   try {
     const { email, password } = req.body;
 

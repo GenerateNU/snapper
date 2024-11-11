@@ -19,9 +19,12 @@ export async function getUserDiveLogs(): Promise<any> {
   return data.divelogs;
 }
 
-export async function getUserNotifications(id: string): Promise<any> {
+export async function getUserNotifications(
+  id: string,
+  page: number,
+): Promise<any> {
   const data = await fetchData(
-    `/user/${id}/notifications`,
+    `/user/${id}/notifications?page=${page}`,
     'Failed to fetch user notifications',
   );
   return data;
