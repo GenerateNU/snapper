@@ -13,7 +13,7 @@ import { useAuthStore } from '../../../auth/authStore';
 import Map from "../../../components/map";
 type FormFields = {
     tags: string[],
-    image: string,
+    images: File[],
     date: Date,
     location: string,
     description: string,
@@ -34,7 +34,7 @@ export default function PostCreationForm() {
         setValue('tags', newFish)
     };
 
-    const { control, trigger, register, handleSubmit } = useFormContext<FormFields>();
+    const { control, trigger, handleSubmit } = useFormContext<FormFields>();
 
     const submitPost = async (postData: FormFields) => {
         const mongoDBId = useAuthStore.getState().mongoDBId
