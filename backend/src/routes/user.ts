@@ -11,6 +11,7 @@ import { toggleLikeDivelog } from '../controllers/User/toggleLikeDivelog';
 import { getNotifications } from '../controllers/User/getNotification';
 import { ExpoTokenController } from '../controllers/User/expoToken';
 import { getUserDiveLogs } from '../controllers/User/GetMyDivelog';
+import { getFollowingPosts } from '../controllers/User/getFollowingPosts';
 
 export default (router: express.Router) => {
   router.get('/user/me', isAuthenticated, getUserMe); // get the current user
@@ -31,4 +32,5 @@ export default (router: express.Router) => {
     isAuthenticated,
     ExpoTokenController.handleExpoToken,
   );
+  router.get('/user/:id/followingPosts', isAuthenticated, getFollowingPosts);
 };

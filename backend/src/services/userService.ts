@@ -1,4 +1,5 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../consts/pagination';
+import { DiveLog } from '../models/diveLog';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 
@@ -42,6 +43,11 @@ export interface UserService {
     page: number,
   ): Promise<Document[] | null>;
   getDiveLogs(
+    id: string,
+    limit: number,
+    page: number,
+  ): Promise<Document[] | null>;
+  getFollowingPosts(
     id: string,
     limit: number,
     page: number,
@@ -179,5 +185,27 @@ export class UserServiceImpl implements UserService {
       return user.deviceTokens.includes(deviceToken);
     }
     return false;
+  }
+
+  async getFollowingPosts(
+    id: string,
+    limit: number = 10,
+    page: number = 1,
+  ): Promise<Document[] | null> {
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return null;
+    }
+
+    const followedUsers = user.following;
+
+    const divelogs = await DiveLog.find({
+      user: { $in: followedUsers },
+    })
+      .sort({ date: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    return divelogs;
   }
 }
