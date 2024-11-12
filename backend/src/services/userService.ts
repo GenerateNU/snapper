@@ -1,3 +1,5 @@
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../consts/pagination';
+import { DiveLog } from '../models/diveLog';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 
@@ -35,8 +37,24 @@ export interface UserService {
     currentUserId: string,
     targetUserId: string,
   ): Promise<boolean>;
-  getSpecies(id: string): Promise<Document[] | null>;
-  getDiveLogs(id: string): Promise<Document[] | null>;
+  getSpecies(
+    id: string,
+    limit: number,
+    page: number,
+  ): Promise<Document[] | null>;
+  getDiveLogs(
+    id: string,
+    limit: number,
+    page: number,
+  ): Promise<Document[] | null>;
+  getFollowingPosts(
+    id: string,
+    limit: number,
+    page: number,
+  ): Promise<Document[] | null>;
+  saveExpoToken(id: string, deviceToken: string): Promise<Document | null>;
+  removeExpoToken(id: string, deviceToken: string): Promise<Document | null>;
+  tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -88,23 +106,106 @@ export class UserServiceImpl implements UserService {
     return !!user;
   }
 
-  async getSpecies(id: string): Promise<Document[] | null> {
-    const user = await UserModel.findById(id)
-      .populate('speciesCollected')
+  async getSpecies(
+    id: string,
+    limit: number = DEFAULT_LIMIT,
+    page: number = DEFAULT_PAGE,
+  ): Promise<Document[] | null> {
+    const user = await UserModel.findById(id);
+    if (!user) return null;
+
+    const species = await UserModel.findById(id)
+      .populate({
+        path: 'speciesCollected',
+        options: {
+          sort: { createdAt: -1 },
+          limit: limit,
+          skip: (page - 1) * limit,
+        },
+      })
       .exec();
-    return user ? user.speciesCollected : null;
+
+    return species?.speciesCollected || null;
   }
 
-  async getDiveLogs(userId: string): Promise<Document[] | null> {
-    const user = await UserModel.findById(userId)
+  async getDiveLogs(
+    userId: string,
+    limit: number = DEFAULT_LIMIT,
+    page: number = DEFAULT_PAGE,
+  ): Promise<Document[] | null> {
+    const user = await UserModel.findById(userId);
+    if (!user) return null;
+
+    const calculatedSkip = (page - 1) * limit;
+    const userWithDiveLogs = await UserModel.findById(userId)
       .populate({
         path: 'diveLogs',
+        options: {
+          sort: { createdAt: -1 },
+          limit: limit,
+          skip: calculatedSkip,
+        },
         populate: {
           path: 'speciesTags',
           select: 'commonNames scientificName',
         },
       })
       .exec();
-    return user ? user.diveLogs : null;
+
+    return userWithDiveLogs?.diveLogs || null;
+  }
+
+  async saveExpoToken(
+    id: string,
+    deviceToken: string,
+  ): Promise<Document | null> {
+    const user = await UserModel.findByIdAndUpdate(
+      { _id: id },
+      { $addToSet: { deviceTokens: deviceToken } },
+      { new: true },
+    );
+    return user;
+  }
+
+  async removeExpoToken(
+    id: string,
+    deviceToken: string,
+  ): Promise<Document | null> {
+    const user = await UserModel.findByIdAndUpdate(
+      id,
+      { $pull: { deviceTokens: deviceToken } },
+      { new: true },
+    );
+    return user;
+  }
+
+  async tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean> {
+    const user = await UserModel.findById(id);
+    if (user) {
+      return user.deviceTokens.includes(deviceToken);
+    }
+    return false;
+  }
+
+  async getFollowingPosts(
+    id: string,
+    limit: number = 10,
+    page: number = 1,
+  ): Promise<Document[] | null> {
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return null;
+    }
+
+    const followedUsers = user.following;
+
+    const divelogs = await DiveLog.find({
+      user: { $in: followedUsers },
+    })
+      .sort({ date: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    return divelogs;
   }
 }

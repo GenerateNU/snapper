@@ -1,8 +1,15 @@
 import { findUserBySupabaseId } from './../../services/userService';
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import {
+  NotificationService,
+  NotificationServiceImpl,
+} from '../../services/notificationService';
+import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
 
+const notificationService: NotificationService = new NotificationServiceImpl();
 const userService: UserService = new UserServiceImpl();
+const expoService: ExpoService = new ExpoServiceImpl();
 
 export const toggleUserFollow = async (
   req: express.Request,
@@ -50,6 +57,13 @@ export const toggleUserFollow = async (
         .json({ message: 'Successfully unfollowed the user.' });
     } else {
       await userService.followUser(currentUserMongoDBId, targetUserMongoDBId);
+      const notification = await notificationService.createFollowNotification(
+        currentUserMongoDBId,
+        targetUserMongoDBId,
+      );
+      if (notification) {
+        await expoService.sendFollowNotification(notification);
+      }
       return res
         .status(200)
         .json({ message: 'Successfully followed the user.' });

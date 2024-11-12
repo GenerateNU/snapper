@@ -14,13 +14,17 @@
     "scheme": "snapper",
     "ios": {
       "supportsTablet": true,
-      "bundlerIdentifier": "com.generate.snapper"
+      "bundlerIdentifier": "com.generate.snapper",
+      "infoPlist": {
+        "NSUserNotificationUsageDescription": "Snapper would like to send you notifications."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["android.permission.NOTIFICATIONS"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,6 +39,12 @@
     ],
     "packagerOpts": {
       "config": "metro.config.js"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "921eecab-3fe7-43c0-ae5a-79aa0ba93d62"
+      }
+    },
+    "owner": "generate-snapper"
   }
 }

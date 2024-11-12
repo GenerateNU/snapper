@@ -1,6 +1,7 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -12,6 +13,8 @@ export const getUserSpecies = async (
   try {
     //Get the ID from the body of the request
     const userID = req.session.userId;
+    const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
+    const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
 
     //Check to make sure that the id is defined
     if (!userID) {
@@ -33,6 +36,8 @@ export const getUserSpecies = async (
 
     const speciesCollected = await userService.getSpecies(
       foundUser._id.toString(),
+      limit,
+      page,
     );
 
     //Return the OK status

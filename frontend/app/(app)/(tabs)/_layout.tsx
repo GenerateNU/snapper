@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Tabs } from 'expo-router';
 import IconButton from '../../../components/icon-button';
+import { Text, SafeAreaView } from 'react-native';
 
 const Layout = () => {
   return (
@@ -77,14 +78,20 @@ const Layout = () => {
         <Tabs.Screen
           name="notification"
           options={{
-            title: 'Notification',
-            headerShown: false,
-            headerTransparent: true,
+            title: 'Notifications',
+            headerShown: true,
             tabBarIcon: ({ focused }) => {
               return focused ? (
                 <IconButton icon={faStar} />
               ) : (
                 <Star width={20} height={20} />
+              );
+            },
+            header: () => {
+              return (
+                <SafeAreaView className="w-full items-center justify-center">
+                  <Text className="text-xl font-bold mt-5">Notifications</Text>
+                </SafeAreaView>
               );
             },
           }}
