@@ -4,12 +4,20 @@ import { useFormContext } from "react-hook-form";
 import Tag from "../../components/tag";
 import FishSearch from "./components/fish-search";
 
+
+type Location = {
+    type: string,
+    location: number[]
+}
+
+
 type FormFields = {
     tags: string[],
     image: string,
     date: Date,
-    location: string,
+    location: Location,
     description: string,
+    user: string
 }
 
 export default function TagFish() {

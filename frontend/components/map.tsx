@@ -1,40 +1,30 @@
-import React, { Component, useEffect, useRef } from 'react';
-import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from 'expo-router';
+import React, { useEffect, useRef } from 'react';
+import MapView, {Marker} from 'react-native-maps';
+import {StyleSheet,View } from 'react-native';
 
 
-    class Map extends Component {
-        INITIAL_REGION = {
-            latitude: 37.33,
-            longitude: -122,
-            latitudeDelta: 2,
-            longitudeDelta: 2
-        };
-    
-        state = {
-            x: {
-                latitude: 37.78825,
-                longitude: -122.4324
-            }
-        };
-    
-        render() {
-            return (
-                <>
-                    <View style={{ flex: 1 }}>
-                        <MapView style={StyleSheet.absoluteFill} initialRegion={this.INITIAL_REGION}>
-                            <Marker draggable coordinate={this.state.x}
-                                onDragEnd={(e) => this.setState({ x: { latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude } })}
-                            />
-                        </MapView>
-                    </View>
-                </>
-            );
-        }
-    
-    
-    }
 
+interface MapProps {
+    coordinate: number[]
+    setCoordinate: React.Dispatch<React.SetStateAction<number[]>>;  // type of setter function
+}
+
+
+const Map: React.FC<MapProps> = ({
+    coordinate,
+    setCoordinate
+  }) => {
+        return (
+            <>
+                <View style={{ flex: 1 }}>
+                    <MapView style={StyleSheet.absoluteFill} initialRegion={{latitude: coordinate[0], longitude: coordinate[1],  latitudeDelta: 2, longitudeDelta: 2}}>
+                        <Marker draggable coordinate={{latitude: coordinate[0], longitude: coordinate[1]}}
+                            onDragEnd={(e) => setCoordinate([e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude])}
+                        />
+                    </MapView>
+                </View>
+            </>
+        );
+}
 
 export default Map;

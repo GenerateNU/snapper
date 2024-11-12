@@ -2,12 +2,19 @@ import React from "react";
 import { router, Stack } from 'expo-router';
 import { useForm, FormProvider } from "react-hook-form";
 
+type Location = {
+    type: string,
+    location: number[]
+}
+
+
 type FormFields = {
     tags: string[],
     image: string,
     date: Date,
-    location: string,
+    location: Location,
     description: string,
+    user: string
 }
 
 
