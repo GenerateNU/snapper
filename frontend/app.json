@@ -27,7 +27,6 @@
           "apiKey": "process.env.GOOGLEMAPS_APIKEY"
         }
       }
-
     },
     "web": {
       "favicon": "./assets/favicon.png"

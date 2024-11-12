@@ -16,6 +16,4 @@ const Tag: React.FC<TagProps> = ({ fish, onPress }) => {
   );
 };
 
-
-
 export default Tag;

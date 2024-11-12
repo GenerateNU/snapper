@@ -4,11 +4,11 @@ import { useFormContext, Controller } from "react-hook-form"
 import ImagePicker from "../../../components/image-picker";
 import BigText from "../../../components/bigtext"
 import Input from '../../../components/input';
-import Button from "../../../components/button";
-import PageButton from "./page-button";
+import Button from '../../../components/button';
+import PageButton from './page-button';
 import { router } from 'expo-router';
-import Tag from "../../../components/tag";
-import { apiConfig } from "../../../api/apiContext";
+import Tag from '../../../components/tag';
+import { apiConfig } from '../../../api/apiContext';
 import { useAuthStore } from '../../../auth/authStore';
 import Map from "../../../components/map";
 import IconButton from '../../../components/icon-button';
@@ -42,12 +42,12 @@ export default function PostCreationForm() {
     const removeFish = (index: number) => {
         const newFish = [...tags];
 
-        newFish.splice(index, 1);
+    newFish.splice(index, 1);
 
-        setValue('tags', newFish)
-    };
+    setValue('tags', newFish);
+  };
 
-    const { control, trigger, handleSubmit } = useFormContext<FormFields>();
+  const { control, trigger, handleSubmit } = useFormContext<FormFields>();
 
     const getLocation  = () => {
         setValue('location', {type:"Point", coordinates: coordinate.reverse()})
