@@ -136,7 +136,7 @@ describe('POST /divelog', () => {
     },
   );
   */
-  
+
   it.each(missingFieldCasesDiveLog)(
     '400 for missing required %s',
     async ({ field, value, message }) => {
@@ -162,7 +162,6 @@ describe('POST /divelog', () => {
       expect(response.status).toBe(400);
     },
   );
-
 
   it('404 user not found', async () => {
     const payload = {
