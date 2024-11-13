@@ -102,18 +102,11 @@ const InitialLayout = () => {
   }, [isAuthenticated, user?.supabaseId]);
 
   return (
-    <View className="h-full w-full flex flex-col">
-      <Stack>
-        <Stack.Screen
-          name="(auth)"
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen
-          name="(app)"
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-      </Stack>
-    </View>
+    <Stack>
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(app)" options={{ headerShown: false }} />
+      <Stack.Screen name="(postcreation)" />
+    </Stack>
   );
 };
 

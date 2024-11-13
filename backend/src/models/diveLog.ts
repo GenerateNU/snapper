@@ -14,7 +14,7 @@ const DiveLogSchema = new mongoose.Schema({
       required: true,
     },
   },
-  date: { type: Date, required: true },
+  date: { type: Date, required: false },
   time: { type: String },
   duration: { type: Number },
   depth: { type: Number },

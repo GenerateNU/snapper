@@ -15,6 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundlerIdentifier": "com.generate.snapper",
+      "googleMapsApiKey": "process.env.GOOGLEMAPS_APIKEY",
       "infoPlist": {
         "NSUserNotificationUsageDescription": "Snapper would like to send you notifications."
       }
@@ -23,6 +24,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "process.env.GOOGLEMAPS_APIKEY"
+        }
       },
       "permissions": ["android.permission.NOTIFICATIONS"]
     },
