@@ -16,7 +16,6 @@ import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { number } from 'zod';
 import { Location, FormFields } from '../_layout';
 
-
 export default function PostCreationForm() {
   const [modalVisible, setModalVisible] = useState(false);
   const [coordinate, setCoordinate] = useState([37.33, -122]);
