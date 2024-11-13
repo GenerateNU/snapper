@@ -1,17 +1,10 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import {
-  useForm,
-  FormProvider,
-  useFormContext,
-  Form,
-  Controller,
-} from 'react-hook-form';
 import PostCreationForm from './components/post-creation-form';
 
 export default function PostCreation() {
   return (
-    <View className="flex items-center w-full bg-white h-full">
+    <View className="flex items-center w-full bg-white h-full pt-[5vh]">
       <ScrollView className="flex flex-col w-[90vw] bg-white">
         <View className="flex flex-col justify-items items-center pt-[5vh] mb-[3vh]">
           <Text className="font-bold text-[24px] leading-[29.05px] pb-[1vh]">

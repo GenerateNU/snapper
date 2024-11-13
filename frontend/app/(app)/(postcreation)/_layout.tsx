@@ -1,7 +1,7 @@
 import React from 'react';
 import { router, Stack } from 'expo-router';
 import { useForm, FormProvider } from 'react-hook-form';
-
+import Arrow from '../../../components/arrow';
 export type Location = {
   type: string;
   coordinates: number[];
@@ -23,12 +23,14 @@ export default function Layout() {
     <FormProvider {...methods}>
       <Stack>
         <Stack.Screen
-          name="index"
+          name="post"
           options={{
-            headerShown: false,
             headerTitle: '',
             headerTransparent: true,
-            gestureEnabled: false,
+            headerShown: true,
+            headerLeft: () => (
+              <Arrow direction="left" onPress={() => router.push("/(tabs)")} />
+            ),
           }}
         />
         <Stack.Screen
