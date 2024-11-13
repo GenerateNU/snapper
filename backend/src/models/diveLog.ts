@@ -20,6 +20,7 @@ const DiveLogSchema = new mongoose.Schema({
   depth: { type: Number },
   photos: [{ type: String }], // aws s3 urls
   description: { type: String },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 DiveLogSchema.index({ location: '2dsphere' });

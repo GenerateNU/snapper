@@ -5,9 +5,16 @@ import {
 const { validationResult } = require('express-validator');
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import {
+  NotificationService,
+  NotificationServiceImpl,
+} from '../../services/notificationService';
+import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
 const userService: UserService = new UserServiceImpl();
+const notificationService: NotificationService = new NotificationServiceImpl();
+const expoService: ExpoService = new ExpoServiceImpl();
 
 // using mongoId
 export const DiveLogController = {
@@ -30,7 +37,14 @@ export const DiveLogController = {
     }
 
     try {
-      const diveLog = await diveLogService.createDiveLog(req.body);
+      const diveLog: any = await diveLogService.createDiveLog(req.body);
+      const notifications = await notificationService.createPostNotification(
+        diveLog.user,
+        diveLog._id,
+      );
+      if (notifications && notifications.length > 0) {
+        await expoService.sendPostNotification(notifications[0]);
+      }
       res.status(201).json(diveLog);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });

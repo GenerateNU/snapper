@@ -3,15 +3,15 @@ import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { useAuthStore } from '../../../../auth/authStore';
 import {
   useUserById,
-  useUserDivelogById,
-  useUserSpeciesById,
+  useUserDiveLogs,
+  useUserSpecies,
 } from '../../../../hooks/user';
-import DiveLog from './divelog';
 import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
+import DiveLog from '../../../../components/divelog/divelog';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
@@ -21,20 +21,29 @@ const Menu = ({ id }: { id: string }) => {
   const isViewingOwnProfile = supabaseId === id;
 
   const {
-    data: diveLogData,
-    isError: diveLogError,
-    isLoading: diveLogLoading,
-  } = useUserDivelogById(id);
+    data: diveLogPages,
+    isLoading: diveLogIsLoading,
+    error: diveLogError,
+    fetchNextPage: diveLogFetchNextPage,
+    hasNextPage: diveLogHasNextPage,
+    isFetchingNextPage: diveLogIsFetchingNextPage,
+  } = useUserDiveLogs(id);
 
   const {
-    data: speciesData,
-    isError: speciesError,
-    isLoading: speciesLoading,
-  } = useUserSpeciesById(id);
+    data: speciesPages,
+    isLoading: speciesIsLoading,
+    error: speciesError,
+    fetchNextPage: speciesFetchNextPage,
+    hasNextPage: speciesHasNextPage,
+    isFetchingNextPage: speciesIsFetchingNextPage,
+  } = useUserSpecies(id);
 
-  const noData =
-    (!diveLogData || diveLogData.length === 0) &&
-    (!speciesData || speciesData.length === 0);
+  const diveLogData = diveLogPages?.pages.flatMap((page) => page) ?? [];
+  const speciesData = speciesPages?.pages.flatMap((page) => page) ?? [];
+
+  if (diveLogData.length === 0 && speciesData.length === 0) {
+    return;
+  }
 
   const profilePhoto = userData?.user.profilePicture || PROFILE_PHOTO;
   const username = userData?.user.username;
@@ -63,15 +72,43 @@ const Menu = ({ id }: { id: string }) => {
     );
   };
 
-  if (noData) {
-    return null;
-  }
+  const loadMoreSpecies = () => {
+    if (speciesHasNextPage && !speciesIsFetchingNextPage) {
+      speciesFetchNextPage();
+    }
+  };
+
+  const loadMoreDiveLog = () => {
+    if (diveLogHasNextPage && !diveLogIsFetchingNextPage) {
+      diveLogFetchNextPage();
+    }
+  };
+
+  const renderDiveLogFooter = () => {
+    if (!diveLogIsFetchingNextPage) return null;
+    return <DiveLogSkeleton />;
+  };
+
+  const renderSpeciesFooter = () => {
+    if (!speciesIsFetchingNextPage) return null;
+    return (
+      <View className="flex-row gap-2">
+        <SpeciesSkeleton />
+        <SpeciesSkeleton />
+        <SpeciesSkeleton />
+      </View>
+    );
+  };
 
   return (
-    <View className="flex flex-col w-full mb-[20%]">
+    <View className="flex flex-col w-full mb-10">
       <View className="flex w-full flex-row justify-around pb-[5%]">
         <TouchableOpacity
-          className={`py-[3%] w-[50%] justify-center items-center ${category === 'Dives' ? 'border-b-2 border-darkblue' : 'border-b-2 border-gray-200'}`}
+          className={`py-[3%] w-[50%] justify-center items-center ${
+            category === 'Dives'
+              ? 'border-b-2 border-darkblue'
+              : 'border-b-2 border-gray-200'
+          }`}
           onPress={() => setCategory('Dives')}
         >
           <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">
@@ -79,7 +116,11 @@ const Menu = ({ id }: { id: string }) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className={`py-[3%] w-[50%] justify-center items-center ${category === 'Species' ? 'border-b-2 border-darkblue' : 'border-b-2 border-gray-200'}`}
+          className={`py-[3%] w-[50%] justify-center items-center ${
+            category === 'Species'
+              ? 'border-b-2 border-darkblue'
+              : 'border-b-2 border-gray-200'
+          }`}
           onPress={() => setCategory('Species')}
         >
           <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">
@@ -88,7 +129,7 @@ const Menu = ({ id }: { id: string }) => {
         </TouchableOpacity>
       </View>
       {category === 'Dives' &&
-        (diveLogLoading ? (
+        (diveLogIsLoading ? (
           <FlatList
             data={[1, 2]}
             renderItem={() => <DiveLogSkeleton />}
@@ -101,18 +142,22 @@ const Menu = ({ id }: { id: string }) => {
         ) : (
           <FlatList
             data={diveLogData}
+            onEndReached={loadMoreDiveLog}
+            onEndReachedThreshold={0.7}
             renderItem={renderDiveLog}
-            ItemSeparatorComponent={() => <View className="h-5"></View>}
+            ListFooterComponent={renderDiveLogFooter}
+            ItemSeparatorComponent={() => <View className="h-5" />}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: 'flex-start',
               alignItems: 'center',
             }}
-            keyExtractor={(_, index) => index.toString()}
+            keyExtractor={(item, index) => `species-${item._id}-${index}`}
           />
         ))}
+
       {category === 'Species' &&
-        (speciesLoading ? (
+        (speciesIsLoading ? (
           <FlatList
             data={[1, 2, 3, 4, 5, 6]}
             renderItem={() => <SpeciesSkeleton />}
@@ -137,6 +182,9 @@ const Menu = ({ id }: { id: string }) => {
             data={speciesData}
             renderItem={renderSpecies}
             numColumns={3}
+            onEndReachedThreshold={0.7}
+            onEndReached={loadMoreSpecies}
+            ListFooterComponent={renderSpeciesFooter}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: 'flex-start',
@@ -146,7 +194,7 @@ const Menu = ({ id }: { id: string }) => {
             columnWrapperStyle={{
               gap: 10,
             }}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item, index) => `diveLog-${item._id}-${index}`}
           />
         ))}
     </View>

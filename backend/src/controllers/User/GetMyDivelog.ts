@@ -11,6 +11,8 @@ export const getUserDiveLogs = async (
   try {
     //Get the ID from the body of the request
     const userID = req.session.userId;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const page = parseInt(req.query.page as string) || 1;
 
     //Check to make sure that the id is defined
     if (!userID) {
@@ -28,7 +30,11 @@ export const getUserDiveLogs = async (
         .json({ error: 'Unable to find user of ID: ' + userID });
     }
 
-    const divelogs = await userService.getDiveLogs(foundUser._id.toString());
+    const divelogs = await userService.getDiveLogs(
+      foundUser._id.toString(),
+      limit,
+      page,
+    );
 
     //Return the OK status
     return res.status(200).json({

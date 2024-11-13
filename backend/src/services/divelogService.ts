@@ -7,6 +7,8 @@ export interface DiveLogService {
   getDiveLogById(id: string): Promise<Document | null>;
   updateDiveLog(id: string, data: Partial<Document>): Promise<Document | null>;
   deleteDiveLog(id: string): Promise<Document | null>;
+  likeDiveLog(userId: string, divelogId: string): Promise<Document | null>;
+  unlikeDiveLog(userId: string, divelogId: string): Promise<Document | null>;
 }
 
 export class DiveLogServiceImpl implements DiveLogService {
@@ -26,14 +28,17 @@ export class DiveLogServiceImpl implements DiveLogService {
       update.$addToSet.speciesCollected = { $each: data.speciesTags };
     }
 
-    const user: any = await UserModel.findByIdAndUpdate(data.user, update, {
+    await UserModel.findByIdAndUpdate(data.user, update, {
       new: true,
     });
     return diveLog;
   }
 
   async getDiveLogById(id: string): Promise<Document | null> {
-    return DiveLog.findById(id).populate('speciesTags').exec();
+    return DiveLog.findById(id)
+      .populate('speciesTags')
+      .populate('user', 'supabaseId profilePicture username')
+      .exec();
   }
 
   async updateDiveLog(
@@ -45,5 +50,29 @@ export class DiveLogServiceImpl implements DiveLogService {
 
   async deleteDiveLog(id: string): Promise<Document | null> {
     return DiveLog.findByIdAndDelete(id).exec();
+  }
+
+  async likeDiveLog(
+    userId: string,
+    divelogId: string,
+  ): Promise<Document | null> {
+    const updatedDiveLog = await DiveLog.findByIdAndUpdate(
+      divelogId,
+      { $addToSet: { likes: userId } },
+      { new: true },
+    );
+    return updatedDiveLog;
+  }
+
+  async unlikeDiveLog(
+    userId: string,
+    divelogId: string,
+  ): Promise<Document | null> {
+    const updatedDiveLog = await DiveLog.findByIdAndUpdate(
+      divelogId,
+      { $pull: { likes: userId } },
+      { new: true },
+    );
+    return updatedDiveLog;
   }
 }

@@ -1,43 +1,18 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import Profile from '../../../../components/profile';
-import Button from '../../../../components/button';
 import Divider from '../../../../components/divider';
 import { useAuthStore } from '../../../../auth/authStore';
-import { useFollowUser, useUserById } from '../../../../hooks/user';
+import { useUserById } from '../../../../hooks/user';
 import HeaderSkeleton from './skeleton/header-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import { formatNumber } from '../../../../utils/profile';
-import { useCallback, useEffect, useState } from 'react';
+import FollowButton from './follow-button';
+import useFollow from '../../../../hooks/following';
 
 const Header = ({ id }: { id: string }) => {
-  const { supabaseId, mongoDBId } = useAuthStore();
+  const { supabaseId } = useAuthStore();
   const { data, isError, isLoading } = useUserById(id);
-
-  const followMutation = useFollowUser();
-  const [isFollowing, setIsFollowing] = useState(false);
-
-  useEffect(() => {
-    if (data && data.user && Array.isArray(data.user.followers)) {
-      const isUserFollowing = data.user.followers.includes(mongoDBId);
-      setIsFollowing(isUserFollowing);
-    }
-  }, [data, mongoDBId]);
-
-  const handleFollowToggle = useCallback(async () => {
-    if (!supabaseId) {
-      console.error('supabaseId is null');
-      return;
-    }
-
-    setIsFollowing((prevIsFollowing) => !prevIsFollowing);
-
-    try {
-      await followMutation.mutateAsync({ id: supabaseId, followUserId: id });
-    } catch (error) {
-      console.error('Error toggling follow status:', error);
-      setIsFollowing((prevIsFollowing) => !prevIsFollowing);
-    }
-  }, [followMutation, id, supabaseId]);
+  const { handleFollowToggle, isFollowing, isPending } = useFollow(id);
 
   if (isLoading) {
     return <HeaderSkeleton />;
@@ -56,7 +31,11 @@ const Header = ({ id }: { id: string }) => {
   return (
     <View className="flex flex-col w-full">
       <View className="flex flex-row w-full">
-        <Profile image={data?.user.profilePicture || PROFILE_PHOTO} />
+        <Profile
+          size="lg"
+          outline
+          image={data?.user.profilePicture || PROFILE_PHOTO}
+        />
         <View className="flex flex-row ml-[5%] justify-around w-3/4">
           <TouchableOpacity className="flex-col justify-center items-center flex-1">
             <Text className="font-bold text-darkblue text-md sm:text-lg md:text-xl">
@@ -82,17 +61,10 @@ const Header = ({ id }: { id: string }) => {
           <Text className="text-ocean text-sm sm:text-base">{`@${data?.user.username}`}</Text>
         </View>
         {id !== supabaseId && (
-          <Button
+          <FollowButton
             onPress={handleFollowToggle}
-            text={
-              followMutation.isPending
-                ? 'Loading...'
-                : isFollowing
-                  ? 'Unfollow'
-                  : 'Follow'
-            }
-            small
-            disabled={followMutation.isPending}
+            isPending={isPending}
+            isFollowing={isFollowing}
           />
         )}
       </View>

@@ -16,6 +16,9 @@
       "supportsTablet": true,
       "bundlerIdentifier": "com.generate.snapper",
       "googleMapsApiKey": "process.env.GOOGLEMAPS_APIKEY"
+      "infoPlist": {
+        "NSUserNotificationUsageDescription": "Snapper would like to send you notifications."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +30,7 @@
           "apiKey": "process.env.GOOGLEMAPS_APIKEY"
         }
       }
+      "permissions": ["android.permission.NOTIFICATIONS"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,6 +45,12 @@
     ],
     "packagerOpts": {
       "config": "metro.config.js"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "921eecab-3fe7-43c0-ae5a-79aa0ba93d62"
+      }
+    },
+    "owner": "generate-snapper"
   }
 }
