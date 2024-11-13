@@ -1,24 +1,22 @@
-import React from "react";
-import { View, Text, Image, TextInput } from "react-native";
-import { useFormContext } from "react-hook-form";
-import Tag from "../../components/tag";
-import FishSearch from "./components/fish-search";
-
+import React from 'react';
+import { View, Text, Image, TextInput } from 'react-native';
+import { useFormContext } from 'react-hook-form';
+import Tag from '../../components/tag';
+import FishSearch from './components/fish-search';
 
 type Location = {
-    type: string,
-    location: number[]
-}
-
+  type: string;
+  location: number[];
+};
 
 type FormFields = {
-    tags: string[],
-    image: string,
-    date: Date,
-    location: Location,
-    description: string,
-    user: string
-}
+  tags: string[];
+  image: string;
+  date: Date;
+  location: Location;
+  description: string;
+  user: string;
+};
 
 export default function TagFish() {
   const { setValue, watch } = useFormContext<FormFields>();

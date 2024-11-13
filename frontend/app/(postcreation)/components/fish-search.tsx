@@ -47,7 +47,7 @@ export default function FishSearch() {
         if (!tags.includes(newData[i].name) && newData[i].visibility) {
           newData[i].visibility = false;
           hasChanged = true;
-        } 
+        }
         if (tags.includes(newData[i].name) && !newData[i].visibility) {
           newData[i].visibility = true;
           hasChanged = true;

@@ -1,23 +1,20 @@
 import React from 'react';
 import { router, Stack } from 'expo-router';
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider } from 'react-hook-form';
 
 type Location = {
-    type: string,
-    location: number[]
-}
-
+  type: string;
+  location: number[];
+};
 
 type FormFields = {
-    tags: string[],
-    image: string,
-    date: Date,
-    location: Location,
-    description: string,
-    user: string
-}
-
-
+  tags: string[];
+  image: string;
+  date: Date;
+  location: Location;
+  description: string;
+  user: string;
+};
 
 export default function Layout() {
   const methods = useForm<FormFields>();
