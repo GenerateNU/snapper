@@ -38,7 +38,7 @@ export default function PostCreationForm() {
     const [coordinate, setCoordinate] = useState([37.33, -122]);
     const { setValue, watch, reset } = useFormContext<FormFields>();
     const tags: string[] = watch('tags') || [];
-    const location: Location = watch('location') || {type: "Point", location: []};
+    const location: Location = watch('location') || {type: "Point", coordinates: []};
     const removeFish = (index: number) => {
         const newFish = [...tags];
 
@@ -99,7 +99,10 @@ export default function PostCreationForm() {
             </View>
             <Text className="text-[16px]">Location</Text>
             <View className="mb-4">
-                <PageButton outline='gray-400' text= "Choose Location" backgroundColor="white" onPress={() => setModalVisible(true)} />
+                {!location.coordinates.length? 
+                <PageButton outline='gray-400' text= "Choose Location" backgroundColor="white" onPress={() => setModalVisible(true)} />: 
+                <PageButton outline='gray-400' text= {"Set Location: [ " + location.coordinates[0].toFixed(2) + " , " + location.coordinates[1].toFixed(2) + " ]"} backgroundColor="white" onPress={() => setModalVisible(true)} />
+                }
             </View>
             <Modal
                 animationType="slide"

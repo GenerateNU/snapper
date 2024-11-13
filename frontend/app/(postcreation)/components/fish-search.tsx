@@ -27,7 +27,7 @@ export default function FishSearch() {
 
   const updateBoolAtIndex = (index: number, value: boolean) => {
     const newData = [...data];
-    if (value) {
+    if (value && !tags.includes(data[index].name)) {
       setValue('tags', [data[index].name, ...tags]);
     } else {
       setValue(
@@ -43,11 +43,12 @@ export default function FishSearch() {
     const checkTags = () => {
       let hasChanged = false;
       const newData = [...data];
-      for (let i: number = 0; i < newData.length; i++) {
+      for (let i: number = 0; i < data.length; i++) {
         if (!tags.includes(newData[i].name) && newData[i].visibility) {
           newData[i].visibility = false;
           hasChanged = true;
-        } else if (tags.includes(data[i]) && !newData[i].visibility) {
+        } 
+        if (tags.includes(newData[i].name) && !newData[i].visibility) {
           newData[i].visibility = true;
           hasChanged = true;
         }
