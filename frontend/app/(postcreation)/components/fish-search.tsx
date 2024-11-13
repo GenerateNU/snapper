@@ -7,6 +7,7 @@ type FishData = {
   name: string;
   visibility: Boolean;
 };
+
 export default function FishSearch() {
   const [data, setData] = useState<FishData[]>([
     { name: 'Anemone', visibility: false },

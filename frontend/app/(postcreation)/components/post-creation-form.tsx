@@ -14,20 +14,8 @@ import Map from '../../../components/map';
 import IconButton from '../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { number } from 'zod';
+import { Location, FormFields } from '../_layout';
 
-type Location = {
-  type: string;
-  coordinates: number[];
-};
-
-type FormFields = {
-  tags: string[];
-  images: File[];
-  date: Date;
-  location: Location;
-  description: string;
-  user: string;
-};
 
 export default function PostCreationForm() {
   const [modalVisible, setModalVisible] = useState(false);
