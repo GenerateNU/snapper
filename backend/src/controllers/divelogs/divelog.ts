@@ -26,13 +26,13 @@ export const DiveLogController = {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ error: errors.array()});
       return;
     }
 
     const user = await userService.getUserById(req.body.user);
     if (user == null) {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ error: 'User not found' });
       return;
     }
 
@@ -47,7 +47,7 @@ export const DiveLogController = {
       }
       res.status(201).json(diveLog);
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ error: 'Internal server error' });
     }
   },
 

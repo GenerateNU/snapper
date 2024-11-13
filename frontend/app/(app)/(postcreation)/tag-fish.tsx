@@ -3,7 +3,7 @@ import { View, Text, Image, TextInput } from 'react-native';
 import { useFormContext } from 'react-hook-form';
 import Tag from '../../../components/tag';
 import FishSearch from './components/fish-search';
-import { Location, FormFields } from './_layout';
+import { Location, FormFields } from '../../../types/divelog';
 
 export default function TagFish() {
   const { setValue, watch } = useFormContext<FormFields>();

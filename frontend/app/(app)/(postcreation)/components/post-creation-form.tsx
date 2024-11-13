@@ -14,9 +14,12 @@ import Map from '../../../../components/map';
 import IconButton from '../../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { number } from 'zod';
-import { Location, FormFields } from '../_layout';
+import { Location, FormFields} from '../../../../types/divelog';
+
+
 
 export default function PostCreationForm() {
+  const API_BASE_URL = apiConfig;
   const [modalVisible, setModalVisible] = useState(false);
   const [coordinate, setCoordinate] = useState([37.33, -122]);
   const { setValue, watch, reset } = useFormContext<FormFields>();
@@ -47,7 +50,7 @@ export default function PostCreationForm() {
       postData.user = mongoDBId;
     }
     try {
-      const response = await fetch('http://localhost:3000/divelog', {
+      const response = await fetch(`${API_BASE_URL}/divelog`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +61,7 @@ export default function PostCreationForm() {
       const responseBody = await response.json();
       if (response.status == 400) {
         setError(true);
-        setErrorMessage(responseBody.errors[0].msg);
+        setErrorMessage(responseBody.error[0].msg);
       }
     } catch (error: any) {
       setError(true);

@@ -2,19 +2,7 @@ import React from 'react';
 import { router, Stack } from 'expo-router';
 import { useForm, FormProvider } from 'react-hook-form';
 import Arrow from '../../../components/arrow';
-export type Location = {
-  type: string;
-  coordinates: number[];
-};
-
-export type FormFields = {
-  tags: string[];
-  image: string;
-  date: Date;
-  location: Location;
-  description: string;
-  user: string;
-};
+import { Location, FormFields } from '../../../types/divelog';
 
 export default function Layout() {
   const methods = useForm<FormFields>();
