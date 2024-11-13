@@ -21,15 +21,16 @@ export default function PostCreationForm() {
   const [coordinate, setCoordinate] = useState([37.33, -122]);
   const { setValue, watch, reset } = useFormContext<FormFields>();
   const tags: string[] = watch('tags') || [];
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const location: Location = watch('location') || {
     type: 'Point',
     coordinates: [],
   };
   const removeFish = (index: number) => {
     const newFish = [...tags];
-
     newFish.splice(index, 1);
-
     setValue('tags', newFish);
   };
 
@@ -42,11 +43,9 @@ export default function PostCreationForm() {
   };
   const submitPost = async (postData: FormFields) => {
     const mongoDBId = useAuthStore.getState().mongoDBId;
-    //console.log(mongoDBId);
     if (mongoDBId) {
       postData.user = mongoDBId;
     }
-    console.log(postData);
     try {
       const response = await fetch('http://localhost:3000/divelog', {
         method: 'POST',
@@ -55,8 +54,15 @@ export default function PostCreationForm() {
         },
         body: JSON.stringify(postData),
       });
-    } catch (error) {
-      console.error(error);
+
+      const responseBody = await response.json();
+      if (response.status == 400) {
+        setError(true);
+        setErrorMessage(responseBody.errors[0].msg);
+      }
+    } catch (error: any) {
+      setError(true);
+      setErrorMessage(error.message);
     }
     reset();
   };
@@ -135,7 +141,7 @@ export default function PostCreationForm() {
         </View>
       </Modal>
       <Text className="text-[16px] ">Tag Fish</Text>
-      <View className="w-full mb-[4vh]">
+      <View className="w-full mb-[2vh]">
         {tags.length == 0 ? (
           <PageButton
             outline="gray-400"
@@ -144,7 +150,7 @@ export default function PostCreationForm() {
             onPress={() => router.push('/tag-fish')}
           />
         ) : (
-          <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-5">
+          <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-[2vh]">
             <View className="flex h-full w-full flex-row items-center flex-wrap items-center gap-2 p-2">
               {tags.map((item, index) => {
                 return (
@@ -164,8 +170,15 @@ export default function PostCreationForm() {
             </View>
           </View>
         )}
+        {error ? (
+          <View className="flex items-center text-center pt-[1vh]">
+            <Text className="text-[16px] text-red-500"> {errorMessage} </Text>
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
-      <View className="pb-10">
+      <View className="pb-2">
         <Button text="Post" onPress={handleSubmit(submitPost)} />
       </View>
     </View>
