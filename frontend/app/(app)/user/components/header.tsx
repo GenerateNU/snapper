@@ -10,7 +10,7 @@ import FollowButton from './follow-button';
 import useFollow from '../../../../hooks/following';
 
 const Header = ({ id }: { id: string }) => {
-  const { supabaseId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const { data, isError, isLoading } = useUserById(id);
   const { handleFollowToggle, isFollowing, isPending } = useFollow(id);
 
@@ -60,7 +60,7 @@ const Header = ({ id }: { id: string }) => {
           </Text>
           <Text className="text-ocean text-sm sm:text-base">{`@${data?.user.username}`}</Text>
         </View>
-        {id !== supabaseId && (
+        {id !== mongoDBId && (
           <FollowButton
             onPress={handleFollowToggle}
             isPending={isPending}

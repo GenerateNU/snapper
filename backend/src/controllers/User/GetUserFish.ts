@@ -1,6 +1,6 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import { NotFoundError } from '../../consts/errors';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -10,29 +10,18 @@ export const getUserSpeciesById = async (
   res: express.Response,
 ) => {
   try {
-    const userID = req.params.id;
+    const userId = req.params.id;
     const limit = parseInt(req.query.limit as string) || 10;
     const page = parseInt(req.query.page as string) || 1;
 
-    //Check to make sure that the id is defined
-    if (!userID) {
+    if (!userId) {
       return res
         .status(400)
         .json({ error: 'User is not present in the current session!' });
     }
 
-    const foundUser = await findUserBySupabaseId(userID);
-
-    //Ensure that there is a defined(non-null) result
-    if (!foundUser) {
-      //Error if not
-      return res
-        .status(400)
-        .json({ error: 'Unable to find user of ID: ' + userID });
-    }
-
     const speciesCollected = await userService.getSpecies(
-      foundUser._id.toString(),
+      userId,
       limit,
       page,
     );
@@ -40,14 +29,15 @@ export const getUserSpeciesById = async (
     //Return the OK status
     return res.status(200).json({
       species: speciesCollected,
-      message: 'Successfully found species for user:' + userID,
+      message: 'Successfully found species for user',
     });
   } catch (err) {
-    //Handle error
-    console.error("Error while searching for User's species:\n", err);
+    if (err instanceof NotFoundError) {
+      return res.status(404).json({ error: err.message });
+    }
     return res.status(500).json({
       error:
-        "Internal server error while searching for the user's species.' + err",
+        "Internal server error while searching for the user's species."
     });
   }
 };

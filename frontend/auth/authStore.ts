@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist } from 'zustand/middleware';
 import { LoginRequestBody, RegisterRequestBody } from '../types/auth';
 import { getSession, login, logout, register } from '../api/auth';
-import { getUserById } from '../api/user';
+import { getUserBySupabaseId } from '../api/user';
 
 interface AuthState {
   user: any;
@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthState>(
 
           const response = await login(userData);
           const session = await getSession();
-          const userMe = await getUserById(response.user.id);
+          const userMe = await getUserBySupabaseId(response.user.id);
 
           if (session && userMe) {
             set({
@@ -84,7 +84,7 @@ export const useAuthStore = create<AuthState>(
 
           const response = await register(userData);
           const session = await getSession();
-          const userMe = await getUserById(response.user.id);
+          const userMe = await getUserBySupabaseId(response.user.id);
 
           if (session && userMe) {
             set({

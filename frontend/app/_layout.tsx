@@ -33,7 +33,7 @@ const InitialLayout = () => {
 
     const handleNotificationPermissions = async () => {
       try {
-        if (!user?.supabaseId) return null;
+        if (!user?.mongoDBId) return null;
 
         const { status } = await Notifications.getPermissionsAsync();
         const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
@@ -41,7 +41,7 @@ const InitialLayout = () => {
         if (status === 'granted') {
           // register for notifications if user does not have a token
           if (!savedToken) {
-            const token = await registerForPushNotifications(user.supabaseId);
+            const token = await registerForPushNotifications(user.mongoDBId);
             if (token) {
               await AsyncStorage.setItem(NOTIFICATION_TOKEN_KEY, token);
               notificationTokenRef.current = token;
@@ -52,7 +52,7 @@ const InitialLayout = () => {
         } else {
           // unregister if permissions are revoked and have a saved token
           if (savedToken) {
-            await unregisterForPushNotifications(user.supabaseId, savedToken);
+            await unregisterForPushNotifications(user.mongoDBId, savedToken);
             await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
             notificationTokenRef.current = null;
           }
@@ -76,18 +76,18 @@ const InitialLayout = () => {
         subscription.remove();
       }
     };
-  }, [isAuthenticated, user?.supabaseId]);
+  }, [isAuthenticated, user?.mongoDBId]);
 
   useEffect(() => {
     const cleanupNotifications = async () => {
       if (
         !isAuthenticated &&
         notificationTokenRef.current &&
-        user?.supabaseId
+        user?.mongoDBId
       ) {
         try {
           await unregisterForPushNotifications(
-            user.supabaseId,
+            user.mongoDBId,
             notificationTokenRef.current,
           );
           await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
@@ -105,7 +105,6 @@ const InitialLayout = () => {
     <Stack>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(app)" options={{ headerShown: false }} />
-      <Stack.Screen name="(postcreation)" />
     </Stack>
   );
 };

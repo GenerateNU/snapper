@@ -1,7 +1,9 @@
+import mongoose from 'mongoose';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../consts/pagination';
 import { DiveLog } from '../models/diveLog';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
+import { NotFoundError } from '../consts/errors';
 
 export const createUser = async (userData: {
   email: string;
@@ -27,36 +29,29 @@ export const editUserBySupabaseId = async (
 
 export interface UserService {
   getUserById(id: string): Promise<Document | null>;
-  followUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<Document | null>;
-  unfollowUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<Document | null>;
-  isFollowingUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<boolean>;
   getSpecies(
-    id: string,
+    userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
   getDiveLogs(
-    id: string,
+    userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
   getFollowingPosts(
-    id: string,
+    userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
-  saveExpoToken(id: string, deviceToken: string): Promise<Document | null>;
-  removeExpoToken(id: string, deviceToken: string): Promise<Document | null>;
-  tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean>;
+  updateDeviceToken(
+    userId: string,
+    deviceToken: string,
+  ): Promise<Document | null>;
+  toggleFollow(
+    currentUserId: string,
+    targetUserId: string
+  ): Promise<Document | null>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -64,59 +59,47 @@ export class UserServiceImpl implements UserService {
     return UserModel.findById(id);
   }
 
-  async followUser(
+  async toggleFollow(
     currentUserId: string,
-    targetUserId: string,
+    targetUserId: string
   ): Promise<Document | null> {
-    await UserModel.findByIdAndUpdate(
+    const targetUser = await UserModel.findById(targetUserId);
+    
+    if (!targetUser) {
+      throw new NotFoundError('Target user not found');
+    }
+  
+    const isFollowing = targetUser.followers.includes(new mongoose.Types.ObjectId(currentUserId));
+  
+    const updateCurrentUser = isFollowing
+      ? { $pull: { following: targetUserId } } 
+      : { $addToSet: { following: targetUserId } };
+  
+    const updateTargetUser = isFollowing
+      ? { $pull: { followers: currentUserId } }
+      : { $addToSet: { followers: currentUserId } };
+  
+    const followUser = await UserModel.findByIdAndUpdate(
       currentUserId,
-      // $addToSet ensures that targetUserId is added only if it is not already in the array
-      { $addToSet: { following: targetUserId } }, // add targetUserId into following list of currentUser
+      updateCurrentUser,
       { new: true },
     );
-    return UserModel.findByIdAndUpdate(
-      targetUserId,
-      { $addToSet: { followers: currentUserId } }, // add currentUserId to follower list of targetUser
-      { new: true },
-    );
-  }
-
-  async unfollowUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<Document | null> {
+  
     await UserModel.findByIdAndUpdate(
-      currentUserId,
-      { $pull: { following: targetUserId } }, // remove targetUserId into following list of currentUser
-      { new: true },
-    );
-    return UserModel.findByIdAndUpdate(
       targetUserId,
-      { $pull: { followers: currentUserId } }, // remove currentUserId to follower list of targetUser
+      updateTargetUser,
       { new: true },
     );
-  }
 
-  async isFollowingUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<boolean> {
-    const user = await UserModel.findOne({
-      _id: currentUserId,
-      following: targetUserId, // search in following array if it contains targetUserId
-    });
-    return !!user;
-  }
+    return followUser;
+  }  
 
   async getSpecies(
-    id: string,
+    userId: string,
     limit: number = DEFAULT_LIMIT,
     page: number = DEFAULT_PAGE,
   ): Promise<Document[] | null> {
-    const user = await UserModel.findById(id);
-    if (!user) return null;
-
-    const species = await UserModel.findById(id)
+    const user = await UserModel.findById(userId)
       .populate({
         path: 'speciesCollected',
         options: {
@@ -127,19 +110,19 @@ export class UserServiceImpl implements UserService {
       })
       .exec();
 
-    return species?.speciesCollected || null;
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user?.speciesCollected || null;
   }
 
   async getDiveLogs(
     userId: string,
     limit: number = DEFAULT_LIMIT,
     page: number = DEFAULT_PAGE,
-  ): Promise<Document[] | null> {
-    const user = await UserModel.findById(userId);
-    if (!user) return null;
-
+  ): Promise<Document[]> {
     const calculatedSkip = (page - 1) * limit;
-    const userWithDiveLogs = await UserModel.findById(userId)
+    const user = await UserModel.findById(userId)
       .populate({
         path: 'diveLogs',
         options: {
@@ -154,55 +137,73 @@ export class UserServiceImpl implements UserService {
       })
       .exec();
 
-    return userWithDiveLogs?.diveLogs || null;
-  }
-
-  async saveExpoToken(
-    id: string,
-    deviceToken: string,
-  ): Promise<Document | null> {
-    const user = await UserModel.findByIdAndUpdate(
-      { _id: id },
-      { $addToSet: { deviceTokens: deviceToken } },
-      { new: true },
-    );
-    return user;
-  }
-
-  async removeExpoToken(
-    id: string,
-    deviceToken: string,
-  ): Promise<Document | null> {
-    const user = await UserModel.findByIdAndUpdate(
-      id,
-      { $pull: { deviceTokens: deviceToken } },
-      { new: true },
-    );
-    return user;
-  }
-
-  async tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean> {
-    const user = await UserModel.findById(id);
-    if (user) {
-      return user.deviceTokens.includes(deviceToken);
+    if (!user) {
+      throw new NotFoundError('User not found');
     }
-    return false;
+
+    return user?.diveLogs || null;
+  }
+
+  async updateDeviceToken(
+    userId: string,
+    deviceToken: string,
+  ): Promise<Document | null> {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const user = await UserModel.findByIdAndUpdate(
+        { userId },
+        [
+          {
+            $set: {
+              deviceTokens: {
+                $cond: {
+                  if: { $in: [deviceToken, '$deviceTokens'] },
+                  then: {
+                    $filter: {
+                      input: '$deviceTokens',
+                      cond: { $ne: ['$$this', deviceToken] },
+                    },
+                  },
+                  else: { $concatArrays: ['$deviceTokens', [deviceToken]] },
+                },
+              },
+            },
+          },
+        ],
+        { new: true },
+      );
+
+      if (!user) {
+        session.abortTransaction();
+        throw new NotFoundError('User not found');
+      }
+
+      await session.commitTransaction();
+      return user;
+    } catch (error) {
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 
   async getFollowingPosts(
-    id: string,
+    userId: string,
     limit: number = 10,
     page: number = 1,
   ): Promise<Document[] | null> {
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findById({ userId }, 'following');
+
     if (!user) {
-      return null;
+      throw new NotFoundError('User not found');
     }
 
-    const followedUsers = user.following;
-
     const divelogs = await DiveLog.find({
-      user: { $in: followedUsers },
+      user: {
+        $in: user.following,
+      },
     })
       .sort({ date: -1 })
       .skip((page - 1) * limit)

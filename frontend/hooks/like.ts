@@ -4,7 +4,7 @@ import { useLikeDivelog } from './user';
 import { useDiveLog } from './divelog';
 
 const useLike = (divelogId: string) => {
-  const { supabaseId, mongoDBId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const { data } = useDiveLog(divelogId);
 
   const likeMutation = useLikeDivelog();
@@ -18,8 +18,8 @@ const useLike = (divelogId: string) => {
   }, [data, mongoDBId]);
 
   const handleLikeToggle = useCallback(async () => {
-    if (!supabaseId) {
-      console.error('supabaseId is null');
+    if (!mongoDBId) {
+      console.error('ID is null');
       return null;
     }
 
@@ -27,14 +27,14 @@ const useLike = (divelogId: string) => {
 
     try {
       await likeMutation.mutateAsync({
-        id: supabaseId,
+        id: mongoDBId,
         divelogId: divelogId,
       });
     } catch (error) {
       console.error('Error toggling like status:', error);
       setIsLiking((prevIsLiking) => !prevIsLiking);
     }
-  }, [likeMutation, divelogId, supabaseId]);
+  }, [likeMutation, divelogId, mongoDBId]);
 
   return {
     isLiking,

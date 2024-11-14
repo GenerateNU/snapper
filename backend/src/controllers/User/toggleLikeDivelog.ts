@@ -1,4 +1,3 @@
-import { findUserBySupabaseId } from '../../services/userService';
 import express from 'express';
 import {
   DiveLogService,
@@ -9,6 +8,7 @@ import {
   NotificationServiceImpl,
 } from '../../services/notificationService';
 import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
+import { NotFoundError } from '../../consts/errors';
 
 const divelogService: DiveLogService = new DiveLogServiceImpl();
 const notificationService: NotificationService = new NotificationServiceImpl();
@@ -19,50 +19,38 @@ export const toggleLikeDivelog = async (
   res: express.Response,
 ) => {
   try {
-    const { id: currentUserId, divelogId } = req.params;
+    const { id: likeUserId, divelogId } = req.params;
 
-    if (!divelogId || !currentUserId) {
+    if (!divelogId || !likeUserId) {
       return res
         .status(400)
         .json({ error: 'User ID or dive log ID is missing' });
     }
 
-    const currentUserInMongoDB = await findUserBySupabaseId(currentUserId);
-    if (!currentUserInMongoDB) {
-      return res.status(404).json({ error: 'Current user not found.' });
-    }
+    const divelog: any = await divelogService.toggleLikeDiveLog(
+      likeUserId,
+      divelogId,
+    );
 
-    const divelog: any = await divelogService.getDiveLogById(divelogId);
-
-    if (!divelog) {
-      return res.status(404).json({ error: 'Dive log not found.' });
-    }
-
-    const currentUserMongoId = currentUserInMongoDB._id.toString();
-
-    const alreadyLiked = divelog.likes.includes(currentUserMongoId);
-
-    if (alreadyLiked) {
-      // unlike if already liked
-      await divelogService.unlikeDiveLog(currentUserMongoId, divelogId);
-      return res
-        .status(200)
-        .json({ message: 'Dive log unliked successfully.' });
-    } else {
-      // like if not already liked
-      await divelogService.likeDiveLog(currentUserMongoId, divelogId);
+    if (divelog.likes.includes(likeUserId)) {
       const notification = await notificationService.createLikeNotification(
-        currentUserMongoId,
-        divelog.user._id.toString(),
+        likeUserId,
+        divelog.user._id,
         divelog._id,
       );
       if (notification) {
         await expoService.sendLikeNotification(notification);
       }
       return res.status(200).json({ message: 'Dive log liked successfully.' });
+    } else {
+      return res
+        .status(200)
+        .json({ message: 'Dive log unliked successfully.' });
     }
   } catch (error) {
-    console.error('Error toggling like status:', error);
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     return res
       .status(500)
       .json({ error: 'An error occurred while toggling like status.' });

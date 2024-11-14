@@ -1,11 +1,9 @@
+import { findUserBySupabaseId } from './../../services/userService';
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
 
-const userService = new UserServiceImpl();
-
-//Will get the user by the given supabaseID
-export const getUserByID = async (
+//Will get the user by the given supabaseId
+export const getUserBySupabaseId = async (
   req: express.Request,
   res: express.Response,
 ) => {

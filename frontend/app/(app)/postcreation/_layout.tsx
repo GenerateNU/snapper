@@ -1,6 +1,7 @@
 import React from 'react';
 import { router, Stack } from 'expo-router';
 import { useForm, FormProvider } from 'react-hook-form';
+import Arrow from '../../../components/arrow';
 
 export type Location = {
   type: string;
@@ -25,10 +26,11 @@ export default function Layout() {
         <Stack.Screen
           name="index"
           options={{
-            headerShown: false,
+            headerShown: true,
             headerTitle: '',
             headerTransparent: true,
             gestureEnabled: false,
+            headerLeft: () => <Arrow onPress={() => router.replace('/(tabs)')} direction="left"/>
           }}
         />
         <Stack.Screen
@@ -38,6 +40,7 @@ export default function Layout() {
             headerTitle: '',
             headerTransparent: true,
             gestureEnabled: false,
+            headerLeft: () => <Arrow onPress={() => router.back()} direction="left"/>
           }}
         />
       </Stack>

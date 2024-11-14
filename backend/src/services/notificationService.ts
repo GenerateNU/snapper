@@ -3,6 +3,7 @@ import { Notification } from '../models/notification';
 import { UserModel } from '../models/users';
 import { DiveLog } from '../models/diveLog';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../consts/pagination';
+import { NotFoundError } from '../consts/errors';
 
 export interface NotificationService {
   createLikeNotification(
@@ -32,13 +33,14 @@ export class NotificationServiceImpl implements NotificationService {
     receiverId: string,
     diveLogId: string,
   ): Promise<Document | null> {
-    const actor = await UserModel.findById(actorId).select('username');
-    if (!actor) {
-      throw new Error('Actor not found');
-    }
-
+    
     if (actorId === receiverId) {
       return null;
+    }
+
+    const actor = await UserModel.findById(actorId).select('username');
+    if (!actor) {
+      throw new NotFoundError('Actor not found');
     }
 
     const existingNotification = await Notification.findOne({
@@ -72,29 +74,32 @@ export class NotificationServiceImpl implements NotificationService {
   ): Promise<Document> {
     const actor = await UserModel.findById(actorId).select('username');
     if (!actor) {
-      throw new Error('Actor not found');
+      throw new NotFoundError('Actor not found');
     }
-
-    await Notification.findOneAndDelete({
-      type: 'FOLLOW',
-      receiver: receiverId,
-      actor: actorId,
-      target: receiverId,
-      targetModel: 'User',
-    });
 
     const message = `${actor.username} started following you.`;
 
-    const notification = new Notification({
-      type: 'FOLLOW',
-      message,
-      receiver: receiverId,
-      actor: actorId,
-      target: receiverId,
-      targetModel: 'User',
-    });
+    const notification = await Notification.findOneAndUpdate(
+      {
+        type: 'FOLLOW',
+        receiver: receiverId,
+        actor: actorId,
+        target: receiverId,
+        targetModel: 'User',
+      },
+      {
+        $set: {
+          message,
+          time: new Date(),
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      },
+    );
 
-    return notification.save();
+    return notification;
   }
 
   async createPostNotification(
@@ -104,7 +109,7 @@ export class NotificationServiceImpl implements NotificationService {
     const actor =
       await UserModel.findById(actorId).select('username followers');
     if (!actor) {
-      throw new Error('Actor not found');
+      throw new NotFoundError('Actor not found');
     }
 
     const diveLog: any = await DiveLog.findById(diveLogId)
@@ -115,7 +120,7 @@ export class NotificationServiceImpl implements NotificationService {
       .exec();
 
     if (!diveLog) {
-      throw new Error('DiveLog not found');
+      throw new NotFoundError('DiveLog not found');
     }
 
     const speciesNames =
@@ -146,7 +151,7 @@ export class NotificationServiceImpl implements NotificationService {
       .sort({ time: -1 })
       .limit(limit)
       .skip((page - 1) * limit)
-      .populate('actor', '-_id supabaseId username profilePicture')
+      .populate('actor', 'username profilePicture')
       .populate('target', 'photos')
       .exec();
     return notifications;

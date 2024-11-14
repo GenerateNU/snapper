@@ -16,13 +16,13 @@ import { useAuthStore } from '../../../auth/authStore';
 import LikeAndShare from '../../../components/divelog/like-share';
 
 const DiveLog = () => {
-  const { supabaseId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const { id: diveLogId } = useLocalSearchParams<{ id: string }>();
 
   const { data, isLoading, error } = useDiveLog(diveLogId);
 
   const navigateUserProfile = () =>
-    router.push(`/user/${data?.user.supabaseId}`);
+    router.push(`/user/${data?.user._id}`);
 
   const renderTag = (item: any) => {
     return (

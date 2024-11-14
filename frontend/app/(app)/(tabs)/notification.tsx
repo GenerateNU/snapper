@@ -10,7 +10,7 @@ import NotificationEntry from '../../../components/notification/notification';
 import Divider from '../../../components/divider';
 
 const Notification = () => {
-  const { supabaseId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const [sections, setSections] = useState<{ title: string; data: any[] }[]>(
     [],
   );
@@ -23,7 +23,7 @@ const Notification = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useUserNotification(supabaseId || '');
+  } = useUserNotification(mongoDBId || '');
 
   const groupNotificationsAndSetSections = (pages: any) => {
     if (!pages) return;
@@ -80,7 +80,7 @@ const Notification = () => {
       <NotificationEntry
         username={item.actor.username}
         message={item.message}
-        actorId={item.actor.supabaseId}
+        actorId={item.actor._id}
         targetId={item.target._id}
         type={item.type}
         postImage={item.target.photos ? item.target.photos[0] : ''}

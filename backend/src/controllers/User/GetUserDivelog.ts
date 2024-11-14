@@ -1,7 +1,7 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
+import { NotFoundError } from '../../consts/errors';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -10,44 +10,29 @@ export const getUserDiveLogsById = async (
   res: express.Response,
 ) => {
   try {
-    const userID = req.params.id;
+    const userId = req.params.id;
     const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
     const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
 
     //Check to make sure that the id is defined
-    if (!userID) {
+    if (!userId) {
       return res.status(400).json({ error: 'ID is a required argument' });
     }
 
-    //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(userID);
-
-    //Ensure that there is a defined(non-null) result
-    if (!foundUser) {
-      //Error if not
-      return res
-        .status(400)
-        .json({ error: 'Unable to find user of ID: ' + userID });
-    }
-
-    const divelogs = await userService.getDiveLogs(
-      foundUser._id.toString(),
-      limit,
-      page,
-    );
+    const divelogs = await userService.getDiveLogs(userId, limit, page);
 
     //Return the OK status
     return res.status(200).json({
       divelogs: divelogs,
-      message: 'Successfully found dive logs for user:' + userID,
+      message: 'Successfully found dive logs for user',
     });
   } catch (err) {
-    //Handle error
-    console.error("Error while searching for User's dive logs:\n", err);
+    if (err instanceof NotFoundError) {
+      return res.status(404).json({ error: err.message });
+    }
     return res.status(500).json({
       error:
-        "Internal server error while searching for the user's dive logs.\n" +
-        err,
+        "Internal server error while searching for the user's dive logs."
     });
   }
 };

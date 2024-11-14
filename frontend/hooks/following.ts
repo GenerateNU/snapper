@@ -3,7 +3,7 @@ import { useAuthStore } from '../auth/authStore';
 import { useFollowUser, useUserById } from './user';
 
 const useFollow = (followUser: string) => {
-  const { supabaseId, mongoDBId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const { data } = useUserById(followUser);
 
   const followMutation = useFollowUser();
@@ -17,8 +17,8 @@ const useFollow = (followUser: string) => {
   }, [data, mongoDBId]);
 
   const handleFollowToggle = useCallback(async () => {
-    if (!supabaseId) {
-      console.error('supabaseId is null');
+    if (!mongoDBId) {
+      console.error('ID is null');
       return null;
     }
 
@@ -26,14 +26,14 @@ const useFollow = (followUser: string) => {
 
     try {
       await followMutation.mutateAsync({
-        id: supabaseId,
+        id: mongoDBId,
         followUserId: followUser,
       });
     } catch (error) {
       console.error('Error toggling follow status:', error);
       setIsFollowing((prevIsFollowing) => !prevIsFollowing);
     }
-  }, [followMutation, followUser, supabaseId]);
+  }, [followMutation, followUser, mongoDBId]);
 
   return {
     isFollowing,

@@ -11,8 +11,8 @@ import Arrow from '../../../../components/arrow';
 import InfoPopup from '../../../../components/info-popup';
 
 const User = ({ id }: { id: string }) => {
-  const { supabaseId } = useAuthStore();
-  const isViewingOwnProfile = supabaseId === id;
+  const { mongoDBId } = useAuthStore();
+  const isViewingOwnProfile = mongoDBId === id;
 
   const data = [
     { id: 'header', component: <Header id={id} /> },

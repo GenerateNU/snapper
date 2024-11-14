@@ -1,14 +1,14 @@
 import { DiveLog } from '../models/diveLog';
-import { Document, Types } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { UserModel } from '../models/users';
+import { NotFoundError } from '../consts/errors';
 
 export interface DiveLogService {
   createDiveLog(data: Partial<Document>): Promise<Document>;
   getDiveLogById(id: string): Promise<Document | null>;
   updateDiveLog(id: string, data: Partial<Document>): Promise<Document | null>;
   deleteDiveLog(id: string): Promise<Document | null>;
-  likeDiveLog(userId: string, divelogId: string): Promise<Document | null>;
-  unlikeDiveLog(userId: string, divelogId: string): Promise<Document | null>;
+  toggleLikeDiveLog(userId: string, divelogId: string): Promise<Document | null>;
 }
 
 export class DiveLogServiceImpl implements DiveLogService {
@@ -37,7 +37,7 @@ export class DiveLogServiceImpl implements DiveLogService {
   async getDiveLogById(id: string): Promise<Document | null> {
     return DiveLog.findById(id)
       .populate('speciesTags')
-      .populate('user', 'supabaseId profilePicture username')
+      .populate('user', 'profilePicture username')
       .exec();
   }
 
@@ -52,27 +52,40 @@ export class DiveLogServiceImpl implements DiveLogService {
     return DiveLog.findByIdAndDelete(id).exec();
   }
 
-  async likeDiveLog(
-    userId: string,
-    divelogId: string,
-  ): Promise<Document | null> {
-    const updatedDiveLog = await DiveLog.findByIdAndUpdate(
-      divelogId,
-      { $addToSet: { likes: userId } },
-      { new: true },
-    );
-    return updatedDiveLog;
-  }
+  async toggleLikeDiveLog(userId: string, divelogId: string): Promise<Document | null> {
+    const user = await UserModel.findById(userId);
 
-  async unlikeDiveLog(
-    userId: string,
-    divelogId: string,
-  ): Promise<Document | null> {
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
     const updatedDiveLog = await DiveLog.findByIdAndUpdate(
       divelogId,
-      { $pull: { likes: userId } },
+      [
+        {
+          $set: {
+            likes: {
+              $cond: {
+                if: { $in: [user._id, '$likes'] },
+                then: {
+                  $filter: {
+                    input: '$likes',
+                    cond: { $ne: ['$$this', user._id] },
+                  },
+                },
+                else: { $concatArrays: ['$likes', [user._id]] },
+              },
+            },
+          },
+        },
+      ],
       { new: true },
     );
+
+    if (!updatedDiveLog) {
+      throw new NotFoundError('Dive log not found');
+    }
+
     return updatedDiveLog;
   }
 }
