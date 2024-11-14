@@ -1,5 +1,4 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 
@@ -24,7 +23,7 @@ export const getMySpecies = async (
     }
 
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(userID);
+    const foundUser = await userService.getUserBySupabaseId(userID);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {

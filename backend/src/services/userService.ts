@@ -5,30 +5,20 @@ import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 import { NotFoundError } from '../consts/errors';
 
-export const createUser = async (userData: {
-  email: string;
-  username: string;
-  supabaseId: string;
-  firstName: string;
-  lastName: string;
-}) => {
-  const user = new UserModel(userData);
-  return user.save();
-};
-
-export const findUserBySupabaseId = async (supabaseId: string) => {
-  return UserModel.findOne({ supabaseId });
-};
-
-export const editUserBySupabaseId = async (
-  supabaseId: string,
-  updatedJson: Record<string, any>,
-) => {
-  return UserModel.updateOne({ supabaseId }, { $set: updatedJson });
-};
-
 export interface UserService {
   getUserById(id: string): Promise<Document | null>;
+  getUserBySupabaseId(id: string): Promise<Document | null>;
+  editUserBySupabaseId(
+    supabaseId: string,
+    updatedJson: Record<string, any>,
+  ): Promise<Document | null>;
+  createUser(userData: {
+    email: string;
+    username: string;
+    supabaseId: string;
+    firstName: string;
+    lastName: string;
+  }): Promise<Document | null>;
   getSpecies(
     userId: string,
     limit: number,
@@ -57,6 +47,28 @@ export interface UserService {
 export class UserServiceImpl implements UserService {
   async getUserById(id: string): Promise<Document | null> {
     return UserModel.findById(id);
+  }
+
+  async createUser(userData: {
+    email: string;
+    username: string;
+    supabaseId: string;
+    firstName: string;
+    lastName: string;
+  }) {
+    const user = new UserModel(userData);
+    return user.save();
+  }
+
+  async getUserBySupabaseId(supabaseId: string) {
+    return UserModel.findOne({ supabaseId });
+  }
+
+  async editUserBySupabaseId(
+    supabaseId: string,
+    updatedJson: Record<string, any>,
+  ) {
+    return UserModel.updateOne({ supabaseId }, { $set: updatedJson });
   }
 
   async toggleFollow(

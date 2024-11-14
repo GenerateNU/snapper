@@ -1,9 +1,6 @@
 import express from 'express';
-import {
-  editUserBySupabaseId,
-  findUserBySupabaseId,
-} from '../../services/userService';
-import { UserModel } from '../../models/users';
+import { UserService, UserServiceImpl } from '../../services/userService';
+const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
 export const putUser = async (req: express.Request, res: express.Response) => {
@@ -39,7 +36,7 @@ export const putUser = async (req: express.Request, res: express.Response) => {
     }
 
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(userId);
+    const foundUser = await userService.getUserBySupabaseId(userId);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {
@@ -50,7 +47,7 @@ export const putUser = async (req: express.Request, res: express.Response) => {
     }
 
     //Should mutate the id with the given request
-    const user = await editUserBySupabaseId(userId, req.body);
+    const user = await userService.editUserBySupabaseId(userId, req.body);
     //Return the OK status
     return res.status(200).json({
       message: 'Successfully updated user:' + userId,

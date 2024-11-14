@@ -1,6 +1,8 @@
 import express from 'express';
 import { supabase } from '../../config/supabaseClient';
-import { createUser } from '../../services/userService';
+import { UserService, UserServiceImpl } from '../../services/userService';
+
+const userService: UserService = new UserServiceImpl();
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
@@ -30,7 +32,7 @@ export const register = async (req: express.Request, res: express.Response) => {
         .json({ error: 'Internal error during user creation.' });
     }
 
-    await createUser({
+    await userService.createUser({
       email,
       username,
       supabaseId: user.id,

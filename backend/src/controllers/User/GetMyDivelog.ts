@@ -1,5 +1,4 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
 
 const userService: UserService = new UserServiceImpl();
@@ -20,7 +19,7 @@ export const getMyDiveLogs = async (
     }
 
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(userID);
+    const foundUser = await userService.getUserBySupabaseId(userID);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {

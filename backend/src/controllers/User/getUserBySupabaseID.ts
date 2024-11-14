@@ -1,5 +1,7 @@
-import { findUserBySupabaseId } from '../../services/userService';
 import express from 'express';
+import { UserService, UserServiceImpl } from '../../services/userService';
+
+const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given supabaseId
 export const getUserBySupabaseId = async (
@@ -17,7 +19,7 @@ export const getUserBySupabaseId = async (
     }
 
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(id);
+    const foundUser = await userService.getUserBySupabaseId(id);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {

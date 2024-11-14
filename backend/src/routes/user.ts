@@ -36,5 +36,9 @@ export default (router: express.Router) => {
   router.get('/user/:id/followingPosts', isAuthenticated, getFollowingPosts);
 
   // expo device token (ids are mongoDB ID)
-  router.post('/user/:id/expoDeviceToken', isAuthenticated, ExpoTokenController.handleExpoToken);
+  router.post(
+    '/user/:id/expoDeviceToken',
+    isAuthenticated,
+    ExpoTokenController.handleExpoToken,
+  );
 };
