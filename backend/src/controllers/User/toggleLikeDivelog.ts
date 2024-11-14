@@ -35,7 +35,7 @@ export const toggleLikeDivelog = async (
     if (divelog.likes.includes(likeUserId)) {
       const notification = await notificationService.createLikeNotification(
         likeUserId,
-        divelog.user._id,
+        divelog.user._id.toString(),
         divelog._id,
       );
       if (notification) {

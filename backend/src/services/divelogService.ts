@@ -1,5 +1,5 @@
 import { DiveLog } from '../models/diveLog';
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 import { UserModel } from '../models/users';
 import { NotFoundError } from '../consts/errors';
 
