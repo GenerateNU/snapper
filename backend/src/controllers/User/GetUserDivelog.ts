@@ -5,7 +5,7 @@ import { NotFoundError } from '../../consts/errors';
 
 const userService: UserService = new UserServiceImpl();
 
-export const getUserDiveLogsById = async (
+export const getUserDiveLogs = async (
   req: express.Request,
   res: express.Response,
 ) => {

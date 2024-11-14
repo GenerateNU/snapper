@@ -1,8 +1,8 @@
-import { DEFAULT_LIMIT, DEFAULT_PAGE } from './../../consts/pagination';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 import {
   NotificationService,
   NotificationServiceImpl,
-} from './../../services/notificationService';
+} from '../../services/notificationService';
 import express from 'express';
 import { NotFoundError } from '../../consts/errors';
 

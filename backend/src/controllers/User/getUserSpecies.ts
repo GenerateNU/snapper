@@ -5,7 +5,7 @@ import { NotFoundError } from '../../consts/errors';
 const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
-export const getUserSpeciesById = async (
+export const getUserSpecies = async (
   req: express.Request,
   res: express.Response,
 ) => {

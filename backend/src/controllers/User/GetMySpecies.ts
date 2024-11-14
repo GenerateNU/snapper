@@ -6,7 +6,7 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
-export const getUserSpecies = async (
+export const getMySpecies = async (
   req: express.Request,
   res: express.Response,
 ) => {

@@ -6,7 +6,7 @@ import {
 import { UserModel } from '../../models/users';
 
 //Will get the user by the given ID
-export const PutUser = async (req: express.Request, res: express.Response) => {
+export const putUser = async (req: express.Request, res: express.Response) => {
   try {
     const userId = req.session.userId;
     if (!userId) {

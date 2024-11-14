@@ -17,7 +17,7 @@ export const toggleUserFollow = async (
 ) => {
   try {
     const currentUserId = req.params.id;
-    const targetUserId = req.params.userid;
+    const targetUserId = req.params.userId;
 
     if (!currentUserId || !targetUserId) {
       return res.status(400).json({ error: 'User ID is required' });

@@ -4,7 +4,7 @@ import { UserService, UserServiceImpl } from '../../services/userService';
 
 const userService: UserService = new UserServiceImpl();
 
-export const getUserDiveLogs = async (
+export const getMyDiveLogs = async (
   req: express.Request,
   res: express.Response,
 ) => {
