@@ -30,7 +30,12 @@ export default function Layout() {
             headerTitle: '',
             headerTransparent: true,
             gestureEnabled: false,
-            headerLeft: () => <Arrow onPress={() => router.replace('/(tabs)')} direction="left"/>
+            headerLeft: () => (
+              <Arrow
+                onPress={() => router.replace('/(tabs)')}
+                direction="left"
+              />
+            ),
           }}
         />
         <Stack.Screen
@@ -40,7 +45,9 @@ export default function Layout() {
             headerTitle: '',
             headerTransparent: true,
             gestureEnabled: false,
-            headerLeft: () => <Arrow onPress={() => router.back()} direction="left"/>
+            headerLeft: () => (
+              <Arrow onPress={() => router.back()} direction="left" />
+            ),
           }}
         />
       </Stack>

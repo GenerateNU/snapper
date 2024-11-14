@@ -16,9 +16,7 @@ const Home = () => {
       <Button
         textOnly
         text="Another user's profile"
-        onPress={() =>
-          router.push('/user/672dc084b875bba96609b3c8')
-        }
+        onPress={() => router.push('/user/672dc084b875bba96609b3c8')}
       />
       <Button
         textOnly

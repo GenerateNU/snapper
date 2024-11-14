@@ -20,12 +20,13 @@ export const toggleUserFollow = async (
     const targetUserId = req.params.userid;
 
     if (!currentUserId || !targetUserId) {
-      return res
-        .status(400)
-        .json({ error: 'User ID is required' });
+      return res.status(400).json({ error: 'User ID is required' });
     }
 
-    const followUser: any = await userService.toggleFollow(currentUserId, targetUserId);
+    const followUser: any = await userService.toggleFollow(
+      currentUserId,
+      targetUserId,
+    );
 
     const isFollowing = followUser.following.includes(targetUserId);
 
@@ -40,7 +41,7 @@ export const toggleUserFollow = async (
       return res
         .status(200)
         .json({ message: 'Successfully followed the user.' });
-    } else {      
+    } else {
       return res
         .status(200)
         .json({ message: 'Successfully unfollowed the user.' });

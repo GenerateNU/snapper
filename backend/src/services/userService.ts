@@ -50,7 +50,7 @@ export interface UserService {
   ): Promise<Document | null>;
   toggleFollow(
     currentUserId: string,
-    targetUserId: string
+    targetUserId: string,
   ): Promise<Document | null>;
 }
 
@@ -61,38 +61,38 @@ export class UserServiceImpl implements UserService {
 
   async toggleFollow(
     currentUserId: string,
-    targetUserId: string
+    targetUserId: string,
   ): Promise<Document | null> {
     const targetUser = await UserModel.findById(targetUserId);
-    
+
     if (!targetUser) {
       throw new NotFoundError('Target user not found');
     }
-  
-    const isFollowing = targetUser.followers.includes(new mongoose.Types.ObjectId(currentUserId));
-  
+
+    const isFollowing = targetUser.followers.includes(
+      new mongoose.Types.ObjectId(currentUserId),
+    );
+
     const updateCurrentUser = isFollowing
-      ? { $pull: { following: targetUserId } } 
+      ? { $pull: { following: targetUserId } }
       : { $addToSet: { following: targetUserId } };
-  
+
     const updateTargetUser = isFollowing
       ? { $pull: { followers: currentUserId } }
       : { $addToSet: { followers: currentUserId } };
-  
+
     const followUser = await UserModel.findByIdAndUpdate(
       currentUserId,
       updateCurrentUser,
       { new: true },
     );
-  
-    await UserModel.findByIdAndUpdate(
-      targetUserId,
-      updateTargetUser,
-      { new: true },
-    );
+
+    await UserModel.findByIdAndUpdate(targetUserId, updateTargetUser, {
+      new: true,
+    });
 
     return followUser;
-  }  
+  }
 
   async getSpecies(
     userId: string,

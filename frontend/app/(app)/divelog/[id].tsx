@@ -21,8 +21,7 @@ const DiveLog = () => {
 
   const { data, isLoading, error } = useDiveLog(diveLogId);
 
-  const navigateUserProfile = () =>
-    router.push(`/user/${data?.user._id}`);
+  const navigateUserProfile = () => router.push(`/user/${data?.user._id}`);
 
   const renderTag = (item: any) => {
     return (

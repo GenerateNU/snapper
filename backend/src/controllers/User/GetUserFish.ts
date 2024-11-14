@@ -20,11 +20,7 @@ export const getUserSpeciesById = async (
         .json({ error: 'User is not present in the current session!' });
     }
 
-    const speciesCollected = await userService.getSpecies(
-      userId,
-      limit,
-      page,
-    );
+    const speciesCollected = await userService.getSpecies(userId, limit, page);
 
     //Return the OK status
     return res.status(200).json({
@@ -36,8 +32,7 @@ export const getUserSpeciesById = async (
       return res.status(404).json({ error: err.message });
     }
     return res.status(500).json({
-      error:
-        "Internal server error while searching for the user's species."
+      error: "Internal server error while searching for the user's species.",
     });
   }
 };

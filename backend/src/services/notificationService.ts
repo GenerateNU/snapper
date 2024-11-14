@@ -33,7 +33,6 @@ export class NotificationServiceImpl implements NotificationService {
     receiverId: string,
     diveLogId: string,
   ): Promise<Document | null> {
-    
     if (actorId === receiverId) {
       return null;
     }

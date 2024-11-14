@@ -24,10 +24,7 @@ export const ExpoTokenController = {
         return res.status(400).json({ error: 'Invalid Expo push token' });
       }
 
-      const updatedUser = await userService.updateDeviceToken(
-        userId,
-        token,
-      );
+      const updatedUser = await userService.updateDeviceToken(userId, token);
 
       return res.status(200).json({ message: updatedUser });
     } catch (error) {

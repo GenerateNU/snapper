@@ -8,7 +8,10 @@ export interface DiveLogService {
   getDiveLogById(id: string): Promise<Document | null>;
   updateDiveLog(id: string, data: Partial<Document>): Promise<Document | null>;
   deleteDiveLog(id: string): Promise<Document | null>;
-  toggleLikeDiveLog(userId: string, divelogId: string): Promise<Document | null>;
+  toggleLikeDiveLog(
+    userId: string,
+    divelogId: string,
+  ): Promise<Document | null>;
 }
 
 export class DiveLogServiceImpl implements DiveLogService {
@@ -52,7 +55,10 @@ export class DiveLogServiceImpl implements DiveLogService {
     return DiveLog.findByIdAndDelete(id).exec();
   }
 
-  async toggleLikeDiveLog(userId: string, divelogId: string): Promise<Document | null> {
+  async toggleLikeDiveLog(
+    userId: string,
+    divelogId: string,
+  ): Promise<Document | null> {
     const user = await UserModel.findById(userId);
 
     if (!user) {

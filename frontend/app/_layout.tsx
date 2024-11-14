@@ -80,11 +80,7 @@ const InitialLayout = () => {
 
   useEffect(() => {
     const cleanupNotifications = async () => {
-      if (
-        !isAuthenticated &&
-        notificationTokenRef.current &&
-        user?.mongoDBId
-      ) {
+      if (!isAuthenticated && notificationTokenRef.current && user?.mongoDBId) {
         try {
           await unregisterForPushNotifications(
             user.mongoDBId,
