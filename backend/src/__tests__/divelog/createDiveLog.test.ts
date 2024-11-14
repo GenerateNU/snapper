@@ -10,14 +10,14 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
 
 import request from 'supertest';
 import express from 'express';
-import divelog from '../../../routes/divelog';
+import divelog from '../../routes/divelog';
 import mongoose from 'mongoose';
-import { UserModel } from '../../../models/users';
+import { UserModel } from '../../models/users';
 import {
   invalidCasesDiveLog,
   missingFieldCasesDiveLog,
-} from '../../../consts/testConstant';
-import { DiveLog } from '../../../models/diveLog';
+} from '../../consts/testConstant';
+import { DiveLog } from '../../models/diveLog';
 
 jest.mock('../../../services/notificationService', () => ({
   NotificationServiceImpl: jest.fn().mockImplementation(() => ({

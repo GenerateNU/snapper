@@ -31,7 +31,7 @@ export default (router: express.Router) => {
   router.patch('/user/:id/follow/:userId', isAuthenticated, toggleUserFollow);
   router.patch('/user/:id/like/:divelogId', isAuthenticated, toggleLikeDivelog);
 
-  // Notifications and posts (ids are mongoDB ID)
+  // notifications and posts (ids are mongoDB ID)
   router.get('/user/:id/notifications', isAuthenticated, getNotifications);
   router.get('/user/:id/followingPosts', isAuthenticated, getFollowingPosts);
 

@@ -10,7 +10,7 @@ export const getUserByMongoID = async (
 ) => {
   try {
     //Get the ID from the params
-    const id = req.params.userid;
+    const id = req.params.id;
 
     //Check to make sure that the id is defined
     if (!id) {
