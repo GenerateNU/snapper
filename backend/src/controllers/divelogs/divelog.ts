@@ -29,12 +29,14 @@ export const DiveLogController = {
       return;
     }
 
-    const photos = req.body.photos;
-    const links = await sendFilesToS3(photos);
-    Object.defineProperty(req.body, 'photos', {
-      value: links,
-      enumerable: true,
-    });
+    const photos: any[] = req.body.photos;
+    if (photos.length > 0) {
+      const links = await sendFilesToS3(photos);
+      Object.defineProperty(req.body, 'photos', {
+        value: links,
+        enumerable: true,
+      });
+    }
 
     const user = await userService.getUserById(req.body.user);
     if (user == null) {
