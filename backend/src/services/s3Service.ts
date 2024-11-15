@@ -48,6 +48,8 @@ export class S3ServiceImpl implements S3Service {
   async upload(file: File) {
     const fileKey = `${Date.now()}-${file.name}`;
     const fileBuffer = await file.arrayBuffer();
+    console.log('Bucket Name:', this.name);
+    console.log('Region:', this.region);
     const command = new PutObjectCommand({
       Bucket: this.name,
       Key: fileKey,

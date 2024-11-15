@@ -15,6 +15,7 @@ import IconButton from '../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { number } from 'zod';
 import { Location, FormFields } from '../_layout';
+import { createDiveLog } from '../../../api/divelog';
 
 export default function PostCreationForm() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -42,22 +43,10 @@ export default function PostCreationForm() {
   };
   const submitPost = async (postData: FormFields) => {
     const mongoDBId = useAuthStore.getState().mongoDBId;
-    //console.log(mongoDBId);
     if (mongoDBId) {
       postData.user = mongoDBId;
     }
-    console.log(postData);
-    try {
-      const response = await fetch('http://localhost:3000/divelog', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    await createDiveLog(postData);
     reset();
   };
 

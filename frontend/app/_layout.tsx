@@ -105,7 +105,7 @@ const InitialLayout = () => {
     <Stack>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(app)" options={{ headerShown: false }} />
-      <Stack.Screen name="(postcreation)" />
+      <Stack.Screen name="(postcreation)" options={{ headerShown: false }} />
     </Stack>
   );
 };

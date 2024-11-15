@@ -10,6 +10,7 @@ import {
   NotificationServiceImpl,
 } from '../../services/notificationService';
 import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
+import sendFilesToS3 from '../../services/filesToS3';
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
 const userService: UserService = new UserServiceImpl();
@@ -22,13 +23,18 @@ export const DiveLogController = {
     req: express.Request,
     res: express.Response,
   ): Promise<void> => {
-    // console.log("HIT");
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
       return;
     }
+
+    const photos = req.body.photos;
+    const links = await sendFilesToS3(photos);
+    Object.defineProperty(req.body, 'photos', {
+      value: links,
+      enumerable: true,
+    });
 
     const user = await userService.getUserById(req.body.user);
     if (user == null) {
