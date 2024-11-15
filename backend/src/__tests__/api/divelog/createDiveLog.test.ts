@@ -78,10 +78,7 @@ describe('POST /divelog', () => {
       time: '15:30',
       duration: 60,
       depth: 30,
-      photos: [
-        'https://example.com/salmon.jpg',
-        'https://example.com/tuna.jpg',
-      ],
+      photos: [],
       description: 'A great dive at the reef with lots of colorful fish.',
     };
 
@@ -174,10 +171,7 @@ describe('POST /divelog', () => {
       time: '15:30',
       duration: 60,
       depth: 30,
-      photos: [
-        'https://example.com/salmon.jpg',
-        'https://example.com/tuna.jpg',
-      ],
+      photos: [],
       description: 'A great dive at the reef with lots of colorful fish.',
     };
 
