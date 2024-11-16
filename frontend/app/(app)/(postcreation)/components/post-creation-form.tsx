@@ -12,14 +12,15 @@ import { useAuthStore } from '../../../../auth/authStore';
 import Map from '../../../../components/map';
 import IconButton from '../../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { Location, FormFields } from '../../../../types/divelog';
+import { Location, FormFields, TagData } from '../../../../types/divelog';
+import { number } from 'zod';
 
 export default function PostCreationForm() {
   const API_BASE_URL = apiConfig;
   const [modalVisible, setModalVisible] = useState(false);
   const [coordinate, setCoordinate] = useState([37.33, -122]);
   const { setValue, watch, reset } = useFormContext<FormFields>();
-  const tags: string[] = watch('tags') || [];
+  const tagData: TagData[] = watch('tagData') || [];
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -28,9 +29,9 @@ export default function PostCreationForm() {
     coordinates: [],
   };
   const removeFish = (index: number) => {
-    const newFish = [...tags];
+    const newFish = [...tagData];
     newFish.splice(index, 1);
-    setValue('tags', newFish);
+    setValue('tagData', newFish);
   };
 
   const { control, trigger, handleSubmit } = useFormContext<FormFields>();
@@ -45,7 +46,12 @@ export default function PostCreationForm() {
     if (mongoDBId) {
       postData.user = mongoDBId;
     }
-    console.log(postData);
+
+    let fishID = []
+    for(let i: number = 0; i < postData.tagData.length; i++){
+      fishID.push(tagData[i].id);
+    }
+    postData.speciesTags = fishID;
     try {
       const response = await fetch(`${API_BASE_URL}/divelog`, {
         method: 'POST',
@@ -142,7 +148,7 @@ export default function PostCreationForm() {
       </Modal>
       <Text className="text-[16px] ">Tag Fish</Text>
       <View className="w-full mb-[2vh]">
-        {tags.length == 0 ? (
+        {tagData.length == 0 ? (
           <PageButton
             outline="gray-400"
             text="Choose Fish"
@@ -152,10 +158,10 @@ export default function PostCreationForm() {
         ) : (
           <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-[2vh]">
             <View className="flex h-full w-full flex-row items-center flex-wrap items-center gap-2 p-2">
-              {tags.map((item, index) => {
+              {tagData.map((item, index) => {
                 return (
                   <View key={index}>
-                    <Tag fish={item} onPress={() => removeFish(index)} />
+                    <Tag fish={item.name} onPress={() => removeFish(index)} />
                   </View>
                 );
               })}

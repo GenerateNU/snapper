@@ -1,4 +1,5 @@
 export type SpeciesContent = {
+  _id: string,
   aphiaId: { type: String},
   articleUrl: { type: String },
   articleTitle: { type: String },

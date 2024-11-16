@@ -10,12 +10,13 @@ export type TagData = {
 }
   
 export type FormFields = {
-    tags: TagData[];
+    tagData: TagData[];
     photos: string[];
     date: Date;
     location: Location;
     description: string;
     user: string;
+    speciesTags: String[];
 };
 
 export interface PostDiveLogResponse{

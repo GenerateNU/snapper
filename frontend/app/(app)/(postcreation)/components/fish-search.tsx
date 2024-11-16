@@ -5,29 +5,40 @@ import { useState, useEffect } from 'react';
 import Tag from '../../../../components/tag';
 import { apiConfig } from '../../../../api/apiContext';
 import { SpeciesContent } from '../../../../types/species';
+import { TagData } from '../../../../types/divelog';
 
 
 export default function FishSearch() {
   const API_BASE_URL = apiConfig;
   const { setValue, watch } = useFormContext();
   const [data, setData] = useState<SpeciesContent[]>([]);
-  const tags: string[] = watch('tags') || [];
+  const tagData: TagData[] = watch('tagData') || [];
   const [search, setSearch] = useState("");
 
   const removeFish = (index: number) => {
-    const newFish = [...tags];
+    const newFish = [...tagData];
     newFish.splice(index, 1);
     setValue('tags', newFish);
   };
 
+  const tagIncludes = (name: string, id: string):boolean => {
+    for(let i: number = 0; i < tagData.length; i ++){
+      if(tagData[i].name == name && tagData[i].id == id){
+        return true;
+      }
+    }
+    return false;
+  }
+
   const updateBoolAtIndex = (index: number, value: boolean) => {
     const newData = [...data];
-    if (value && !tags.includes(data[index].commonNames[0])) {
-      setValue('tags', [data[index].commonNames[0], ...tags]);
+    console.log("hello");
+    if (value && !tagIncludes(data[index].commonNames[0], data[index]._id)) {
+      setValue('tagData', [{name: data[index].commonNames[0], id: data[index]._id}, ...tagData]);
     } else {
       setValue(
-        'tags',
-        tags.filter((tag: string) => tag !== data[index].commonNames[0]),
+        'tagData',
+        tagData.filter((tag: TagData) => tag.name !== data[index].commonNames[0]),
       );
     }
     newData[index].visibility = !newData[index].visibility;
@@ -39,11 +50,11 @@ export default function FishSearch() {
       let hasChanged: boolean = false;
       const newData: SpeciesContent[] = [...data];
       for (let i: number = 0; i < data.length; i++) {
-        if (!tags.includes(newData[i].commonNames[0]) && newData[i].visibility) {
+        if (!tagIncludes(data[i].commonNames[0], data[i]._id) && newData[i].visibility) {
           newData[i].visibility = false;
           hasChanged = true;
         }
-        if (tags.includes(newData[i].commonNames[0]) && !newData[i].visibility) {
+        if (tagIncludes(data[i].commonNames[0], data[i]._id) && !newData[i].visibility) {
           newData[i].visibility = true;
           hasChanged = true;
         }
@@ -53,7 +64,7 @@ export default function FishSearch() {
       }
     };
     checkTags();
-  }, [tags, data]);
+  }, [tagData, data]);
 
   useEffect(()=> {
     const searchForFish = async (searchQuery:string) => {
@@ -84,10 +95,10 @@ export default function FishSearch() {
             source={require('../../../../assets/search.png')}
           />
           <View className="flex h-full w-full flex-row items-center flex-wrap items-center gap-2 p-2">
-            {tags.map((item, index) => {
+            {tagData.map((item, index) => {
               return (
                 <View key={index}>
-                  <Tag fish={item} onPress={() => removeFish(index)} />
+                  <Tag fish={item.name} onPress={() => removeFish(index)} />
                 </View>
               );
             })}
