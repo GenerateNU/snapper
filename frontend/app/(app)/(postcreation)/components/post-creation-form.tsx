@@ -48,7 +48,7 @@ export default function PostCreationForm() {
     }
 
     let fishID = []
-    for(let i: number = 0; i < postData.tagData.length; i++){
+    for(let i: number = 0; i < postData.tagData?.length; i++){
       fishID.push(tagData[i].id);
     }
     postData.speciesTags = fishID;
@@ -65,12 +65,14 @@ export default function PostCreationForm() {
       if (response.status == 400) {
         setError(true);
         setErrorMessage(responseBody.error[0].msg);
+      } else {
+        reset();
+        router.push("/(tabs)");
       }
     } catch (error: any) {
       setError(true);
       setErrorMessage(error.message);
     }
-    reset();
   };
 
   return (

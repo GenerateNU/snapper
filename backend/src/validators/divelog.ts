@@ -23,7 +23,8 @@ export const createDiveLogValidation = [
       return true;
     }),
   body('photos')
-    .optional()
+    .notEmpty()
+    .withMessage('Photos are required')
     .isArray()
     .withMessage('Photos must be an array of strings')
     .custom((photos: any[]) => {
