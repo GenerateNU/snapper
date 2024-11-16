@@ -1,5 +1,6 @@
 import express from 'express';
 import { Species } from '../../models/species';
+import Fuse from 'fuse.js';
 
 export const getById = async (req: express.Request, res: express.Response) => {
   const id = req.params.id;
@@ -18,14 +19,23 @@ export const getByScientificName = async (
   return res.status(200).json(species);
 };
 
-export const searchSpecies = async (req: express.Request, res:express.Response) => {
-  console.log(JSON.stringify(req.params))
+export const searchSpecies = async (req: express.Request, res: express.Response) => {
+  const allSpecies = await Species.find();
+  console.log(allSpecies.length);
+  //More options can be added later
+  //https://www.fusejs.io/api/options.html
+  const fuse = new Fuse(allSpecies, {
+    isCaseSensitive: false,
+    keys: ['commonNames', 'scientificName']
+  })
+
   const searchQuery: string = req.params.searchRequest;
   let results;
-  if(searchQuery == "*"){
-    results = await Species.find().limit(50)
+  if (searchQuery == "*") {
+    results = allSpecies.slice(0, 50);
   } else {
-    results = await Species.find( { $text: { $search: searchQuery } },{ score: { $meta: "textScore" } }).limit(50).sort({score: { $meta: "textScore" }});
+    results = fuse.search(searchQuery).slice(0, 50)
+      .map((element) => element.item);
   }
   return res.status(200).json(results);
 }

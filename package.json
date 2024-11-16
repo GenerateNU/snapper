@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "expo": "^52.0.7",
+    "fuse.js": "^7.0.0",
     "nativewind": "^4.1.20"
   }
 }
