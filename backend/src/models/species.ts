@@ -10,4 +10,6 @@ const SpeciesSchema = new mongoose.Schema({
   imageUrls: [String],
 });
 
+SpeciesSchema.index({ commonNames: 'text' }); 
+
 export const Species = mongoose.model('Species', SpeciesSchema);
