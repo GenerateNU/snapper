@@ -6,6 +6,7 @@ import Tag from '../../../../components/tag';
 import { apiConfig } from '../../../../api/apiContext';
 import { SpeciesContent } from '../../../../types/species';
 import { TagData } from '../../../../types/divelog';
+import { searchSpecies } from '../../../../api/species';
 
 
 export default function FishSearch() {
@@ -68,17 +69,8 @@ export default function FishSearch() {
 
   useEffect(()=> {
     const searchForFish = async (searchQuery:string) => {
-      if(searchQuery == ""){
-        searchQuery = "*";
-      }
       try{
-        console.log(searchQuery)
-        const response = await fetch(`${API_BASE_URL}/species/search/${searchQuery}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await searchSpecies(searchQuery);
         const responseBody = await response.json()
         setData(responseBody);
       } catch(error:any) {

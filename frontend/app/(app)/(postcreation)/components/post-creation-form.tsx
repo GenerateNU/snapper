@@ -14,6 +14,7 @@ import IconButton from '../../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Location, FormFields, TagData } from '../../../../types/divelog';
 import { number } from 'zod';
+import { postDiveLog } from '../../../../api/divelog';
 
 export default function PostCreationForm() {
   const API_BASE_URL = apiConfig;
@@ -41,31 +42,16 @@ export default function PostCreationForm() {
     setCoordinate([37.33, -122]);
     setModalVisible(false);
   };
+
   const submitPost = async (postData: FormFields) => {
-    const mongoDBId = useAuthStore.getState().mongoDBId;
-    if (mongoDBId) {
-      postData.user = mongoDBId;
-    }
-
-    let fishID = []
-    for(let i: number = 0; i < postData.tagData?.length; i++){
-      fishID.push(tagData[i].id);
-    }
-    postData.speciesTags = fishID;
     try {
-      const response = await fetch(`${API_BASE_URL}/divelog`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-
+      const response = await postDiveLog(postData);
       const responseBody = await response.json();
       if (response.status == 400) {
         setError(true);
         setErrorMessage(responseBody.error[0].msg);
-      } else {
+      } 
+      if(response.status == 200) {
         reset();
         router.push("/(tabs)");
       }
@@ -74,7 +60,7 @@ export default function PostCreationForm() {
       setErrorMessage(error.message);
     }
   };
-
+  
   return (
     <View className="space-y-2">
       <ImagePicker />

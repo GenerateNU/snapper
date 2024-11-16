@@ -9,24 +9,23 @@ export async function getDiveLogById(id: string): Promise<any> {
   return await fetchData(`/divelog/${id}`, 'Failed to fetch divelog');
 }
 
-export async function postDiveLog(postData: FormFields): Promise<PostDiveLogResponse> {
-  
+export async function postDiveLog(postData: FormFields): Promise<any> {
   const mongoDBId = useAuthStore.getState().mongoDBId;
-  if (mongoDBId) {
-    postData.user = mongoDBId;
-  }
-  const response = await fetch(`${API_BASE_URL}/divelog`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(postData),
-  });
+    if (mongoDBId) {
+      postData.user = mongoDBId;
+    }
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Post failed');
-  }
-  const data = await response.json()
-  return data;
+    let fishID = []
+    for(let i: number = 0; i < postData.tagData?.length; i++){
+      fishID.push(postData.tagData[i].id);
+    }
+    postData.speciesTags = fishID;
+      
+    return await fetch(`${API_BASE_URL}/divelog`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+    });
 }
