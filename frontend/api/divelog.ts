@@ -1,6 +1,6 @@
-import { fetchData } from './base';
-import { Location, FormFields, PostDiveLogResponse } from '../types/divelog';
 import { apiConfig } from './apiContext';
+import { fetchData } from './base';
+import { FormFields, PostDiveLogResponse } from '../types/divelog';
 import { useAuthStore } from '../auth/authStore';
 const API_BASE_URL = apiConfig
 

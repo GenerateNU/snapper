@@ -4,6 +4,7 @@ import Constants from 'expo-constants';
 if (!Constants.expoConfig?.hostUri && !Constants.expoConfig) {
   throw Error('Expo Config Not Loaded');
 }
+
 export const apiConfig =
   'http://' +
   `${Constants.expoConfig.hostUri?.split(':').shift() || 'localhost'}:3000`;

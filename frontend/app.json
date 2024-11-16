@@ -30,7 +30,9 @@
           "apiKey": "process.env.GOOGLEMAPS_APIKEY"
         }
       },
-      "permissions": ["android.permission.NOTIFICATIONS"]
+      "permissions": [
+        "android.permission.NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,7 +43,8 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      "expo-router"
     ],
     "packagerOpts": {
       "config": "metro.config.js"

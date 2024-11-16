@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Modal } from 'react-native';
 import { useFormContext, Controller } from 'react-hook-form';
 import ImagePicker from '../../../../components/image-picker';
 import BigText from '../../../../components/bigtext';
-import Input from '../../../../components/input';
 import Button from '../../../../components/button';
 import PageButton from './page-button';
 import { router } from 'expo-router';
@@ -13,10 +12,7 @@ import { useAuthStore } from '../../../../auth/authStore';
 import Map from '../../../../components/map';
 import IconButton from '../../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { number } from 'zod';
-import { Location, FormFields} from '../../../../types/divelog';
-
-
+import { Location, FormFields } from '../../../../types/divelog';
 
 export default function PostCreationForm() {
   const API_BASE_URL = apiConfig;

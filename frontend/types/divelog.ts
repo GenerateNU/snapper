@@ -22,3 +22,8 @@ export interface PostDiveLogResponse{
   speciesTag: string[];
   user: string;
 }
+export type Photo = {
+  base64: string;
+  name: string;
+  fileType: string;
+};
