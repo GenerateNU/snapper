@@ -3,10 +3,15 @@ export type Location = {
     type: string;
     coordinates: number[];
   };
+
+export type TagData = {
+  name: string;
+  id: String;
+}
   
 export type FormFields = {
-    tags: string[];
-    image: string;
+    tags: TagData[];
+    photos: string[];
     date: Date;
     location: Location;
     description: string;

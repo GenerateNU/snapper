@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 interface TagProps {
-  fish?: string;
+  fish?: String;
   onPress?: () => void;
 }
 const Tag: React.FC<TagProps> = ({ fish, onPress }) => {

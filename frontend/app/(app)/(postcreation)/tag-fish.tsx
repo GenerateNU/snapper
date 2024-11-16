@@ -3,19 +3,9 @@ import { View, Text, Image, TextInput } from 'react-native';
 import { useFormContext } from 'react-hook-form';
 import Tag from '../../../components/tag';
 import FishSearch from './components/fish-search';
-import { Location, FormFields } from '../../../types/divelog';
+import {FormFields } from '../../../types/divelog';
 
 export default function TagFish() {
-  const { setValue, watch } = useFormContext<FormFields>();
-  const tags: string[] = watch('tags') || [];
-
-  const removeFish = (index: number) => {
-    const newFish = [...tags];
-
-    newFish.splice(index, 1);
-
-    setValue('tags', newFish);
-  };
   return (
     <View className="w-full px-10 bg-white h-full pt-[5vh]">
       <View className="flex flex-col justify-items items-center pt-[5vh] mb-[3vh]">
@@ -29,25 +19,6 @@ export default function TagFish() {
         </Text>
       </View>
 
-      <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-5">
-        <Image
-          className="h-[2.5vh] w-[2.5vh]"
-          source={require('../../../assets/search.png')}
-        />
-        <View className="flex h-full w-full flex-row items-center flex-wrap items-center gap-2 p-2">
-          {tags.map((item, index) => {
-            return (
-              <View key={index}>
-                <Tag fish={item} onPress={() => removeFish(index)} />
-              </View>
-            );
-          })}
-          <TextInput
-            placeholder="Default "
-            className="pl-3 font-medium text-[14px] h-[4vh]"
-          />
-        </View>
-      </View>
       <FishSearch />
     </View>
   );

@@ -45,6 +45,7 @@ export default function PostCreationForm() {
     if (mongoDBId) {
       postData.user = mongoDBId;
     }
+    console.log(postData);
     try {
       const response = await fetch(`${API_BASE_URL}/divelog`, {
         method: 'POST',
