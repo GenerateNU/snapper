@@ -1,44 +1,53 @@
-import { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '../auth/authStore';
 import { useLikeDivelog } from './user';
 import { useDiveLog } from './divelog';
+import { useToggleBase } from './base';
+
+interface DiveLog {
+  likes: string[];
+}
+
+interface LikeMutationParams {
+  id: string;
+  divelogId: string;
+}
 
 const useLike = (divelogId: string) => {
   const { mongoDBId } = useAuthStore();
+
+  if (!mongoDBId) {
+    return {
+      isLiking: false,
+      handleLikeToggle: () => {
+        console.error('User ID is required');
+      },
+      isPending: false,
+      isReady: false,
+    } as const;
+  }
+
   const { data } = useDiveLog(divelogId);
-
   const likeMutation = useLikeDivelog();
-  const [isLiking, setIsLiking] = useState(false);
 
-  useEffect(() => {
-    if (data && Array.isArray(data.likes)) {
-      const isUserLiking = data.likes.includes(mongoDBId);
-      setIsLiking(isUserLiking);
-    }
-  }, [data, mongoDBId]);
-
-  const handleLikeToggle = useCallback(async () => {
-    if (!mongoDBId) {
-      console.error('ID is null');
-      return null;
-    }
-
-    setIsLiking((prevIsLiking) => !prevIsLiking);
-
-    try {
-      await likeMutation.mutateAsync({
-        id: mongoDBId,
-        divelogId: divelogId,
-      });
-    } catch (error) {
-      console.error('Error toggling like status:', error);
-      setIsLiking((prevIsLiking) => !prevIsLiking);
-    }
-  }, [likeMutation, divelogId, mongoDBId]);
+  const toggleBase = useToggleBase<DiveLog, LikeMutationParams>({
+    initialState: false,
+    data: data,
+    checkIsActive: (data) => {
+      return Array.isArray(data.likes) && 
+        data.likes.includes(mongoDBId);
+    },
+    mutation: likeMutation,
+    mutationParams: {
+      id: mongoDBId,
+      divelogId: divelogId,
+    },
+  });
 
   return {
-    isLiking,
-    handleLikeToggle,
+    ...toggleBase,
+    isLiking: toggleBase.isActive,
+    handleLikeToggle: toggleBase.handleToggle,
+    isReady: true,
   };
 };
 
