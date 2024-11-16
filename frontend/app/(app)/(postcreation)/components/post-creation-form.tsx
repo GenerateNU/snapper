@@ -17,7 +17,6 @@ import { number } from 'zod';
 import { postDiveLog } from '../../../../api/divelog';
 
 export default function PostCreationForm() {
-  const API_BASE_URL = apiConfig;
   const [modalVisible, setModalVisible] = useState(false);
   const [coordinate, setCoordinate] = useState([37.33, -122]);
   const { setValue, watch, reset } = useFormContext<FormFields>();

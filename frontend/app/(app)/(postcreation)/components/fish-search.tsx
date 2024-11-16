@@ -8,9 +8,7 @@ import { SpeciesContent } from '../../../../types/species';
 import { TagData } from '../../../../types/divelog';
 import { searchSpecies } from '../../../../api/species';
 
-
 export default function FishSearch() {
-  const API_BASE_URL = apiConfig;
   const { setValue, watch } = useFormContext();
   const [data, setData] = useState<SpeciesContent[]>([]);
   const tagData: TagData[] = watch('tagData') || [];

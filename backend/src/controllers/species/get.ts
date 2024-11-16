@@ -26,7 +26,7 @@ export const searchSpecies = async (req: express.Request, res: express.Response)
   //https://www.fusejs.io/api/options.html
   const fuse = new Fuse(allSpecies, {
     isCaseSensitive: false,
-    keys: ['commonNames', 'scientificName']
+    keys: ['commonNames']
   })
 
   const searchQuery: string = req.params.searchRequest;
