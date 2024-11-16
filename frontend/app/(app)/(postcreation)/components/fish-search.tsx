@@ -33,7 +33,6 @@ export default function FishSearch() {
 
   const updateBoolAtIndex = (index: number, value: boolean) => {
     const newData = [...data];
-    console.log("hello");
     if (value && !tagIncludes(data[index].commonNames[0], data[index]._id)) {
       setValue('tagData', [{name: data[index].commonNames[0], id: data[index]._id}, ...tagData]);
     } else {

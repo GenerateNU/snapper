@@ -24,7 +24,7 @@ export default function PostCreationForm() {
   const tagData: TagData[] = watch('tagData') || [];
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [submittingPost, setSubmittingPost] = useState(false);
   const location: Location = watch('location') || {
     type: 'Point',
     coordinates: [],
@@ -45,22 +45,25 @@ export default function PostCreationForm() {
 
   const submitPost = async (postData: FormFields) => {
     try {
+      setSubmittingPost(true)
       const response = await postDiveLog(postData);
       const responseBody = await response.json();
       if (response.status == 400) {
         setError(true);
         setErrorMessage(responseBody.error[0].msg);
       } 
-      if(response.status == 200) {
+      if(response.status == 201) {
         reset();
         router.push("/(tabs)");
       }
     } catch (error: any) {
       setError(true);
       setErrorMessage(error.message);
+    } finally {
+      setSubmittingPost(false)
     }
   };
-  
+
   return (
     <View className="space-y-2">
       <ImagePicker />
@@ -173,8 +176,9 @@ export default function PostCreationForm() {
         )}
       </View>
       <View className="pb-2">
-        <Button text="Post" onPress={handleSubmit(submitPost)} />
+        <Button text= {submittingPost? "Posting ..." : "Post"} onPress={handleSubmit(submitPost)} />
       </View>
+
     </View>
   );
 }

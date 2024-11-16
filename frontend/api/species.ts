@@ -8,7 +8,6 @@ export async function searchSpecies(searchQuery: string): Promise<any> {
     if(searchQuery == ""){
         searchQuery = "*";
       }
-    console.log(searchQuery)
     return await fetch(`${API_BASE_URL}/species/search/${searchQuery}`, {
         method: 'GET',
         headers: {

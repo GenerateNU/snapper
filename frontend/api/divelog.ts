@@ -20,7 +20,7 @@ export async function postDiveLog(postData: FormFields): Promise<any> {
       fishID.push(postData.tagData[i].id);
     }
     postData.speciesTags = fishID;
-      
+    postData.date = new Date();
     return await fetch(`${API_BASE_URL}/divelog`, {
         method: 'POST',
         headers: {
