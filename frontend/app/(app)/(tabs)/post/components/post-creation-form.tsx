@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Modal, Text, View } from 'react-native';
 import { apiConfig } from '../../../../../api/apiContext';
+import { createDiveLog } from '../../../../../api/divelog';
 import { useAuthStore } from '../../../../../auth/authStore';
 import BigText from '../../../../../components/bigtext';
 import Button from '../../../../../components/button';
@@ -42,22 +43,10 @@ export default function PostCreationForm() {
   };
   const submitPost = async (postData: FormFields) => {
     const mongoDBId = useAuthStore.getState().mongoDBId;
-    //console.log(mongoDBId);
     if (mongoDBId) {
       postData.user = mongoDBId;
     }
-    console.log(postData);
-    try {
-      const response = await fetch(`${API_BASE_URL}/divelog`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    await createDiveLog(postData);
     reset();
   };
 

@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { Photo } from '../../../../types/divelog';
 
 export type Location = {
   type: string;
@@ -9,7 +10,7 @@ export type Location = {
 
 export type FormFields = {
   tags: string[];
-  image: string;
+  photos: Photo[];
   date: Date;
   location: Location;
   description: string;

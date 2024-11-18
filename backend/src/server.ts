@@ -77,7 +77,7 @@ async function initializeLogging() {
 
   //TODO decouple middleware from server logic
   router.use(express.urlencoded({ extended: true }));
-  router.use(express.json());
+  router.use(express.json({ limit: '50mb' }));
 
   router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

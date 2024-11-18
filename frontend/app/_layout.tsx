@@ -1,18 +1,18 @@
-import { router, Stack } from 'expo-router';
-import { AppState, StatusBar, View } from 'react-native';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider, useAuth } from '../auth/authProvider';
-import { useEffect, useRef } from 'react';
-import { useAuthStore } from '../auth/authStore';
-import { InfoPopupProvider } from '../contexts/info-popup-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
+import { router, Stack } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import { AppState, StatusBar } from 'react-native';
+import { AuthProvider, useAuth } from '../auth/authProvider';
+import { useAuthStore } from '../auth/authStore';
+import { NOTIFICATION_TOKEN_KEY } from '../consts/notification';
+import { InfoPopupProvider } from '../contexts/info-popup-context';
+import { NotificationProvider } from '../contexts/notification';
 import {
   registerForPushNotifications,
   unregisterForPushNotifications,
 } from '../utils/notification';
-import { NOTIFICATION_TOKEN_KEY } from '../consts/notification';
-import { NotificationProvider } from '../contexts/notification';
 
 const queryClient = new QueryClient();
 
