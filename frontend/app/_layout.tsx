@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 import { router, Stack } from 'expo-router';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { AppState, StatusBar } from 'react-native';
 import { AuthProvider, useAuth } from '../auth/authProvider';
 import { useAuthStore } from '../auth/authStore';
@@ -17,8 +17,9 @@ import {
 const queryClient = new QueryClient();
 
 const InitialLayout = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, mongoDBId } = useAuth();
   const notificationTokenRef = useRef<string | null>(null);
+  const permissionSubscriptionRef = useRef<any>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -28,62 +29,79 @@ const InitialLayout = () => {
     }
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    let subscription: any;
+  const handleNotificationPermissions = useCallback(async () => {
+    try {
+      if (!mongoDBId) {
+        throw new Error("ID does not exist");
+      }
 
-    const handleNotificationPermissions = async () => {
-      try {
-        if (!user?.mongoDBId) return null;
+      const { status: currentStatus } = await Notifications.getPermissionsAsync();
+      const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
 
-        const { status } = await Notifications.getPermissionsAsync();
-        const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
 
-        if (status === 'granted') {
-          // register for notifications if user does not have a token
-          if (!savedToken) {
-            const token = await registerForPushNotifications(user.mongoDBId);
-            if (token) {
-              await AsyncStorage.setItem(NOTIFICATION_TOKEN_KEY, token);
-              notificationTokenRef.current = token;
-            }
-          } else {
-            notificationTokenRef.current = savedToken;
+      if (currentStatus === 'granted') {
+        if (!savedToken) {
+          console.log('Registering for notifications...');
+          const token = await registerForPushNotifications(mongoDBId);
+          if (token) {
+            await AsyncStorage.setItem(NOTIFICATION_TOKEN_KEY, token);
+            notificationTokenRef.current = token;
           }
         } else {
-          // unregister if permissions are revoked and have a saved token
-          if (savedToken) {
-            await unregisterForPushNotifications(user.mongoDBId, savedToken);
-            await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
-            notificationTokenRef.current = null;
-          }
+          notificationTokenRef.current = savedToken;
         }
-      } catch (error) {
-        console.error('Error handling notification permissions:', error);
+      } else {
+        console.log('Permissions not granted, cleaning up...');
+        if (savedToken) {
+          await unregisterForPushNotifications(mongoDBId, savedToken);
+          await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
+          notificationTokenRef.current = null;
+        }
       }
-    };
-
-    if (isAuthenticated && user?.supabaseId) {
-      handleNotificationPermissions();
-      subscription = Notifications.addNotificationResponseReceivedListener(
-        () => {
-          handleNotificationPermissions();
-        },
-      );
+    } catch (error) {
+      console.error('Error handling notification permissions:', error);
     }
+  }, [mongoDBId]);
 
-    return () => {
-      if (subscription) {
+  useEffect(() => {
+    if (isAuthenticated && mongoDBId) {
+      // Initial permission check
+      handleNotificationPermissions();
+
+      // Set up permission change listener
+      permissionSubscriptionRef.current = Notifications.addNotificationResponseReceivedListener(
+        handleNotificationPermissions
+      );
+
+      // Add permission status change listener
+      const checkPermissionStatus = async () => {
+        const { status } = await Notifications.getPermissionsAsync();
+        handleNotificationPermissions();
+      };
+
+      // Check permissions when app comes to foreground
+      const subscription = AppState.addEventListener('change', (nextAppState) => {
+        if (nextAppState === 'active') {
+          checkPermissionStatus();
+        }
+      });
+
+      return () => {
+        if (permissionSubscriptionRef.current) {
+          permissionSubscriptionRef.current.remove();
+        }
         subscription.remove();
-      }
-    };
-  }, [isAuthenticated, user?.mongoDBId]);
+      };
+    }
+  }, [isAuthenticated, mongoDBId, handleNotificationPermissions]);
 
   useEffect(() => {
     const cleanupNotifications = async () => {
-      if (!isAuthenticated && notificationTokenRef.current && user?.mongoDBId) {
+      if (!isAuthenticated && notificationTokenRef.current && mongoDBId) {
         try {
+          console.log("Unregistering device token...");
           await unregisterForPushNotifications(
-            user.mongoDBId,
+            mongoDBId,
             notificationTokenRef.current,
           );
           await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
@@ -95,7 +113,7 @@ const InitialLayout = () => {
     };
 
     cleanupNotifications();
-  }, [isAuthenticated, user?.supabaseId]);
+  }, [isAuthenticated, mongoDBId]);
 
   return (
     <Stack>

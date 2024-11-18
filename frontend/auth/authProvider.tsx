@@ -3,16 +3,16 @@ import { useAuthStore } from './authStore';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: any;
+  mongoDBId: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, mongoDBId } = useAuthStore();
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user }}>
+    <AuthContext.Provider value={{ isAuthenticated, mongoDBId }}>
       {children}
     </AuthContext.Provider>
   );
