@@ -1,6 +1,7 @@
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
 import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -18,6 +19,10 @@ export const getUserSpecies = async (
       return res
         .status(400)
         .json({ error: 'User is not present in the current session!' });
+    }
+
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID format' });
     }
 
     const speciesCollected = await userService.getSpecies(userId, limit, page);

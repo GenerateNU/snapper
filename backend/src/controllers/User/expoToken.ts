@@ -2,6 +2,7 @@ import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
 import { Expo } from 'expo-server-sdk';
 import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -18,6 +19,10 @@ export const ExpoTokenController = {
         return res
           .status(400)
           .json({ error: 'User ID and device token is required' });
+      }
+
+      if (!ObjectId.isValid(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID format' });
       }
 
       if (!Expo.isExpoPushToken(token)) {

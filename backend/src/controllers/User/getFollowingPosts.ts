@@ -2,6 +2,7 @@ import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -15,6 +16,10 @@ export const getFollowingPosts = async (
 
   if (!userId) {
     return res.status(400).json({ message: 'User ID is required' });
+  }
+
+  if (!ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
   }
 
   try {

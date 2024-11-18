@@ -5,6 +5,7 @@ import {
 } from '../../services/notificationService';
 import express from 'express';
 import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const notificationService: NotificationService = new NotificationServiceImpl();
 
@@ -19,6 +20,10 @@ export const getNotifications = async (
 
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID format' });
     }
 
     if (limit <= 0 || page <= 0) {

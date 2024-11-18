@@ -33,7 +33,6 @@ export class NotificationServiceImpl implements NotificationService {
     receiverId: string,
     diveLogId: string,
   ): Promise<Document | null> {
-
     const actor = await UserModel.findById(actorId).select('username');
     if (!actor) {
       throw new NotFoundError('Actor not found');

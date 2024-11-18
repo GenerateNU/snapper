@@ -33,8 +33,7 @@ const useLike = (divelogId: string) => {
     initialState: false,
     data: data,
     checkIsActive: (data) => {
-      return Array.isArray(data.likes) && 
-        data.likes.includes(mongoDBId);
+      return Array.isArray(data.likes) && data.likes.includes(mongoDBId);
     },
     mutation: likeMutation,
     mutationParams: {

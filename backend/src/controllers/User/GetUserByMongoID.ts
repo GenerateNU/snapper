@@ -1,5 +1,6 @@
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import { ObjectId } from 'mongodb';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -16,6 +17,10 @@ export const getUserByMongoID = async (
     if (!id) {
       //Error if not
       return res.status(400).json({ error: 'ID is a required argument' });
+    }
+
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid user ID format' });
     }
 
     //Query the given ID on the database and save the result

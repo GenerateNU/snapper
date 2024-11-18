@@ -160,45 +160,30 @@ export class UserServiceImpl implements UserService {
     userId: string,
     deviceToken: string,
   ): Promise<Document | null> {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
-      const user = await UserModel.findByIdAndUpdate(
-        { userId },
-        [
-          {
-            $set: {
-              deviceTokens: {
-                $cond: {
-                  if: { $in: [deviceToken, '$deviceTokens'] },
-                  then: {
-                    $filter: {
-                      input: '$deviceTokens',
-                      cond: { $ne: ['$$this', deviceToken] },
-                    },
+    const user = await UserModel.findByIdAndUpdate(
+      userId,
+      [
+        {
+          $set: {
+            deviceTokens: {
+              $cond: {
+                if: { $in: [deviceToken, '$deviceTokens'] },
+                then: {
+                  $filter: {
+                    input: '$deviceTokens',
+                    cond: { $ne: ['$$this', deviceToken] },
                   },
-                  else: { $concatArrays: ['$deviceTokens', [deviceToken]] },
                 },
+                else: { $concatArrays: ['$deviceTokens', [deviceToken]] },
               },
             },
           },
-        ],
-        { new: true },
-      );
+        },
+      ],
+      { new: true },
+    );
 
-      if (!user) {
-        session.abortTransaction();
-        throw new NotFoundError('User not found');
-      }
-
-      await session.commitTransaction();
-      return user;
-    } catch (error) {
-      throw error;
-    } finally {
-      session.endSession();
-    }
+    return user;
   }
 
   async getFollowingPosts(
@@ -206,7 +191,7 @@ export class UserServiceImpl implements UserService {
     limit: number = 10,
     page: number = 1,
   ): Promise<Document[] | null> {
-    const user = await UserModel.findById({ userId }, 'following');
+    const user = await UserModel.findById(userId, 'following');
 
     if (!user) {
       throw new NotFoundError('User not found');

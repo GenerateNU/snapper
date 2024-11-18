@@ -9,6 +9,7 @@ import {
 } from '../../services/notificationService';
 import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
 import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const divelogService: DiveLogService = new DiveLogServiceImpl();
 const notificationService: NotificationService = new NotificationServiceImpl();
@@ -25,6 +26,10 @@ export const toggleLikeDivelog = async (
       return res
         .status(400)
         .json({ error: 'User ID or dive log ID is missing' });
+    }
+
+    if (!ObjectId.isValid(likeUserId) || !ObjectId.isValid(divelogId)) {
+      return res.status(400).json({ error: 'Invalid ID format' });
     }
 
     const divelog: any = await divelogService.toggleLikeDiveLog(

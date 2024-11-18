@@ -32,8 +32,10 @@ const useFollow = (followUserId: string) => {
     initialState: false,
     data: data,
     checkIsActive: (data) => {
-      return Array.isArray(data.user.followers) && 
-        data.user.followers.includes(mongoDBId);
+      return (
+        Array.isArray(data.user.followers) &&
+        data.user.followers.includes(mongoDBId)
+      );
     },
     mutation: followMutation,
     mutationParams: {

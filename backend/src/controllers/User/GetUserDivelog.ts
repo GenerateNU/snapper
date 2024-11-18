@@ -2,6 +2,7 @@ import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const userService: UserService = new UserServiceImpl();
 
@@ -17,6 +18,10 @@ export const getUserDiveLogs = async (
     //Check to make sure that the id is defined
     if (!userId) {
       return res.status(400).json({ error: 'ID is a required argument' });
+    }
+
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID format' });
     }
 
     const divelogs = await userService.getDiveLogs(userId, limit, page);

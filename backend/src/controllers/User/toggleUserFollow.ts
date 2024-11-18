@@ -6,6 +6,7 @@ import {
 } from '../../services/notificationService';
 import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
 import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const notificationService: NotificationService = new NotificationServiceImpl();
 const userService: UserService = new UserServiceImpl();
@@ -21,6 +22,10 @@ export const toggleUserFollow = async (
 
     if (!currentUserId || !targetUserId) {
       return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    if (!ObjectId.isValid(currentUserId) || !ObjectId.isValid(targetUserId)) {
+      return res.status(400).json({ error: 'Invalid ID format' });
     }
 
     const followUser: any = await userService.toggleFollow(
