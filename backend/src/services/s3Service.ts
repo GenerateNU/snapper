@@ -3,6 +3,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { randomUUID } from 'crypto';
 import { config } from '../config/config';
 
 interface S3Service {
@@ -46,7 +47,7 @@ export class S3ServiceImpl implements S3Service {
   }
 
   async upload(file: File) {
-    const fileKey = `${Date.now()}-${file.name}`;
+    const fileKey = randomUUID();
     const fileBuffer = await file.arrayBuffer();
     console.log('Bucket Name:', this.name);
     console.log('Region:', this.region);
@@ -58,7 +59,9 @@ export class S3ServiceImpl implements S3Service {
     });
     try {
       await this.client.send(command);
-      const url = `https://${this.name}.s3.${this.region}.amazonaws.com/${fileKey}`;
+      const url = encodeURI(
+        `https://${this.name}.s3.${this.region}.amazonaws.com/${fileKey}`,
+      );
       return url;
     } catch (error) {
       console.error('Error uploading file:', error);
