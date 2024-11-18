@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
-import { SafeAreaView, SectionList, FlatList, Text, View } from 'react-native';
-import { useAuthStore } from '../../../auth/authStore';
-import { categorizeTime } from '../../../utils/profile';
-import { useUserNotification } from '../../../hooks/user';
 import { useFocusEffect } from 'expo-router';
-import React from 'react';
-import NotificationSkeleton from '../../../components/notification/skeleton';
-import NotificationEntry from '../../../components/notification/notification';
+import React, { useEffect, useState } from 'react';
+import { FlatList, SafeAreaView, SectionList, Text, View } from 'react-native';
+import { useAuthStore } from '../../../auth/authStore';
 import Divider from '../../../components/divider';
+import NotificationEntry from '../../../components/notification/notification';
+import NotificationSkeleton from '../../../components/notification/skeleton';
+import { useUserNotification } from '../../../hooks/user';
+import { categorizeTime } from '../../../utils/profile';
 
 const Notification = () => {
   const { supabaseId } = useAuthStore();

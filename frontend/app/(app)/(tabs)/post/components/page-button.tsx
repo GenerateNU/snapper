@@ -1,7 +1,7 @@
-import React from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 interface ButtonProps {
   text?: string;

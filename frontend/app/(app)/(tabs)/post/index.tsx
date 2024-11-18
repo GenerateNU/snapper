@@ -1,12 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import {
-  useForm,
-  FormProvider,
-  useFormContext,
-  Form,
-  Controller,
-} from 'react-hook-form';
+import { ScrollView, Text, View } from 'react-native';
 import PostCreationForm from './components/post-creation-form';
 
 export default function PostCreation() {
