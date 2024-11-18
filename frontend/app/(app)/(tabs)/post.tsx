@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 const Post = () => {
   useEffect(() => {
-    router.replace('/postcreation');
+    router.replace('/(postcreation)');
   }, []);
 
   return null;
