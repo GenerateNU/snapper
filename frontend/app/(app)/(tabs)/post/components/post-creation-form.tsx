@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Modal } from 'react-native';
 import { useFormContext, Controller } from 'react-hook-form';
 import ImagePicker from '../../../../../components/image-picker';
 import BigText from '../../../../../components/bigtext';
@@ -12,7 +12,6 @@ import { useAuthStore } from '../../../../../auth/authStore';
 import Map from '../../../../../components/map';
 import IconButton from '../../../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { number } from 'zod';
 import { Location, FormFields } from '../_layout';
 
 export default function PostCreationForm() {
@@ -32,6 +31,8 @@ export default function PostCreationForm() {
     setValue('tags', newFish);
   };
 
+  const API_BASE_URL = apiConfig;
+
   const { control, trigger, handleSubmit } = useFormContext<FormFields>();
 
   const getLocation = () => {
@@ -47,7 +48,7 @@ export default function PostCreationForm() {
     }
     console.log(postData);
     try {
-      const response = await fetch('http://localhost:3000/divelog', {
+      const response = await fetch(`${API_BASE_URL}/divelog`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +141,7 @@ export default function PostCreationForm() {
             outline="gray-400"
             text="Choose Fish"
             backgroundColor="white"
-            onPress={() => router.push('/tag-fish')}
+            onPress={() => router.push('./post/tag-fish')}
           />
         ) : (
           <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-5">
