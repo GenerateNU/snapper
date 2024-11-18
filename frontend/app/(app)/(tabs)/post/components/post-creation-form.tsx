@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { View, Text, Modal } from 'react-native';
-import { useFormContext, Controller } from 'react-hook-form';
-import ImagePicker from '../../../../../components/image-picker';
-import BigText from '../../../../../components/bigtext';
-import Button from '../../../../../components/button';
-import PageButton from './page-button';
+import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { router } from 'expo-router';
-import Tag from '../../../../../components/tag';
+import React, { useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+import { Modal, Text, View } from 'react-native';
 import { apiConfig } from '../../../../../api/apiContext';
 import { useAuthStore } from '../../../../../auth/authStore';
-import Map from '../../../../../components/map';
+import BigText from '../../../../../components/bigtext';
+import Button from '../../../../../components/button';
 import IconButton from '../../../../../components/icon-button';
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { Location, FormFields } from '../_layout';
+import ImagePicker from '../../../../../components/image-picker';
+import Map from '../../../../../components/map';
+import Tag from '../../../../../components/tag';
+import { FormFields, Location } from '../_layout';
+import PageButton from './page-button';
 
 export default function PostCreationForm() {
   const [modalVisible, setModalVisible] = useState(false);

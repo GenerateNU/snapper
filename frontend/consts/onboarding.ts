@@ -1,4 +1,4 @@
-import { apiConfig } from "../api/apiContext";
+import { apiConfig } from '../api/apiContext';
 
 export const ONBOARDING_DATA = [
   {

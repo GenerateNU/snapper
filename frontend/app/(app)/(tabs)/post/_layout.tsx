@@ -1,6 +1,6 @@
+import { Stack } from 'expo-router';
 import React from 'react';
-import { router, Stack } from 'expo-router';
-import { useForm, FormProvider } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 export type Location = {
   type: string;
