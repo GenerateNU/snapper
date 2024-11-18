@@ -1,19 +1,19 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import {
-  SafeAreaView,
-  View,
-  Text,
   Image,
   Pressable,
+  SafeAreaView,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { useDiveLog } from '../../../hooks/divelog';
-import Profile from '../../../components/profile';
-import { PROFILE_PHOTO } from '../../../consts/profile';
-import PopulatedInfoPopupButton from '../../../components/populated-info-popup';
-import InfoPopup from '../../../components/info-popup';
 import { useAuthStore } from '../../../auth/authStore';
 import LikeAndShare from '../../../components/divelog/like-share';
+import InfoPopup from '../../../components/info-popup';
+import PopulatedInfoPopupButton from '../../../components/populated-info-popup';
+import Profile from '../../../components/profile';
+import { PROFILE_PHOTO } from '../../../consts/profile';
+import { useDiveLog } from '../../../hooks/divelog';
 
 const DiveLog = () => {
   const { mongoDBId } = useAuthStore();

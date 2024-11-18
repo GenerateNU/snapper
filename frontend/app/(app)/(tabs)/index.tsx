@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native';
 import { router } from 'expo-router';
+import { Text, View } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import Button from '../../../components/button';
 

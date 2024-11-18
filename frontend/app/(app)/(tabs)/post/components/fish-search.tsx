@@ -1,7 +1,6 @@
-import React from 'react';
-import { TextInput, View, Image, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useState, useEffect } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 type FishData = {
   name: string;

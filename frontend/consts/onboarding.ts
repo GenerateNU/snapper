@@ -1,3 +1,5 @@
+import { apiConfig } from '../api/apiContext';
+
 export const ONBOARDING_DATA = [
   {
     title: 'Track and enhance your dives',
@@ -22,4 +24,4 @@ export const ONBOARDING_DATA = [
   },
 ];
 
-export const API_BASE_URL = 'http://localhost:3000';
+export const API_BASE_URL = apiConfig;

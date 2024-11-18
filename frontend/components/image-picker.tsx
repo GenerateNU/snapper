@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Image,
   TouchableOpacity,
@@ -8,11 +8,19 @@ import {
 } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import { FormProvider, useFormContext } from 'react-hook-form';
+import { Photo } from '../types/divelog';
 
 export default function ImagePicker() {
-  const { register, setValue } = useFormContext();
-  register('images');
+  const { register, setValue, formState } = useFormContext();
+  const { isSubmitted, isDirty } = formState;
+  register('photos');
   const [image, setImage] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!isSubmitted && !isDirty) {
+      setImage([]);
+    }
+  }, [isDirty]);
 
   const pickImage = async () => {
     let result = await ExpoImagePicker.launchImageLibraryAsync({
@@ -24,18 +32,41 @@ export default function ImagePicker() {
     if (!result.canceled) {
       const copy = [result.assets[0].uri, ...image];
       setImage(copy);
-      console.log(copy?.length);
+      //Pretty messy, lets but for now its okay.
+      const fetchImageFromURI = async (uri: string): Promise<Photo> => {
+        const res = await fetch(uri);
+        const blob = await res.blob();
 
-      const fs = copy.map(async (element, index) => {
-        const f = await fetch(element).then(
-          async (r) => new File([await r.blob()], index.toString()),
-        );
-        return f;
-      });
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
 
-      const files = await Promise.all(fs);
+          reader.onloadend = () => {
+            if (reader.result) {
+              const result = reader.result as string;
+              const photo: Photo = {
+                base64: result,
+                name: uri,
+                fileType: 'image/jpeg',
+              };
+              resolve(photo);
+            } else {
+              reject(new Error('Failed to convert blob to base64.'));
+            }
+          };
 
-      setValue('images', files);
+          reader.onerror = () => {
+            reject(new Error('Error reading the file.'));
+          };
+
+          reader.readAsDataURL(blob);
+        });
+      };
+
+      const fs = copy.map(fetchImageFromURI);
+
+      const base64s = await Promise.all(fs);
+
+      setValue('photos', base64s);
     }
   };
 

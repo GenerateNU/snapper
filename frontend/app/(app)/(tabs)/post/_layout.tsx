@@ -1,7 +1,7 @@
+import { Stack } from 'expo-router';
 import React from 'react';
-import { router, Stack } from 'expo-router';
-import { useForm, FormProvider } from 'react-hook-form';
-import Arrow from '../../../components/arrow';
+import { FormProvider, useForm } from 'react-hook-form';
+import { Photo } from '../../../../types/divelog';
 
 export type Location = {
   type: string;
@@ -10,7 +10,7 @@ export type Location = {
 
 export type FormFields = {
   tags: string[];
-  image: string;
+  photos: Photo[];
   date: Date;
   location: Location;
   description: string;
@@ -26,16 +26,10 @@ export default function Layout() {
         <Stack.Screen
           name="index"
           options={{
-            headerShown: true,
+            headerShown: false,
             headerTitle: '',
             headerTransparent: true,
             gestureEnabled: false,
-            headerLeft: () => (
-              <Arrow
-                onPress={() => router.replace('/(tabs)')}
-                direction="left"
-              />
-            ),
           }}
         />
         <Stack.Screen
@@ -45,9 +39,6 @@ export default function Layout() {
             headerTitle: '',
             headerTransparent: true,
             gestureEnabled: false,
-            headerLeft: () => (
-              <Arrow onPress={() => router.back()} direction="left" />
-            ),
           }}
         />
       </Stack>

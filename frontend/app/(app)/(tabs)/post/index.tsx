@@ -1,21 +1,11 @@
 import React from 'react';
-import { View, Text, ScrollView, SafeAreaView } from 'react-native';
-import {
-  useForm,
-  FormProvider,
-  useFormContext,
-  Form,
-  Controller,
-} from 'react-hook-form';
+import { ScrollView, Text, View } from 'react-native';
 import PostCreationForm from './components/post-creation-form';
 
 export default function PostCreation() {
   return (
-    <SafeAreaView className="flex items-center w-full bg-white h-full">
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        className="flex flex-col w-[90vw] bg-white"
-      >
+    <View className="flex items-center w-full bg-white h-full">
+      <ScrollView className="flex flex-col w-[90vw] bg-white">
         <View className="flex flex-col justify-items items-center pt-[5vh] mb-[3vh]">
           <Text className="font-bold text-[24px] leading-[29.05px] pb-[1vh]">
             {' '}
@@ -32,6 +22,6 @@ export default function PostCreation() {
         </View>
         <PostCreationForm />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

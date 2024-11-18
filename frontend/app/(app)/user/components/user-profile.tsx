@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, FlatList, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Header from '.././components/header';
-import Badges from '.././components/badges';
-import Menu from '.././components/menu';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Stack } from 'expo-router';
+import React from 'react';
+import { FlatList, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../../../auth/authStore';
 import Arrow from '../../../../components/arrow';
 import InfoPopup from '../../../../components/info-popup';
+import Badges from '.././components/badges';
+import Header from '.././components/header';
+import Menu from '.././components/menu';
 
 const User = ({ id }: { id: string }) => {
   const { mongoDBId } = useAuthStore();

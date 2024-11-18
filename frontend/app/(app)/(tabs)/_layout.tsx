@@ -1,19 +1,19 @@
-import React from 'react';
-import Home from '../../../assets/house.svg';
-import Search from '../../../assets/search.svg';
-import Plus from '../../../assets/plus.svg';
-import Star from '../../../assets/Star.svg';
-import Profile from '../../../assets/profile.svg';
 import {
+  faCircleUser,
   faHouse,
+  faPlusSquare,
   faSearch,
   faStar,
-  faCircleUser,
-  faPlusSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { Tabs } from 'expo-router';
+import React from 'react';
+import { SafeAreaView, Text } from 'react-native';
+import Home from '../../../assets/house.svg';
+import Plus from '../../../assets/plus.svg';
+import Profile from '../../../assets/profile.svg';
+import Search from '../../../assets/search.svg';
+import Star from '../../../assets/Star.svg';
 import IconButton from '../../../components/icon-button';
-import { Text, SafeAreaView } from 'react-native';
 
 const Layout = () => {
   return (

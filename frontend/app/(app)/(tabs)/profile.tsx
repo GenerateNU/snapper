@@ -1,9 +1,9 @@
-import { View, Text } from 'react-native';
-import User from '../user/components/user-profile';
-import { useAuthStore } from '../../../auth/authStore';
-import { Stack } from 'expo-router';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { Stack } from 'expo-router';
+import { Text, View } from 'react-native';
+import { useAuthStore } from '../../../auth/authStore';
 import IconButton from '../../../components/icon-button';
+import User from '../user/components/user-profile';
 
 const Profile = () => {
   const { mongoDBId } = useAuthStore();

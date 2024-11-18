@@ -27,8 +27,19 @@ export const createDiveLogValidation = [
     .isArray()
     .withMessage('Photos must be an array of strings')
     .custom((photos: any[]) => {
-      if (!photos.every((val) => typeof val === 'string')) {
-        throw new Error('Each photo URL must be a string');
+      if (
+        !photos.every(
+          (val) =>
+            typeof val === 'object' &&
+            val !== null &&
+            typeof val.base64 === 'string' &&
+            typeof val.name === 'string' &&
+            typeof val.fileType === 'string',
+        )
+      ) {
+        throw new Error(
+          'Each photo must be an object with keys "base64", "name", and "fileType", all with string values',
+        );
       }
       return true;
     }),
