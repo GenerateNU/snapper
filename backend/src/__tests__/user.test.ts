@@ -83,7 +83,7 @@ describe('User Routes', () => {
     it('Returns 400 if user is not found', async () => {
       const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
       mockUserModelFindOne.mockResolvedValue(null); // Simulate user not found
-      const res = await request(app).get(`/user/${id}`);
+      const res = await request(app).get(`/user/${id}/supabase`);
       expect(res.status).toBe(400);
       expect(res.body).toEqual({ error: 'Unable to find user of ID: ' + id });
     });

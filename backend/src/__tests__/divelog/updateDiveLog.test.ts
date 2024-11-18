@@ -1,4 +1,4 @@
-jest.mock('../../../middlewares/authMiddleware', () => ({
+jest.mock('../../middlewares/authMiddleware', () => ({
   isAuthenticated: (
     req: express.Request,
     res: express.Response,
@@ -13,7 +13,7 @@ const mockFindById = jest.fn(() => ({
   exec: jest.fn(),
 }));
 
-jest.mock('../../../models/diveLog', () => ({
+jest.mock('../../models/diveLog', () => ({
   DiveLog: {
     create: jest.fn(),
     deleteMany: jest.fn(),
@@ -22,10 +22,10 @@ jest.mock('../../../models/diveLog', () => ({
   },
 }));
 
+import { isAuthenticated } from '../../middlewares/authMiddleware';
 import request from 'supertest';
 import express from 'express';
 import divelog from '../../routes/divelog';
-import { isAuthenticated } from '../../middlewares/authMiddleware';
 import mongoose from 'mongoose';
 import {
   invalidUpdateCasesDiveLog,

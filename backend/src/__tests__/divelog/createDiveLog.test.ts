@@ -1,4 +1,4 @@
-jest.mock('../../../middlewares/authMiddleware', () => ({
+jest.mock('../../middlewares/authMiddleware', () => ({
   isAuthenticated: (
     req: express.Request,
     res: express.Response,
@@ -19,7 +19,7 @@ import {
 } from '../../consts/testConstant';
 import { DiveLog } from '../../models/diveLog';
 
-jest.mock('../../../services/notificationService', () => ({
+jest.mock('../../services/notificationService', () => ({
   NotificationServiceImpl: jest.fn().mockImplementation(() => ({
     createPostNotification: jest.fn().mockResolvedValue([]),
   })),

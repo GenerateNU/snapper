@@ -1,4 +1,4 @@
-jest.mock('../../../middlewares/authMiddleware', () => ({
+jest.mock('../../middlewares/authMiddleware', () => ({
   isAuthenticated: (
     req: express.Request,
     res: express.Response,
@@ -10,7 +10,7 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
 
 const mockExec = jest.fn();
 
-jest.mock('../../../models/diveLog', () => ({
+jest.mock('../../models/diveLog', () => ({
   DiveLog: {
     create: jest.fn(),
     deleteMany: jest.fn(),
