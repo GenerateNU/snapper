@@ -7,13 +7,10 @@ import Button from '../../../../components/button';
 import PageButton from './page-button';
 import { router } from 'expo-router';
 import Tag from '../../../../components/tag';
-import { apiConfig } from '../../../../api/apiContext';
-import { useAuthStore } from '../../../../auth/authStore';
 import Map from '../../../../components/map';
 import IconButton from '../../../../components/icon-button';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Location, FormFields, TagData } from '../../../../types/divelog';
-import { number } from 'zod';
 import { postDiveLog } from '../../../../api/divelog';
 
 export default function PostCreationForm() {

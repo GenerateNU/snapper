@@ -7,7 +7,7 @@ import {
   InputAccessoryView,
 } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
-import { FormProvider, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { Photo } from '../types/divelog';
 
 export default function ImagePicker() {
