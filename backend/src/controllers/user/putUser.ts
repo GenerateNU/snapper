@@ -1,5 +1,6 @@
 import express from 'express';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import { NotFoundError } from '../../consts/errors';
 const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
@@ -22,7 +23,8 @@ export const putUser = async (req: express.Request, res: express.Response) => {
       'following',
       'profilePicture',
       'deviceTokens',
-      'name',
+      'firstName',
+      'lastName',
     ];
 
     //TODO: Will not change with schema
@@ -35,26 +37,17 @@ export const putUser = async (req: express.Request, res: express.Response) => {
       }
     }
 
-    //Query the given ID on the database and save the result
-    const foundUser = await userService.getUserBySupabaseId(userId);
-
-    //Ensure that there is a defined(non-null) result
-    if (!foundUser) {
-      //Error if not
-      return res
-        .status(400)
-        .json({ error: 'Unable to find user of ID: ' + userId });
-    }
-
     //Should mutate the id with the given request
-    const user = await userService.editUserBySupabaseId(userId, req.body);
+    await userService.editUserBySupabaseId(userId, req.body);
+
     //Return the OK status
     return res.status(200).json({
       message: 'Successfully updated user:' + userId,
     });
   } catch (err) {
-    //Handle error
-    console.error('Error updating the user data:\n', err);
+    if (err instanceof NotFoundError) {
+      return res.status(404).json({ error: err.message });
+    }
     return res.status(500).json({
       error: 'Internal server error while updating user data.\n' + err,
     });

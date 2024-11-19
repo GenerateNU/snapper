@@ -35,9 +35,11 @@ jest.mock('../models/users');
 
 const mockUserModelFindOne = jest.fn();
 const mockUserFindById = jest.fn();
+const mockUserUpdateOne = jest.fn();
 
 UserModel.findById = mockUserFindById;
 UserModel.findOne = mockUserModelFindOne;
+UserModel.updateOne = mockUserUpdateOne;
 
 const app = express();
 const router = express.Router();
@@ -149,7 +151,8 @@ describe('User Routes', () => {
         _id: id,
       };
 
-      mockUserModelFindOne.mockResolvedValue(user);
+      mockUserUpdateOne.mockResolvedValue(user);
+
       const res = await request(app)
         .put(`/user/actions/edit`)
         .send(updatedUser);

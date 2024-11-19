@@ -135,7 +135,14 @@ export class UserServiceImpl implements UserService {
     supabaseId: string,
     updatedJson: Record<string, any>,
   ) {
-    return UserModel.updateOne({ supabaseId }, { $set: updatedJson });
+    const user = await UserModel.updateOne(
+      { supabaseId },
+      { $set: updatedJson },
+    );
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user;
   }
 
   async toggleFollow(
