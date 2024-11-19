@@ -1,18 +1,18 @@
 import express from 'express';
 import { isAuthenticated } from '../middlewares/authMiddleware';
-import { toggleUserFollow } from '../controllers/user/toggleUserFollow';
-import { toggleLikeDivelog } from '../controllers/user/toggleLikeDivelog';
-import { getNotifications } from '../controllers/user/getNotification';
-import { ExpoTokenController } from '../controllers/user/expoToken';
-import { getFollowingPosts } from '../controllers/user/getFollowingPosts';
-import { getUserBySupabaseId } from '../controllers/user/getUserBySupabaseID';
 import { getUserMe } from '../controllers/user/getUserMe';
 import { getUserByMongoID } from '../controllers/user/getUserByMongoID';
 import { getMySpecies } from '../controllers/user/getMySpecies';
 import { getMyDiveLogs } from '../controllers/user/getMyDivelog';
-import { getUserSpecies } from '../controllers/user/getUserSpecies';
 import { getUserDiveLogs } from '../controllers/user/getUserDivelog';
 import { putUser } from '../controllers/user/putUser';
+import { getUserBySupabaseId } from '../controllers/user/getUserBySupabaseID';
+import { getUserSpecies } from '../controllers/user/getUserSpecies';
+import { toggleUserFollow } from '../controllers/user/toggleUserFollow';
+import { toggleLikeDivelog } from '../controllers/user/toggleLikeDivelog';
+import { getNotifications } from '../controllers/user/getNotification';
+import { getFollowingPosts } from '../controllers/user/getFollowingPosts';
+import { ExpoTokenController } from '../controllers/user/expoToken';
 
 export default (router: express.Router) => {
   // user-specific routes
