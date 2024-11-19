@@ -54,7 +54,7 @@ Create a .env in the root directory containing the following:
 ```
 NODE_ENV=development
 SERVER_PORT=3000
-MONGO_URL=mongodb://user:dbUserPassword@0.0.0.0:27017/
+MONGO_URL=mongodb+srv://qwantumsnapper:I222Irhjv7XjJXpc@cluster0.2eorm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 MONGO_USERNAME="user"
 MONGO_PASSWORD="dbUserPassword"
 SUPABASE_PASSWORD="p4JeQ2sCH3OXC1jP"
