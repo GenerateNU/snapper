@@ -41,7 +41,6 @@ app.use(express.json());
 divelog(router);
 app.use(router);
 
-
 describe('POST /divelog', () => {
   let testUserId: mongoose.Types.ObjectId;
 
@@ -120,7 +119,7 @@ describe('POST /divelog', () => {
     expect(response.body.description).toBe(payload.description);
   });
   */
- 
+
   /*
   it.each(invalidCasesDiveLog)(
     '400 for invalid %s',
