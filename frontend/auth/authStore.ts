@@ -110,12 +110,18 @@ export const useAuthStore = create<AuthState>(
         set({ loading: true, error: null });
         try {
           const currentMongoDBId = get().mongoDBId;
-          
+
           const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
           if (savedToken && currentMongoDBId) {
-            console.log('Unregistering device token for user:', currentMongoDBId);
+            console.log(
+              'Unregistering device token for user:',
+              currentMongoDBId,
+            );
             try {
-              await unregisterForPushNotifications(currentMongoDBId, savedToken);
+              await unregisterForPushNotifications(
+                currentMongoDBId,
+                savedToken,
+              );
               await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
               console.log('Successfully unregistered notifications');
             } catch (error) {

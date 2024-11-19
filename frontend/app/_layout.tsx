@@ -21,9 +21,9 @@ const InitialLayout = () => {
     }
   }, [isAuthenticated]);
 
-  useNotificationPermission({ 
-    isAuthenticated, 
-    mongoDBId 
+  useNotificationPermission({
+    isAuthenticated,
+    mongoDBId,
   });
 
   return (

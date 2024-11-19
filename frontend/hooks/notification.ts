@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppState } from 'react-native';
-import { 
-  registerForPushNotifications, 
-  unregisterForPushNotifications 
+import {
+  registerForPushNotifications,
+  unregisterForPushNotifications,
 } from '../utils/notification';
 import { NOTIFICATION_TOKEN_KEY } from '../consts/notification';
 
@@ -13,8 +13,13 @@ interface UseNotificationsProps {
   mongoDBId: string | null;
 }
 
-export const useNotificationPermission = ({ isAuthenticated, mongoDBId }: UseNotificationsProps) => {
-  const [notificationToken, setNotificationToken] = useState<string | null>(null);
+export const useNotificationPermission = ({
+  isAuthenticated,
+  mongoDBId,
+}: UseNotificationsProps) => {
+  const [notificationToken, setNotificationToken] = useState<string | null>(
+    null,
+  );
   const [permissionStatus, setPermissionStatus] = useState<string | null>(null);
 
   const handleNotificationPermissions = useCallback(async () => {
@@ -23,7 +28,8 @@ export const useNotificationPermission = ({ isAuthenticated, mongoDBId }: UseNot
         throw new Error('ID does not exist');
       }
 
-      const { status: currentStatus } = await Notifications.getPermissionsAsync();
+      const { status: currentStatus } =
+        await Notifications.getPermissionsAsync();
       const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
 
       if (currentStatus === 'granted') {
@@ -53,18 +59,24 @@ export const useNotificationPermission = ({ isAuthenticated, mongoDBId }: UseNot
     if (isAuthenticated && mongoDBId) {
       handleNotificationPermissions();
 
-      const permissionSubscription = Notifications.addNotificationResponseReceivedListener(handleNotificationPermissions);
+      const permissionSubscription =
+        Notifications.addNotificationResponseReceivedListener(
+          handleNotificationPermissions,
+        );
 
       const checkPermissionStatus = async () => {
         const { status } = await Notifications.getPermissionsAsync();
         handleNotificationPermissions();
       };
 
-      const appStateSubscription = AppState.addEventListener('change', (nextAppState) => {
-        if (nextAppState === 'active') {
-          checkPermissionStatus();
-        }
-      });
+      const appStateSubscription = AppState.addEventListener(
+        'change',
+        (nextAppState) => {
+          if (nextAppState === 'active') {
+            checkPermissionStatus();
+          }
+        },
+      );
 
       return () => {
         permissionSubscription.remove();
@@ -76,6 +88,6 @@ export const useNotificationPermission = ({ isAuthenticated, mongoDBId }: UseNot
   return {
     notificationToken,
     permissionStatus,
-    handleNotificationPermissions
+    handleNotificationPermissions,
   };
 };
