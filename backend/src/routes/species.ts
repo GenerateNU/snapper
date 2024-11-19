@@ -48,5 +48,5 @@ export default (router: express.Router) => {
     isAuthenticated,
     getByScientificName,
   );
-    router.get('/species/query', querySpecies);
+    router.get('/species/query', isAuthenticated, querySpecies);
 };
