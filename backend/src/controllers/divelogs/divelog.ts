@@ -11,6 +11,7 @@ import {
 } from '../../services/notificationService';
 import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
 import sendFilesToS3 from '../../services/filesToS3';
+import { NotFoundError } from '../../consts/errors';
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
 const userService: UserService = new UserServiceImpl();
@@ -23,26 +24,20 @@ export const DiveLogController = {
     req: express.Request,
     res: express.Response,
   ): Promise<void> => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
-      return;
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   res.status(400).json({ errors: errors.array() });
+    //   return;
+    // }
 
-    const photos: any[] = req.body.photos;
-    if (photos.length > 0) {
-      const links = await sendFilesToS3(photos);
-      Object.defineProperty(req.body, 'photos', {
-        value: links,
-        enumerable: true,
-      });
-    }
-
-    const user = await userService.getUserById(req.body.user);
-    if (user == null) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
+    // const photos: any[] = req.body.photos;
+    // if (photos.length > 0) {
+    //   const links = await sendFilesToS3(photos);
+    //   Object.defineProperty(req.body, 'photos', {
+    //     value: links,
+    //     enumerable: true,
+    //   });
+    // }
 
     try {
       const diveLog: any = await diveLogService.createDiveLog(req.body);
@@ -55,6 +50,10 @@ export const DiveLogController = {
       }
       res.status(201).json(diveLog);
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        res.status(404).json({ message: error.message });
+        return;
+      }
       res.status(500).json({ message: 'Internal server error' });
     }
   },

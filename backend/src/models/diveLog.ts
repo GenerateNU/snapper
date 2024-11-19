@@ -26,12 +26,4 @@ const DiveLogSchema = new mongoose.Schema({
 
 DiveLogSchema.index({ location: '2dsphere' });
 
-DiveLogSchema.pre('save', async function (next) {
-  const userExists = await mongoose.model('User').exists({ _id: this.user });
-  if (!userExists) {
-    return next(new NotFoundError('User not found'));
-  }
-  next();
-});
-
 export const DiveLog = mongoose.model('DiveLog', DiveLogSchema);

@@ -63,7 +63,7 @@ const Header = ({ id }: { id: string }) => {
         {id !== mongoDBId && (
           <FollowButton
             onPress={handleFollowToggle}
-            isPending={isPending}
+            isPending={isPending!}
             isFollowing={isFollowing}
           />
         )}

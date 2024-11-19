@@ -6,12 +6,41 @@ import { Document } from 'mongodb';
 import { NotFoundError } from '../consts/errors';
 
 export interface UserService {
+  /**
+   * Retrieves a user by their ID.
+   * @param id - The ID of the user.
+   * @returns A promise that resolves to the user document or null if not found.
+   */
   getUserById(id: string): Promise<Document | null>;
+
+  /**
+   * Retrieves a user by their Supabase ID.
+   * @param id - The Supabase ID of the user.
+   * @returns A promise that resolves to the user document or null if not found.
+   */
   getUserBySupabaseId(id: string): Promise<Document | null>;
+
+  /**
+   * Edits a user by their Supabase ID.
+   * @param supabaseId - The Supabase ID of the user.
+   * @param updatedJson - The updated user data as a JSON object.
+   * @returns A promise that resolves to the updated user document or null if not found.
+   */
   editUserBySupabaseId(
     supabaseId: string,
     updatedJson: Record<string, any>,
   ): Promise<Document | null>;
+
+  /**
+   * Creates a new user.
+   * @param userData - An object containing the user's data.
+   * @param userData.email - The email of the user.
+   * @param userData.username - The username of the user.
+   * @param userData.supabaseId - The Supabase ID of the user.
+   * @param userData.firstName - The first name of the user.
+   * @param userData.lastName - The last name of the user.
+   * @returns A promise that resolves to the created user document or null if creation fails.
+   */
   createUser(userData: {
     email: string;
     username: string;
@@ -19,25 +48,63 @@ export interface UserService {
     firstName: string;
     lastName: string;
   }): Promise<Document | null>;
+
+  /**
+   * Retrieves a list of species associated with a user.
+   * @param userId - The ID of the user.
+   * @param limit - The maximum number of species to retrieve.
+   * @param page - The page number for pagination.
+   * @returns A promise that resolves to an array of species documents or null if not found.
+   */
   getSpecies(
     userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
+
+  /**
+   * Retrieves a list of dive logs associated with a user.
+   * @param userId - The ID of the user.
+   * @param limit - The maximum number of dive logs to retrieve.
+   * @param page - The page number for pagination.
+   * @returns A promise that resolves to an array of dive log documents or null if not found.
+   */
   getDiveLogs(
     userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
+
+  /**
+   * Retrieves a list of posts from users that the specified user is following.
+   * @param userId - The ID of the user.
+   * @param limit - The maximum number of posts to retrieve.
+   * @param page - The page number for pagination.
+   * @returns A promise that resolves to an array of post documents or null if not found.
+   */
   getFollowingPosts(
     userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
+
+  /**
+   * Updates the expo device token for a user. Remove it if it already exists. Add it if it has not existed.
+   * @param userId - The ID of the user.
+   * @param deviceToken - The new device token.
+   * @returns A promise that resolves to the updated user document or null if not found.
+   */
   updateDeviceToken(
     userId: string,
     deviceToken: string,
   ): Promise<Document | null>;
+
+  /**
+   * Toggles the follow status between the current user and a target user.
+   * @param currentUserId - The ID of the current user.
+   * @param targetUserId - The ID of the target user.
+   * @returns A promise that resolves to the updated follow status document or null if not found.
+   */
   toggleFollow(
     currentUserId: string,
     targetUserId: string,
@@ -75,35 +142,50 @@ export class UserServiceImpl implements UserService {
     currentUserId: string,
     targetUserId: string,
   ): Promise<Document | null> {
-    const targetUser = await UserModel.findById(targetUserId);
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    if (!targetUser) {
-      throw new NotFoundError('Target user not found');
+    try {
+      const targetUser =
+        await UserModel.findById(targetUserId).session(session);
+
+      if (!targetUser) {
+        throw new NotFoundError('Target user not found');
+      }
+
+      const isFollowing = targetUser.followers.includes(
+        new mongoose.Types.ObjectId(currentUserId),
+      );
+
+      const updateCurrentUser = isFollowing
+        ? { $pull: { following: targetUserId } }
+        : { $addToSet: { following: targetUserId } };
+
+      const updateTargetUser = isFollowing
+        ? { $pull: { followers: currentUserId } }
+        : { $addToSet: { followers: currentUserId } };
+
+      const [followUser, followedUser] = await Promise.all([
+        UserModel.findByIdAndUpdate(currentUserId, updateCurrentUser, {
+          new: true,
+        }).session(session),
+        UserModel.findByIdAndUpdate(targetUserId, updateTargetUser, {
+          new: true,
+        }).session(session),
+      ]);
+
+      if (!followUser || !followedUser) {
+        throw new NotFoundError('One or both users were not found');
+      }
+
+      await session.commitTransaction();
+      return followUser;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
-
-    const isFollowing = targetUser.followers.includes(
-      new mongoose.Types.ObjectId(currentUserId),
-    );
-
-    const updateCurrentUser = isFollowing
-      ? { $pull: { following: targetUserId } }
-      : { $addToSet: { following: targetUserId } };
-
-    const updateTargetUser = isFollowing
-      ? { $pull: { followers: currentUserId } }
-      : { $addToSet: { followers: currentUserId } };
-
-    const followUser = await UserModel.findByIdAndUpdate(
-      currentUserId,
-      updateCurrentUser,
-      { new: true },
-    );
-
-    await UserModel.findByIdAndUpdate(targetUserId, updateTargetUser, {
-      new: true,
-    });
-
-    return followUser;
   }
 
   async getSpecies(
@@ -183,6 +265,10 @@ export class UserServiceImpl implements UserService {
       { new: true },
     );
 
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
     return user;
   }
 
@@ -197,15 +283,13 @@ export class UserServiceImpl implements UserService {
       throw new NotFoundError('User not found');
     }
 
-    const divelogs = await DiveLog.find({
-      user: {
-        $in: user.following,
-      },
+    const diveLogs = await DiveLog.find({
+      user: { $in: user.following },
     })
       .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
 
-    return divelogs;
+    return diveLogs;
   }
 }

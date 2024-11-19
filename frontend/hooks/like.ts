@@ -46,7 +46,7 @@ const useLike = (divelogId: string) => {
     ...toggleBase,
     isLiking: toggleBase.isActive,
     handleLikeToggle: toggleBase.handleToggle,
-    isReady: true,
+    isPending: toggleBase.isPending,
   };
 };
 

@@ -48,7 +48,7 @@ const useFollow = (followUserId: string) => {
     ...toggleBase,
     isFollowing: toggleBase.isActive,
     handleFollowToggle: toggleBase.handleToggle,
-    isReady: true,
+    isPending: toggleBase.isPending,
   };
 };
 
