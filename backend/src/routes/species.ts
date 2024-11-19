@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAuthenticated } from '../middlewares/authMiddleware';
-import { getById, getByScientificName, querySpecies } from '../controllers/species/get';
+import { getById, getByScientificName, getSpeciesBySearch } from '../controllers/species/get';
 
 /**
  * @swagger
@@ -48,5 +48,5 @@ export default (router: express.Router) => {
     isAuthenticated,
     getByScientificName,
   );
-    router.get('/species/query', isAuthenticated, querySpecies);
+    router.get('/species/query', isAuthenticated, getSpeciesBySearch);
 };

@@ -18,7 +18,7 @@ export const getByScientificName = async (
   return res.status(200).json(species);
 };
 
-export const querySpecies = async (req: express.Request, res: express.Response) => {
+export const getSpeciesBySearch = async (req: express.Request, res: express.Response) => {
   const query = req.query.q ? req.query.q.toString().trim() : '';
 
   try {
