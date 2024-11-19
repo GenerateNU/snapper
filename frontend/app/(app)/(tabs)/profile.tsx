@@ -1,4 +1,4 @@
-import { View, Text, TouchableHighlight, Modal } from 'react-native';
+import { View, Text, TouchableHighlight } from 'react-native';
 import User from '../user/components/user-profile';
 import { useAuthStore } from '../../../auth/authStore';
 import { Stack } from 'expo-router';
@@ -6,6 +6,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../components/icon-button';
 import { useState } from 'react';
 import { ChangePFP } from './profileComponents/editProfileModal'
+import { useEffect } from 'react';
 
 const Profile = () => {
   const { supabaseId } = useAuthStore();
@@ -23,6 +24,12 @@ const Profile = () => {
   const burgerClick = () => {
     setMenuOpened(!isMenuOpen);
   };
+
+  useEffect(() => {
+    if(isEditPFPOpen){
+      setMenuOpened(false);
+    }
+  }, [isEditPFPOpen]);
 
   return (
     <>
@@ -44,30 +51,26 @@ const Profile = () => {
                     left: -65 - 50,
                     width: 110,
                     flexDirection: 'column',
-                  }}
-                >
+                  }}>
                   <TouchableHighlight
                     className="w-full p-2"
                     onPress={() => alert('Settings')}
                     activeOpacity={0.6}
-                    underlayColor="#DDDDDD"
-                  >
+                    underlayColor="#DDDDDD">
                     <Text>Settings</Text>
                   </TouchableHighlight>
                   <TouchableHighlight
                     className="w-full p-2"
                     onPress={() => alert('Password')}
                     activeOpacity={0.6}
-                    underlayColor="#DDDDDD"
-                  >
+                    underlayColor="#DDDDDD">
                     <Text>Password</Text>
                   </TouchableHighlight>
                   <TouchableHighlight
                     className="w-full p-2"
                     onPress={() => setEditPFPOpen(true)}
                     activeOpacity={0.6}
-                    underlayColor="#DDDDDD"
-                  >
+                    underlayColor="#DDDDDD">
                     <Text>Edit Profile</Text>
                   </TouchableHighlight>
                 </View>
@@ -78,7 +81,7 @@ const Profile = () => {
       />
       <View className="relative flex flex-1 items-center">
         <User id={supabaseId || ''} />
-        <ChangePFP visible={isEditPFPOpen} onClose={() => setEditPFPOpen(false)} />
+        <ChangePFP visible={isEditPFPOpen} onClose={setEditPFPOpen} />
       </View>
     </>
   );
