@@ -7,4 +7,6 @@ const FishSchema = new mongoose.Schema({
   sightingsCount: { type: Number, default: 0 },
 });
 
+FishSchema.index({ commonName: 'text', scientificName: 'text' });
+
 export const Fish = mongoose.model('Fish', FishSchema);

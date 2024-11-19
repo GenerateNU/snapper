@@ -1,6 +1,7 @@
 import express from 'express';
 import { isAuthenticated } from '../middlewares/authMiddleware';
 import { getById } from '../controllers/fish/get';
+import { queryFish } from '../controllers/fish/get';
 
 /**
  * @swagger
@@ -25,4 +26,5 @@ import { getById } from '../controllers/fish/get';
  */
 export default (router: express.Router) => {
   router.get('/fish/:id', isAuthenticated, getById);
+  router.get('/fish/query', queryFish);
 };
