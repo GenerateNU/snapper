@@ -19,11 +19,6 @@ const Home = () => {
         onPress={() => router.push('/user/673c1eb1ca933ec2f85deee6')}
       />
       <Button
-        textOnly
-        text="Divelog"
-        onPress={() => router.push('/divelog/672fee642e921e76a8345fd1')}
-      />
-      <Button
         onPress={logout}
         textOnly
         text={loading ? 'Logging out' : 'Logout'}
