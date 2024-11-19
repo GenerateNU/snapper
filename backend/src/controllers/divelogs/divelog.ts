@@ -14,7 +14,6 @@ import sendFilesToS3 from '../../services/filesToS3';
 import { NotFoundError } from '../../consts/errors';
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
-const userService: UserService = new UserServiceImpl();
 const notificationService: NotificationService = new NotificationServiceImpl();
 const expoService: ExpoService = new ExpoServiceImpl();
 
@@ -24,20 +23,20 @@ export const DiveLogController = {
     req: express.Request,
     res: express.Response,
   ): Promise<void> => {
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   res.status(400).json({ errors: errors.array() });
-    //   return;
-    // }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
 
-    // const photos: any[] = req.body.photos;
-    // if (photos.length > 0) {
-    //   const links = await sendFilesToS3(photos);
-    //   Object.defineProperty(req.body, 'photos', {
-    //     value: links,
-    //     enumerable: true,
-    //   });
-    // }
+    const photos: any[] = req.body.photos;
+    if (photos.length > 0) {
+      const links = await sendFilesToS3(photos);
+      Object.defineProperty(req.body, 'photos', {
+        value: links,
+        enumerable: true,
+      });
+    }
 
     try {
       const diveLog: any = await diveLogService.createDiveLog(req.body);
