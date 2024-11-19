@@ -13,18 +13,6 @@ interface FollowMutationParams {
 
 const useFollow = (followUserId: string) => {
   const { mongoDBId } = useAuthStore();
-
-  if (!mongoDBId) {
-    return {
-      isFollowing: false,
-      handleFollowToggle: () => {
-        console.error('User ID is required');
-      },
-      isPending: false,
-      isReady: false,
-    } as const;
-  }
-
   const { data } = useUserById(followUserId);
   const followMutation = useFollowUser();
 
@@ -32,14 +20,14 @@ const useFollow = (followUserId: string) => {
     initialState: false,
     data: data,
     checkIsActive: (data) => {
-      return (
-        Array.isArray(data.user.followers) &&
-        data.user.followers.includes(mongoDBId)
-      );
+      return mongoDBId
+        ? Array.isArray(data.user.followers) &&
+            data.user.followers.includes(mongoDBId)
+        : false;
     },
     mutation: followMutation,
     mutationParams: {
-      id: mongoDBId,
+      id: mongoDBId || '',
       followUserId: followUserId,
     },
   });
@@ -47,7 +35,11 @@ const useFollow = (followUserId: string) => {
   return {
     ...toggleBase,
     isFollowing: toggleBase.isActive,
-    handleFollowToggle: toggleBase.handleToggle,
+    handleFollowToggle: mongoDBId
+      ? toggleBase.handleToggle
+      : () => {
+          console.error('User ID is required');
+        },
     isPending: toggleBase.isPending,
   };
 };

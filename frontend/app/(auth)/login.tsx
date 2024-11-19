@@ -3,10 +3,9 @@ import {
   Text,
   Keyboard,
   KeyboardAvoidingView,
-  Pressable,
+  ScrollView,
   Platform,
   View,
-  Image,
 } from 'react-native';
 import LoginForm from './components/login-form';
 import Button from '../../components/button';
@@ -17,18 +16,21 @@ const Login = () => {
       className="flex-1 bg-white"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <Pressable
-        className="flex-1 flex-col bg-white justify-start items-center p-[8%]"
-        onPress={() => Keyboard.dismiss()}
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
       >
-        <View className="w-full mb-[30%] py-[5%] flex-start pt-[10%]">
-          <Text className="text-2xl font-bold">Welcome Back!</Text>
+        <View className="flex-1 justify-center items-center px-8 bg-white">
+          <View className="w-full mb-12 pt-10">
+            <Text className="text-2xl font-bold">Welcome Back!</Text>
+          </View>
+          <LoginForm />
+          <View className="w-full pt-6 items-center">
+            <Button textOnly color="ocean" text="Forgot password?" />
+          </View>
         </View>
-        <LoginForm />
-        <View className="w-full pt-[15%] justify-center items-center">
-          <Button textOnly color="ocean" text="Forgot password?" />
-        </View>
-      </Pressable>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };

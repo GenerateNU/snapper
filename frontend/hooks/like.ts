@@ -14,18 +14,6 @@ interface LikeMutationParams {
 
 const useLike = (divelogId: string) => {
   const { mongoDBId } = useAuthStore();
-
-  if (!mongoDBId) {
-    return {
-      isLiking: false,
-      handleLikeToggle: () => {
-        console.error('User ID is required');
-      },
-      isPending: false,
-      isReady: false,
-    } as const;
-  }
-
   const { data } = useDiveLog(divelogId);
   const likeMutation = useLikeDivelog();
 
@@ -33,11 +21,13 @@ const useLike = (divelogId: string) => {
     initialState: false,
     data: data,
     checkIsActive: (data) => {
-      return Array.isArray(data.likes) && data.likes.includes(mongoDBId);
+      return mongoDBId
+        ? Array.isArray(data.likes) && data.likes.includes(mongoDBId)
+        : false;
     },
     mutation: likeMutation,
     mutationParams: {
-      id: mongoDBId,
+      id: mongoDBId || '',
       divelogId: divelogId,
     },
   });
@@ -45,7 +35,11 @@ const useLike = (divelogId: string) => {
   return {
     ...toggleBase,
     isLiking: toggleBase.isActive,
-    handleLikeToggle: toggleBase.handleToggle,
+    handleLikeToggle: mongoDBId
+      ? toggleBase.handleToggle
+      : () => {
+          console.error('User ID is required');
+        },
     isPending: toggleBase.isPending,
   };
 };

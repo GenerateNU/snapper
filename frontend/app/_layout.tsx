@@ -28,8 +28,14 @@ const InitialLayout = () => {
 
   return (
     <Stack>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(app)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="(auth)"
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="(app)"
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
     </Stack>
   );
 };
