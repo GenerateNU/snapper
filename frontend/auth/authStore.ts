@@ -4,6 +4,8 @@ import { persist } from 'zustand/middleware';
 import { LoginRequestBody, RegisterRequestBody } from '../types/auth';
 import { getSession, login, logout, register } from '../api/auth';
 import { getUserBySupabaseId } from '../api/user';
+import { unregisterForPushNotifications } from '../utils/notification';
+import { NOTIFICATION_TOKEN_KEY } from '../consts/notification';
 
 interface AuthState {
   user: any;
@@ -107,6 +109,20 @@ export const useAuthStore = create<AuthState>(
       logout: async () => {
         set({ loading: true, error: null });
         try {
+          const currentMongoDBId = get().mongoDBId;
+          
+          const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
+          if (savedToken && currentMongoDBId) {
+            console.log('Unregistering device token for user:', currentMongoDBId);
+            try {
+              await unregisterForPushNotifications(currentMongoDBId, savedToken);
+              await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
+              console.log('Successfully unregistered notifications');
+            } catch (error) {
+              console.error('Error unregistering notifications:', error);
+            }
+          }
+
           await logout();
           await get().clearStorage();
 
