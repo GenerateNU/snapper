@@ -37,6 +37,8 @@ const DiveLog = () => {
     );
   };
 
+  
+
   return (
     <>
       <SafeAreaView style={{ gap: 12 }} className="justify-center mx-[8%]">

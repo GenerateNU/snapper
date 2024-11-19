@@ -17,7 +17,7 @@ export default function FishSearch() {
   const removeFish = (index: number) => {
     const newFish = [...tagData];
     newFish.splice(index, 1);
-    setValue('tags', newFish);
+    setValue('tagData', newFish);
   };
 
   const tagIncludes = (name: string, id: string):boolean => {
@@ -99,7 +99,7 @@ export default function FishSearch() {
             />
           </View>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator = {false}>
       <View className="w-full flex flex-row flex-wrap flex-1">
         {data.map((item, index) => {
           return (
