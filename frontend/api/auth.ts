@@ -27,16 +27,13 @@ export async function login(userData: LoginRequestBody): Promise<AuthResponse> {
 export async function register(
   userData: RegisterRequestBody,
 ): Promise<AuthResponse> {
-  const requestBody = JSON.stringify(userData);
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: requestBody,
+    body: JSON.stringify(userData),
   });
-
-  console.log(response);
 
   if (!response.ok) {
     const errorData = await response.json();

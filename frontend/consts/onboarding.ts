@@ -1,3 +1,5 @@
+import { apiConfig } from '../api/apiContext';
+
 export const ONBOARDING_DATA = [
   {
     title: 'Track and enhance your dives',
@@ -21,3 +23,5 @@ export const ONBOARDING_DATA = [
     image: require('../assets/Onboarding 4.png'),
   },
 ];
+
+export const API_BASE_URL = apiConfig;

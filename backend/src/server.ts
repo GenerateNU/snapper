@@ -15,6 +15,7 @@ import { resolve } from 'path';
 import dotenv from 'dotenv';
 import { serve, setup } from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
+import compression from 'compression';
 
 dotenv.config({ path: resolve(__dirname, '../.env') });
 
@@ -46,6 +47,8 @@ const spec = swaggerJsDoc(options);
 export const startServer = () => {
   initializeLogging();
 
+  router.use(compression({ threshold: 0 }));
+
   router.use(sessionMiddleware);
 
   router.use('/api-docs', serve, setup(spec));
@@ -74,7 +77,7 @@ async function initializeLogging() {
 
   //TODO decouple middleware from server logic
   router.use(express.urlencoded({ extended: true }));
-  router.use(express.json());
+  router.use(express.json({ limit: '50mb' }));
 
   router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

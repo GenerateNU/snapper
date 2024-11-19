@@ -1,13 +1,18 @@
 import express from 'express';
 import { findUserBySupabaseId } from '../../services/userService';
+import { UserService, UserServiceImpl } from '../../services/userService';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 
-export const getUserDiveLogs = async (
+const userService: UserService = new UserServiceImpl();
+
+export const getUserDiveLogsById = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    //Get the ID from the body of the request
-    const userID = req.session.userId;
+    const userID = req.params.id;
+    const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
+    const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
 
     //Check to make sure that the id is defined
     if (!userID) {
@@ -25,9 +30,15 @@ export const getUserDiveLogs = async (
         .json({ error: 'Unable to find user of ID: ' + userID });
     }
 
+    const divelogs = await userService.getDiveLogs(
+      foundUser._id.toString(),
+      limit,
+      page,
+    );
+
     //Return the OK status
     return res.status(200).json({
-      divelogs: foundUser.diveLogs,
+      divelogs: divelogs,
       message: 'Successfully found dive logs for user:' + userID,
     });
   } catch (err) {

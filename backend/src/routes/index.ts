@@ -4,7 +4,7 @@ import healthcheck from './healthcheck';
 import divelog from './divelog';
 import swagger from './swagger';
 import user from './user';
-import fish from './fish';
+import species from './species';
 
 const router = express.Router();
 export default (): express.Router => {
@@ -12,7 +12,7 @@ export default (): express.Router => {
   healthcheck(router);
   divelog(router);
   user(router);
-  fish(router);
+  species(router);
   swagger(router);
   return router;
 };
