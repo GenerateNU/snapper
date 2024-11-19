@@ -22,6 +22,7 @@ species(router);
 app.use(router);
 const speciesMock = Species.findById as jest.Mock;
 const speciesFindMock = Species.findOne as jest.Mock;
+const speciesFindQueryMock = Species.find as jest.Mock;
 
 describe('GET /species/id', () => {
   beforeEach(() => {
@@ -64,5 +65,57 @@ describe('GET /species/scientific/id', () => {
     const res = await request(app).get(`/species/scientific/${scientificName}`);
     expect(res.status).toBe(200);
     expect(res.body).toEqual(species);
+  });
+}
+);
+
+describe('GET /species/query', () => {
+  beforeEach(() => {
+    speciesFindQueryMock.mockReset();
+  });
+
+  it('Returns species results for a valid query string', async () => {
+    const queryString = 'salmon';
+    const mockResults = [
+      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Salmo salar', commonNames: ['Atlantic salmon'] },
+      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Oncorhynchus tshawytscha', commonNames: ['Chinook salmon'] },
+    ];
+
+    speciesFindQueryMock.mockReturnValue({
+      sort: jest.fn().mockReturnValue({
+        limit: jest.fn().mockResolvedValue(mockResults),
+      }),
+    });
+
+    const res = await request(app).get(`/species/query?q=${queryString}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(mockResults);
+  });
+
+  it('Returns top alphabetically sorted species when no query is provided', async () => {
+    const mockResults = [
+      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Abramis brama', commonNames: ['Bream'] },
+      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Alosa alosa', commonNames: ['Allis shad'] },
+    ];
+
+    speciesFindQueryMock.mockReturnValue({
+      sort: jest.fn().mockReturnValue({
+        limit: jest.fn().mockResolvedValue(mockResults),
+      }),
+    });
+
+    const res = await request(app).get('/species/query');
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual(mockResults);
+  });
+
+  it('Handles internal server errors gracefully', async () => {
+    speciesFindQueryMock.mockImplementation(() => {
+      throw new Error('Database error');
+    });
+
+    const res = await request(app).get('/species/query?q=salmon');
+    expect(res.status).toBe(500);
+    expect(res.body).toEqual({ message: 'Internal server error' });
   });
 });
