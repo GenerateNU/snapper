@@ -40,6 +40,24 @@ import { getById, getByScientificName, getSpeciesBySearch } from '../controllers
  *         description: Unauthorized
  *       404:
  *         description: species not found
+ * /species/query:
+ *   get:
+ *     summary: Query species
+ *     description: Search for species by a query string or retrieve top results alphabetically.
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: false
+ *         description: Query string to search for species
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved species results
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
  */
 export default (router: express.Router) => {
   router.get('/species/id/:id', isAuthenticated, getById);
