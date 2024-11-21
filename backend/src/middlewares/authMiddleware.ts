@@ -10,4 +10,5 @@ export const isAuthenticated = (
   } else {
     res.status(401).json({ error: 'Unauthorized' });
   }
+  next();
 };
