@@ -66,8 +66,7 @@ describe('GET /species/scientific/id', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual(species);
   });
-}
-);
+});
 
 describe('GET /species/query', () => {
   beforeEach(() => {
@@ -77,8 +76,16 @@ describe('GET /species/query', () => {
   it('Returns species results for a valid query string', async () => {
     const queryString = 'salmon';
     const mockResults = [
-      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Salmo salar', commonNames: ['Atlantic salmon'] },
-      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Oncorhynchus tshawytscha', commonNames: ['Chinook salmon'] },
+      {
+        _id: new mongoose.Types.ObjectId().toString(),
+        scientificName: 'Salmo salar',
+        commonNames: ['Atlantic salmon'],
+      },
+      {
+        _id: new mongoose.Types.ObjectId().toString(),
+        scientificName: 'Oncorhynchus tshawytscha',
+        commonNames: ['Chinook salmon'],
+      },
     ];
 
     speciesFindQueryMock.mockReturnValue({
@@ -94,8 +101,16 @@ describe('GET /species/query', () => {
 
   it('Returns top alphabetically sorted species when no query is provided', async () => {
     const mockResults = [
-      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Abramis brama', commonNames: ['Bream'] },
-      { _id: new mongoose.Types.ObjectId().toString(), scientificName: 'Alosa alosa', commonNames: ['Allis shad'] },
+      {
+        _id: new mongoose.Types.ObjectId().toString(),
+        scientificName: 'Abramis brama',
+        commonNames: ['Bream'],
+      },
+      {
+        _id: new mongoose.Types.ObjectId().toString(),
+        scientificName: 'Alosa alosa',
+        commonNames: ['Allis shad'],
+      },
     ];
 
     speciesFindQueryMock.mockReturnValue({

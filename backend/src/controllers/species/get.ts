@@ -18,7 +18,10 @@ export const getByScientificName = async (
   return res.status(200).json(species);
 };
 
-export const getSpeciesBySearch = async (req: express.Request, res: express.Response) => {
+export const getSpeciesBySearch = async (
+  req: express.Request,
+  res: express.Response,
+) => {
   const query = req.query.q ? req.query.q.toString().trim() : '';
 
   try {
@@ -29,9 +32,7 @@ export const getSpeciesBySearch = async (req: express.Request, res: express.Resp
         .limit(5); // Limit to 5 results
     } else {
       // Default: Get the top 5 species sorted alphabetically by scientificName
-      species = await Species.find({})
-        .sort({ scientificName: 1 })
-        .limit(5);
+      species = await Species.find({}).sort({ scientificName: 1 }).limit(5);
     }
     return res.status(200).json(species);
   } catch (error) {
