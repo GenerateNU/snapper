@@ -1,21 +1,8 @@
-import { Stack } from 'expo-router';
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { Photo } from '../../../../types/divelog';
-
-export type Location = {
-  type: string;
-  coordinates: number[];
-};
-
-export type FormFields = {
-  tags: string[];
-  photos: Photo[];
-  date: Date;
-  location: Location;
-  description: string;
-  user: string;
-};
+import { router, Stack } from 'expo-router';
+import { useForm, FormProvider } from 'react-hook-form';
+import Arrow from '../../../components/arrow';
+import { FormFields } from '../../../types/divelog';
 
 export default function Layout() {
   const methods = useForm<FormFields>();
@@ -24,12 +11,14 @@ export default function Layout() {
     <FormProvider {...methods}>
       <Stack>
         <Stack.Screen
-          name="index"
+          name="post"
           options={{
-            headerShown: false,
             headerTitle: '',
             headerTransparent: true,
-            gestureEnabled: false,
+            headerShown: true,
+            headerLeft: () => (
+              <Arrow direction="left" onPress={() => router.push('/(tabs)')} />
+            ),
           }}
         />
         <Stack.Screen
