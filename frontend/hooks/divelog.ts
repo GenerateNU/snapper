@@ -5,7 +5,7 @@ export const useDiveLog = (id: string) => {
   return useQueryBase(['divelog', id], () => getDiveLogById(id));
 };
 
-export const useNearbyDiveLogs = (lat: number, lng: number, page: number) => {
+export const useNearbyDiveLogs = (lat: number, lng: number) => {
   return useQueryPagination(
     '',
     'divelogs',

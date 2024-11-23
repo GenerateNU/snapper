@@ -1,10 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Dimensions, SafeAreaView, ScrollView, Text } from 'react-native';
+import { Dimensions, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import InfoPopup from '../../../components/info-popup';
 import { useDiveLog } from '../../../hooks/divelog';
 import React, { useState, useCallback } from 'react';
 import DiveLogSkeleton from './components/skeleton';
 import BigDiveLog from '../../../components/divelog/divelog';
+import { PROFILE_PHOTO } from '../../../consts/profile';
 
 const DiveLog = () => {
   const { id: diveLogId } = useLocalSearchParams<{ id: string }>();
@@ -51,8 +52,8 @@ const DiveLog = () => {
   }
 
   return (
-    <>
-      <SafeAreaView className="mx-[8%]" onLayout={onLayout} style={{ height }}>
+    <View className="bg-white">
+      <SafeAreaView className="mx-[6%]" onLayout={onLayout} style={{ height }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           scrollEnabled={scrollEnabled}
@@ -60,7 +61,9 @@ const DiveLog = () => {
           className="flex"
         >
           <BigDiveLog
+            date={data?.date}
             id={diveLogId}
+            profilePicture={data?.user.profilePicture || PROFILE_PHOTO}
             photos={data?.photos}
             description={data?.description}
             username={data?.user.username}
@@ -70,7 +73,7 @@ const DiveLog = () => {
         </ScrollView>
       </SafeAreaView>
       <InfoPopup />
-    </>
+    </View>
   );
 };
 

@@ -1,6 +1,7 @@
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, Pressable } from 'react-native';
 import Profile from '../profile';
 import { useEffect, useState } from 'react';
+import { router } from 'expo-router';
 
 interface NearbyDivelogProps {
   profilePhoto: string;
@@ -26,13 +27,13 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
   }, [photos[0]]);
 
   return (
-    <View className="w-full">
-      <View>
+    <Pressable onPress={() => router.push(`/divelog/${divelogId}`)} className="w-full">
+      <View className="drop-shadow-2xl">
         <Image
           style={{
             width: '100%',
             aspectRatio: aspectRatio,
-            resizeMode: 'contain',
+            resizeMode: 'cover',
           }}
           className="rounded-lg"
           source={{
@@ -53,7 +54,7 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
           {description}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
