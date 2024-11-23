@@ -1,15 +1,15 @@
+import { useEffect, useRef } from 'react';
 import {
-  View,
-  Text,
-  Image,
-  ScrollView,
   Animated,
-  Easing,
   Dimensions,
+  Easing,
+  Image,
   Pressable,
+  ScrollView,
+  Text,
+  View,
 } from 'react-native';
 import { useInfoPopup } from '../contexts/info-popup-context';
-import { useEffect, useRef } from 'react';
 
 const InfoPopup = () => {
   const { speciesContent, isOpen, setClose } = useInfoPopup();
@@ -55,9 +55,11 @@ const InfoPopup = () => {
             </Text>
           </View>
           <Image
-            className=" h-16 w-32"
+            className=" h-32 w-32"
             source={{
-              uri: 'https://www.fisheries.noaa.gov/s3/2022-09/640x427-Snapper-Red-NOAAFisheries.png',
+              uri:
+                speciesContent.iconUrl ||
+                'https://dodo.ac/np/images/0/00/Black_Bass_NH_Icon.png',
             }}
           />
         </View>

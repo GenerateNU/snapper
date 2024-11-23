@@ -7,5 +7,6 @@ export type SpeciesContent = {
   scientificName: { type: String };
   introduction: { type: String };
   imageUrls: [String];
+  iconUrl: string;
   visibility: boolean;
 };

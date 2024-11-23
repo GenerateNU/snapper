@@ -8,6 +8,7 @@ const SpeciesSchema = new mongoose.Schema({
   scientificName: { type: String },
   introduction: { type: String },
   imageUrls: [String],
+  iconUrl: { type: String },
   genus: { type: mongoose.Schema.Types.ObjectId, ref: 'Taxon', required: true },
   family: {
     type: mongoose.Schema.Types.ObjectId,

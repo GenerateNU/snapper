@@ -9,6 +9,7 @@ const defaultContent: SpeciesContent = {
   articleTitle: 'Title',
   articleUrl: 'wwww.wikipedia.org/stuff',
   imageUrls: [],
+  iconUrl: 'https://dodo.ac/np/images/0/00/Black_Bass_NH_Icon.png',
   locations: [],
 };
 
