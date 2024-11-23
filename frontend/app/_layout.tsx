@@ -24,7 +24,7 @@ const InitialLayout = () => {
 
   useNotificationPermission({ isAuthenticated, mongoDBId });
 
-  useLocationPermission({isAuthenticated, mongoDBId});
+  useLocationPermission({ isAuthenticated, mongoDBId });
 
   return (
     <Stack>

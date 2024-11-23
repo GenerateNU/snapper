@@ -34,7 +34,7 @@ const DiveLog = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaView>
+      <SafeAreaView className="mx-[8%]">
         <DiveLogSkeleton />
       </SafeAreaView>
     );

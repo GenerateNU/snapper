@@ -7,6 +7,7 @@ import { useUserFollowingPosts } from '../../../hooks/user';
 import BigDiveLog from '../../../components/divelog/divelog';
 import NearbyDiveLog from '../../../components/home/nearby-divelog';
 import { MasonryFlashList } from '@shopify/flash-list';
+import DiveLogSkeleton from '../divelog/components/skeleton';
 
 const Home = () => {
   const { mongoDBId } = useAuthStore();
@@ -100,14 +101,26 @@ const Home = () => {
     </View>
   );
 
-  const renderNearbyPost = ({ item, index }: { item: any, index: number }) => (
-    <View className={`mb-4 ${index % 2 === 0 ? "mr-2" : "ml-2"}`}>
+  const renderNearbyPost = ({ item, index }: { item: any; index: number }) => (
+    <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
       <NearbyDiveLog
         profilePhoto={item.profilePhoto}
         description={item.description}
         divelogId={item._id}
         photos={item.photos}
       />
+    </View>
+  );
+
+  const loadMoreFollowingPosts = () => {
+    if (hasNextPageFollowing) {
+      fetchNextPageFollowing();
+    }
+  };
+
+  const renderFooterComponent = () => (
+    <View className="mt-8">
+      <DiveLogSkeleton />
     </View>
   );
 
@@ -119,21 +132,28 @@ const Home = () => {
       >
         <HomeMenu selected={selected} setSelected={setSelected} />
         {selected === Category.FOLLOWING ? (
-          <FlatList
-            key="following-divelogs"
-            renderItem={renderFollowingPost}
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View className="h-12" />}
-            data={followingPosts?.pages.flatMap((page) => page) || []}
-          />
+          isLoadingFollowing ? (
+            <FlatList data={[1, 2, 3]} renderItem={() => <DiveLogSkeleton />} />
+          ) : (
+            <FlatList
+              key="following-divelogs"
+              renderItem={renderFollowingPost}
+              showsVerticalScrollIndicator={false}
+              onEndReachedThreshold={0.3}
+              ListFooterComponent={renderFooterComponent}
+              onEndReached={loadMoreFollowingPosts}
+              ItemSeparatorComponent={() => <View className="h-12" />}
+              data={followingPosts?.pages.flatMap((page) => page) || []}
+            />
+          )
         ) : (
           <MasonryFlashList
             data={dummyData}
             numColumns={2}
             renderItem={renderNearbyPost}
-            estimatedItemSize={200}    
+            estimatedItemSize={200}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ 
+            contentContainerStyle={{
               paddingBottom: 20,
             }}
           />

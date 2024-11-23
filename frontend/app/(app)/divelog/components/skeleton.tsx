@@ -5,7 +5,7 @@ const DiveLogSkeleton = () => {
   const opacity = usePulsingAnimation();
 
   return (
-    <Animated.View style={[{ opacity }]} className="w-full flex-col px-[8%]">
+    <Animated.View style={[{ opacity }]} className="w-full flex-col">
       <View className="flex-row items-center gap-2">
         <Animated.View className="bg-gray-300 rounded-full w-12 h-12" />
         <View className="flex-col gap-2">
