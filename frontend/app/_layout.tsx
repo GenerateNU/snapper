@@ -7,6 +7,7 @@ import { useAuthStore } from '../auth/authStore';
 import { InfoPopupProvider } from '../contexts/info-popup-context';
 import { NotificationProvider } from '../contexts/notification';
 import { useNotificationPermission } from '../hooks/notification';
+import { useLocationPermission } from '../hooks/location';
 
 const queryClient = new QueryClient();
 
@@ -21,10 +22,9 @@ const InitialLayout = () => {
     }
   }, [isAuthenticated]);
 
-  useNotificationPermission({
-    isAuthenticated,
-    mongoDBId,
-  });
+  useNotificationPermission({ isAuthenticated, mongoDBId });
+
+  useLocationPermission({isAuthenticated, mongoDBId});
 
   return (
     <Stack>
