@@ -2,7 +2,7 @@ import React from 'react';
 import { router, Stack } from 'expo-router';
 import { useForm, FormProvider } from 'react-hook-form';
 import Arrow from '../../../components/arrow';
-import { FormFields } from '../../../types/divelog'
+import { FormFields } from '../../../types/divelog';
 
 export default function Layout() {
   const methods = useForm<FormFields>();
@@ -17,7 +17,7 @@ export default function Layout() {
             headerTransparent: true,
             headerShown: true,
             headerLeft: () => (
-              <Arrow direction="left" onPress={() => router.push("/(tabs)")} />
+              <Arrow direction="left" onPress={() => router.push('/(tabs)')} />
             ),
           }}
         />

@@ -41,22 +41,22 @@ export default function PostCreationForm() {
 
   const submitPost = async (postData: FormFields) => {
     try {
-      setSubmittingPost(true)
+      setSubmittingPost(true);
       const response = await postDiveLog(postData);
       const responseBody = await response.json();
       if (response.status == 400) {
         setError(true);
         setErrorMessage(responseBody.error[0].msg);
-      } 
-      if(response.status == 201) {
+      }
+      if (response.status == 201) {
         reset();
-        router.push("/(tabs)");
+        router.push('/(tabs)');
       }
     } catch (error: any) {
       setError(true);
       setErrorMessage(error.message);
     } finally {
-      setSubmittingPost(false)
+      setSubmittingPost(false);
     }
   };
 
@@ -172,9 +172,11 @@ export default function PostCreationForm() {
         )}
       </View>
       <View className="pb-2">
-        <Button text= {submittingPost? "Posting ..." : "Post"} onPress={handleSubmit(submitPost)} />
+        <Button
+          text={submittingPost ? 'Posting ...' : 'Post'}
+          onPress={handleSubmit(submitPost)}
+        />
       </View>
-
     </View>
   );
 }

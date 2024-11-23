@@ -5,7 +5,7 @@ import { Stack } from 'expo-router';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../components/icon-button';
 import { useState } from 'react';
-import { ChangePFP } from './profileComponents/editProfileModal'
+import { ChangePFP } from './profileComponents/editProfileModal';
 import { useEffect } from 'react';
 
 const Profile = () => {
@@ -26,7 +26,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if(isEditPFPOpen){
+    if (isEditPFPOpen) {
       setMenuOpened(false);
     }
   }, [isEditPFPOpen]);
@@ -51,26 +51,30 @@ const Profile = () => {
                     left: -65 - 50,
                     width: 110,
                     flexDirection: 'column',
-                  }}>
+                  }}
+                >
                   <TouchableHighlight
                     className="w-full p-2"
                     onPress={() => alert('Settings')}
                     activeOpacity={0.6}
-                    underlayColor="#DDDDDD">
+                    underlayColor="#DDDDDD"
+                  >
                     <Text>Settings</Text>
                   </TouchableHighlight>
                   <TouchableHighlight
                     className="w-full p-2"
                     onPress={() => alert('Password')}
                     activeOpacity={0.6}
-                    underlayColor="#DDDDDD">
+                    underlayColor="#DDDDDD"
+                  >
                     <Text>Password</Text>
                   </TouchableHighlight>
                   <TouchableHighlight
                     className="w-full p-2"
                     onPress={() => setEditPFPOpen(true)}
                     activeOpacity={0.6}
-                    underlayColor="#DDDDDD">
+                    underlayColor="#DDDDDD"
+                  >
                     <Text>Edit Profile</Text>
                   </TouchableHighlight>
                 </View>

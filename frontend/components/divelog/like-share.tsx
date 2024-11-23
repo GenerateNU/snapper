@@ -17,15 +17,11 @@ const LikeAndShare: React.FC<LikeAndShareProps> = ({ diveLogId }) => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        title: "Snapper", 
-        message:
-          'Check out this Dive Log on Snapper!',
-        url:
-          link, 
+        title: 'Snapper',
+        message: 'Check out this Dive Log on Snapper!',
+        url: link,
       });
-    } catch (error: any) {
-  
-    }
+    } catch (error: any) {}
   };
 
   return (
@@ -35,7 +31,7 @@ const LikeAndShare: React.FC<LikeAndShareProps> = ({ diveLogId }) => {
         size={25}
         icon={isLiking ? faHeart : faHeartOutline}
       />
-      <IconButton size={25} icon={faPaperPlane} onPress={onShare}/>
+      <IconButton size={25} icon={faPaperPlane} onPress={onShare} />
     </View>
   );
 };
