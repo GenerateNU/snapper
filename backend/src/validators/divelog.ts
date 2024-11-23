@@ -1,4 +1,4 @@
-import { body, param, check } from 'express-validator';
+const { body, param, check } = require('express-validator');
 
 export const createDiveLogValidation = [
   body('user')

@@ -49,13 +49,12 @@ const Menu = ({ id }: { id: string }) => {
   const username = userData?.user.username;
 
   const renderDiveLog = ({ item }: { item: any }) => {
-    const firstPhoto = item?.photos?.[0] || null;
     return (
       <DiveLog
         divelogId={item._id}
         isMyProfile={isViewingOwnProfile}
         speciesTags={item?.speciesTags}
-        image={firstPhoto}
+        images={item?.photos}
         description={item?.description}
         username={username}
         profilePhoto={profilePhoto}

@@ -1,14 +1,21 @@
 import { router } from 'expo-router';
-import { Text, View } from 'react-native';
+import { Text, View, Image, Dimensions } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import Button from '../../../components/button';
+import DiveLog from '../../../components/divelog/divelog';
 
 const Home = () => {
   const { logout, loading, error: authError } = useAuthStore();
 
   return (
-    <View className="flex-1 justify-center items-center">
-      {authError && (
+    <View className="flex-1 justify-center items-center px-[8%]">
+      <Button
+        textOnly
+        text="Testing divelog"
+        onPress={() => router.push('/divelog/673c226b31ce281ee6935b8b')}
+      />
+
+      {/* {authError && (
         <Text className="text-red-500 mb-4">
           Failed to logout. Please try again.
         </Text>
@@ -22,7 +29,7 @@ const Home = () => {
         onPress={logout}
         textOnly
         text={loading ? 'Logging out' : 'Logout'}
-      />
+      /> */}
     </View>
   );
 };

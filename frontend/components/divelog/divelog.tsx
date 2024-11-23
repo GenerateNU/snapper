@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Pressable, useWindowDimensions, Dimensions } from 'react-native';
 import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
-import { router } from 'expo-router';
 import Profile from '../profile';
 import { timeAgo } from '../../utils/profile';
 import IconButton from '../icon-button';
 import PopulatedInfoPopupButton from '../populated-info-popup';
 import SpeciesTag from '../../app/(app)/user/components/species-tag';
 import LikeAndShare from './like-share';
+import ImageCarousel from './carousel';
 
 interface DiveLogProps {
   username: string;
-  image?: string;
+  images: string[];
   description?: string;
   profilePhoto: string;
   date: Date;
@@ -23,27 +23,20 @@ interface DiveLogProps {
 const DiveLog: React.FC<DiveLogProps> = React.memo(
   ({
     username,
-    image,
     description,
     profilePhoto,
     date,
     speciesTags,
     isMyProfile,
     divelogId,
+    images,
   }) => {
-    const [aspectRatio, setAspectRatio] = useState(1);
-
-    useEffect(() => {
-      if (image) {
-        Image.getSize(image, (width, height) => {
-          setAspectRatio(width / height);
-        });
-      }
-    }, [image]);
+    const { width } = Dimensions.get("window");
+    const carouselWidth = width * 0.9;
 
     return (
       <Pressable
-        onPress={() => router.push(`/divelog/${divelogId}`)}
+        style={{ gap: 20 }}
         className="w-full p-[5%] bg-white shadow-lg rounded-lg"
       >
         <View className="flex-row justify-between items-start">
@@ -56,22 +49,8 @@ const DiveLog: React.FC<DiveLogProps> = React.memo(
           </View>
           {isMyProfile && <IconButton icon={faEllipsisVertical} />}
         </View>
-        {image && (
-          <View className="my-[5%]">
-            <Image
-              style={{
-                width: '100%',
-                aspectRatio: aspectRatio,
-                resizeMode: 'contain',
-              }}
-              className="rounded-lg"
-              source={{
-                uri: image,
-              }}
-            />
-          </View>
-        )}
-        {description && <Text className="pb-[5%]">{description}</Text>}
+        {images && <ImageCarousel width={carouselWidth} data={images} />}
+        {description && <Text>{description}</Text>}
         {speciesTags && (
           <View style={{ gap: 10 }} className="flex flex-row flex-wrap mt-2">
             {speciesTags?.map((species, key) => (
@@ -84,9 +63,7 @@ const DiveLog: React.FC<DiveLogProps> = React.memo(
             ))}
           </View>
         )}
-        <View className="pt-5">
-          <LikeAndShare diveLogId={divelogId} />
-        </View>
+        <LikeAndShare diveLogId={divelogId} />
       </Pressable>
     );
   },
