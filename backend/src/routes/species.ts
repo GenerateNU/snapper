@@ -1,5 +1,9 @@
 import express from 'express';
-import { getById, getByScientificName, searchSpecies } from '../controllers/species/get';
+import {
+  getById,
+  getByScientificName,
+  searchSpecies
+} from '../controllers/species/get';
 import { isAuthenticated } from '../middlewares/authMiddleware';
 
 /**
