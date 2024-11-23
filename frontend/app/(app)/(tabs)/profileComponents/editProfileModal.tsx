@@ -1,6 +1,6 @@
 import { Modal } from 'react-native';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { NewPFP } from "./newPFP"
+import { NewPFP } from './newPFP';
 import { UpdateProfileFields } from '../../../../types/userProfile';
 import { useForm, FormProvider } from 'react-hook-form';
 import Button from '../../../../components/button';
