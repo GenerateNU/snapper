@@ -11,7 +11,7 @@ import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
-import DiveLog from '../../../../components/divelog/divelog';
+import DiveLog from '../../../../components/divelog/profile-divelog';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');

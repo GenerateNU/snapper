@@ -6,6 +6,7 @@ import {
   followUser,
   getUserNotifications,
   toggleLikeDivelog,
+  getUserFollowingPosts,
 } from '../api/user';
 import { useQueryBase, useQueryPagination } from './base';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -42,6 +43,17 @@ export const useUserNotification = (id: string) => {
     'notifications',
     async (id, page): Promise<any[]> => {
       const response = await getUserNotifications(id, page);
+      return response;
+    },
+  );
+};
+
+export const useUserFollowingPosts = (id: string) => {
+  return useQueryPagination(
+    id,
+    'following',
+    async (id, page): Promise<any[]> => {
+      const response = await getUserFollowingPosts(id, page);
       return response;
     },
   );

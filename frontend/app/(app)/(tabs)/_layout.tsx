@@ -80,6 +80,7 @@ const Layout = () => {
           options={{
             title: 'Notifications',
             headerShown: true,
+            headerTransparent: true,
             tabBarIcon: ({ focused }) => {
               return focused ? (
                 <IconButton icon={faStar} />
@@ -90,7 +91,7 @@ const Layout = () => {
             header: () => {
               return (
                 <SafeAreaView className="w-full items-center justify-center">
-                  <Text className="text-xl font-bold mt-5">Notifications</Text>
+                  <Text className="text-xl font-bold mt-2">Notifications</Text>
                 </SafeAreaView>
               );
             },

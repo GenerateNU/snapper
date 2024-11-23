@@ -38,6 +38,18 @@ export async function getUserNotifications(
   return data;
 }
 
+export async function getUserFollowingPosts(
+  id: string,
+  page: number,
+  limit: number = 10,
+): Promise<any> {
+  const data = await fetchData(
+    `/user/${id}/followingPosts?page=${page}&limit=${limit}`,
+    'Failed to fetch user following posts',
+  );
+  return data;
+}
+
 export async function getUserSpeciesById(
   id: string,
   page: number,

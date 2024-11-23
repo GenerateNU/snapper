@@ -2,7 +2,6 @@ import { useFocusEffect } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, SectionList, Text, View } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
-import Divider from '../../../components/divider';
 import NotificationEntry from '../../../components/notification/notification';
 import NotificationSkeleton from '../../../components/notification/skeleton';
 import { useUserNotification } from '../../../hooks/user';
@@ -76,7 +75,7 @@ const Notification = () => {
 
   const renderNotification = ({ item }: { item: any }) => {
     return (
-      <View className="mb-4">
+      <View className="mb-2">
         <NotificationEntry
           username={item.actor.username}
           message={item.message}
@@ -93,14 +92,14 @@ const Notification = () => {
 
   const renderSectionHeader = ({ section: { title }, sectionIndex }: any) => {
     return (
-      <View>
+      <View className="mt-4">
         <Text className="text-base pb-[2%]">{title}</Text>
       </View>
     );
   };
 
   return (
-    <SafeAreaView className="flex-1 mt-[10%] justify-start mx-[8%]">
+    <SafeAreaView className="flex-1 mt-[30%] justify-start mx-[8%]">
       {isLoading ? (
         <FlatList
           data={[1, 2, 3, 4, 5]}
