@@ -8,6 +8,7 @@ import PopulatedInfoPopupButton from '../populated-info-popup';
 import { useState } from 'react';
 import useLike from '../../hooks/like';
 import { router } from 'expo-router';
+import { timeAgo } from '../../utils/profile';
 
 interface DiveLogProps {
   userId: string;
@@ -16,6 +17,8 @@ interface DiveLogProps {
   username: string;
   photos: string[];
   speciesTags: any[];
+  profilePicture: string;
+  date: Date;
 }
 
 const BigDiveLog: React.FC<DiveLogProps> = ({
@@ -25,6 +28,8 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
   username,
   photos,
   speciesTags,
+  profilePicture,
+  date,
 }) => {
   const { isLiking, handleLikeToggle } = useLike(id);
   const [lastTap, setLastTap] = useState(0);
@@ -63,7 +68,7 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
             className="flex-row items-center"
             onPress={navigateUserProfile}
           >
-            <Profile size="md" image={PROFILE_PHOTO} />
+            <Profile size="md" image={profilePicture || PROFILE_PHOTO} />
             <View className="flex flex-col items-start">
               <Text className="font-bold text-md">{username}</Text>
               <Text className="text-gray-700">Western Reefs</Text>
@@ -91,6 +96,8 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
           description={description}
           username={username}
         />
+
+        <Text className="text-xs text-gray-500">{timeAgo(date)}</Text>
       </View>
     </Pressable>
   );

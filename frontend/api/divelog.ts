@@ -15,3 +15,16 @@ export async function createDiveLog(data: FormFields) {
     body: JSON.stringify(data),
   });
 }
+
+export async function getNearbyDivelogs(
+  lat: number,
+  lng: number,
+  page: number,
+  limit: number = 10,
+): Promise<any> {
+  const data = await fetchData(
+    `/divelogs?lat=${lat}&lng=${lng}&page=${page}&limit=${limit}`,
+    'Failed to fetch user notifications',
+  );
+  return data;
+}

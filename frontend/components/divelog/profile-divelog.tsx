@@ -31,9 +31,6 @@ const ProfileDiveLog: React.FC<DiveLogProps> = React.memo(
     divelogId,
     images,
   }) => {
-    const { width } = Dimensions.get('window');
-    const carouselWidth = width * 0.9;
-
     return (
       <Pressable
         style={{ gap: 20 }}
@@ -51,7 +48,7 @@ const ProfileDiveLog: React.FC<DiveLogProps> = React.memo(
         </View>
         {images && <ImageCarousel data={images} />}
         {description && <Text>{description}</Text>}
-        {speciesTags && (
+        {speciesTags && speciesTags.length > 0 && (
           <View style={{ gap: 10 }} className="flex flex-row flex-wrap mt-2">
             {speciesTags?.map((species, key) => (
               <PopulatedInfoPopupButton

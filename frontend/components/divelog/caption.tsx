@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  StyleSheet,
+} from 'react-native';
+import ParsedText from 'react-native-parsed-text';
 
 interface CaptionProps {
   description: string;
@@ -24,31 +31,40 @@ const Caption: React.FC<CaptionProps> = ({
     }
   }, [fullTextHeight, threeLineHeight]);
 
+  const usernameRegex = new RegExp(username);
+  const descriptionRegex = new RegExp(description);
+
+  const handleUsernamePress = () => {};
+
+  const handleCaptionPress = () => {};
+
   return (
     <View>
       <View className="flex-row flex-wrap">
-        <Pressable onPress={onPress}>
-          <Text className="font-bold mr-2">{username}</Text>
-        </Pressable>
-        <Text
-          className="text-gray-700"
-          numberOfLines={viewMore ? undefined : 3}
-          onLayout={(event) => {
-            // Capture the height of the visible (3-line) text
-            if (!threeLineHeight && !viewMore) {
-              setThreeLineHeight(event.nativeEvent.layout.height);
-            }
-          }}
+        <TouchableOpacity
+          onPress={() => setViewMore(!viewMore)}
+          activeOpacity={0.5}
         >
-          {description}
-        </Text>
+          <Text
+            className="text-gray-700"
+            numberOfLines={viewMore ? undefined : 3}
+            ellipsizeMode="tail"
+            onLayout={(event) => {
+              // Capture the height of the visible (3-line) text
+              if (!threeLineHeight && !viewMore) {
+                setThreeLineHeight(event.nativeEvent.layout.height);
+              }
+            }}
+          >
+            {description}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <Text
         className="absolute opacity-0"
         numberOfLines={0}
         onLayout={(event) => {
-          // Capture the height of the full text
           if (!fullTextHeight) {
             setFullTextHeight(event.nativeEvent.layout.height);
           }
@@ -72,3 +88,5 @@ const Caption: React.FC<CaptionProps> = ({
 };
 
 export default Caption;
+
+const styles = StyleSheet.create({});

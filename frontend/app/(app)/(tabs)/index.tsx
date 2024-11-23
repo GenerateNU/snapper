@@ -2,16 +2,23 @@ import { View, SafeAreaView, FlatList } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category } from '../../../consts/home-menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUserFollowingPosts } from '../../../hooks/user';
 import BigDiveLog from '../../../components/divelog/divelog';
 import NearbyDiveLog from '../../../components/home/nearby-divelog';
 import { MasonryFlashList } from '@shopify/flash-list';
 import DiveLogSkeleton from '../divelog/components/skeleton';
+import * as Location from 'expo-location';
+import { DEFAULT_SHERM_LOCATION } from '../../../consts/location';
+import { PROFILE_PHOTO } from '../../../consts/profile';
 
 const Home = () => {
   const { mongoDBId } = useAuthStore();
   const [selected, setSelected] = useState<Category>(Category.FOLLOWING);
+  const [currentLocation, setCurrentLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  }>(DEFAULT_SHERM_LOCATION);
 
   const dummyData = [
     {
@@ -74,6 +81,25 @@ const Home = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        return;
+      }
+
+      if (selected === Category.NEARBY) {
+        let location = await Location.getCurrentPositionAsync({});
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      }
+    };
+
+    fetchLocation();
+  }, [selected]);
+
   const {
     data: followingPosts,
     isLoading: isLoadingFollowing,
@@ -84,16 +110,30 @@ const Home = () => {
     isFetchingNextPage: isFetchingNextPageFollowing,
   } = useUserFollowingPosts(mongoDBId!);
 
+  const {
+    data: nearbyPosts,
+    isLoading: isLoadingNearby,
+    error: errorNearby,
+    refetch: refetchNearby,
+    fetchNextPage: fetchNextPageNearby,
+    hasNextPage: hasNextPageNearby,
+    isFetchingNextPage: isFetchingNextPageNearby,
+  } = useUserFollowingPosts(mongoDBId!);
+
   const renderFollowingPost = ({ item }: { item: any }) => (
     <View className="w-full">
       <BigDiveLog
         id={item?._id}
+        date={new Date()}
+        profilePicture={PROFILE_PHOTO}
         photos={[
           'https://media.istockphoto.com/id/541599504/photo/underwater-scuba-divers-enjoy-explore-reef-sea-life-sea-sponge.jpg?s=612x612&w=0&k=20&c=SVgk2ad0R2Sx7ZZmKZ6VijJKL6OASKwVfeSOEUjUwiI=',
           'https://media.istockphoto.com/id/1425382824/photo/green-turtle-at-the-water-surface.jpg?s=612x612&w=0&k=20&c=CyMAvEvjfnpEPHWRwprwMRLvprgVfeK14FmFF_LTs_k=',
           'https://media.istockphoto.com/id/1482719596/photo/japanese-freediver-and-shark-embrace-the-deep-blue-on-a-sunny-day.jpg?s=612x612&w=0&k=20&c=43GvAqzyEiMYU5seQRExAgIGlVcW28UkhqQUpRIH2c0=',
         ]}
-        description={item?.description}
+        description={
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'
+        }
         username={item?.user.username}
         userId={item?.user._id}
         speciesTags={item?.speciesTags}

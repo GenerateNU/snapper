@@ -28,6 +28,7 @@
     "expo-image-picker": "~15.0.7",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
+    "expo-location": "~17.0.1",
     "expo-notifications": "^0.28.19",
     "expo-router": "~3.5.24",
     "expo-server-sdk": "^3.11.0",
@@ -40,6 +41,7 @@
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-maps": "1.14.0",
     "react-native-modal": "^13.0.1",
+    "react-native-parsed-text": "^0.0.22",
     "react-native-reanimated": "^3.10.1",
     "react-native-reanimated-carousel": "^3.5.1",
     "react-native-share": "^11.0.4",
@@ -47,8 +49,7 @@
     "react-native-svg-transformer": "^0.20.0",
     "zod": "^3.23.8",
     "zustand": "^3.7.2",
-    "zustand-persist": "^0.4.0",
-    "expo-location": "~17.0.1"
+    "zustand-persist": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -38,7 +38,7 @@ const ImageCarousel: React.FC<CarouselProps> = ({ data }) => {
       {containerWidth > 0 && (
         <>
           {data.length !== 1 && (
-            <View className="rounded-full absolute z-10 top-5 right-5 px-3 py-2 bg-gray-500 opacity-90">
+            <View className="rounded-full absolute z-10 top-4 right-4 px-2 py-1 bg-gray-500 opacity-70">
               <Text className="text-white text-xs">{`${page + 1} / ${data.length}`}</Text>
             </View>
           )}

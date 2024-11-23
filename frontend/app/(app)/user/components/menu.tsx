@@ -12,6 +12,7 @@ import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
 import DiveLog from '../../../../components/divelog/profile-divelog';
+import BigDiveLog from '../../../../components/divelog/divelog';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
@@ -50,15 +51,15 @@ const Menu = ({ id }: { id: string }) => {
 
   const renderDiveLog = ({ item }: { item: any }) => {
     return (
-      <DiveLog
-        divelogId={item._id}
-        isMyProfile={isViewingOwnProfile}
+      <BigDiveLog
+        date={item?.date}
+        userId={item?.user}
+        id={item?._id}
         speciesTags={item?.speciesTags}
-        images={item?.photos}
+        photos={item?.photos}
         description={item?.description}
         username={username}
-        profilePhoto={profilePhoto}
-        date={item?.date}
+        profilePicture={item?.profilePicture}
       />
     );
   };
@@ -145,12 +146,12 @@ const Menu = ({ id }: { id: string }) => {
             onEndReachedThreshold={0.7}
             renderItem={renderDiveLog}
             ListFooterComponent={renderDiveLogFooter}
-            ItemSeparatorComponent={() => <View className="h-5" />}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: 'flex-start',
               alignItems: 'center',
             }}
+            ItemSeparatorComponent={() => <View className="h-12" />}
             keyExtractor={(item, index) => `species-${item._id}-${index}`}
           />
         ))}
@@ -167,9 +168,6 @@ const Menu = ({ id }: { id: string }) => {
               justifyContent: 'flex-start',
               alignItems: 'center',
               paddingBottom: 10,
-            }}
-            columnWrapperStyle={{
-              gap: 10,
             }}
           />
         ) : speciesError ? (

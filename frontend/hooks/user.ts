@@ -56,6 +56,7 @@ export const useUserFollowingPosts = (id: string) => {
       const response = await getUserFollowingPosts(id, page);
       return response;
     },
+    true,
   );
 };
 

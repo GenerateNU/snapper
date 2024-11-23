@@ -12,6 +12,7 @@ export const useQueryPagination = (
   id: string,
   model: string,
   queryFunction: (id: string, page: number) => Promise<any[]>,
+  infiniteScroll?: boolean,
 ) => {
   return useInfiniteQuery({
     queryKey: [model, id],
@@ -21,7 +22,11 @@ export const useQueryPagination = (
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length > 0 ? allPages.length + 1 : 1;
+      return lastPage.length > 0
+        ? allPages.length + 1
+        : infiniteScroll
+          ? 1
+          : undefined;
     },
   });
 };
