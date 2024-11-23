@@ -1,18 +1,17 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
-import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 
 const userService: UserService = new UserServiceImpl();
 
-export const getUserDiveLogsById = async (
+export const getMyDiveLogs = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    const userID = req.params.id;
-    const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
-    const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
+    //Get the ID from the body of the request
+    const userID = req.session.userId;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const page = parseInt(req.query.page as string) || 1;
 
     //Check to make sure that the id is defined
     if (!userID) {
@@ -20,7 +19,7 @@ export const getUserDiveLogsById = async (
     }
 
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(userID);
+    const foundUser = await userService.getUserBySupabaseId(userID);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {

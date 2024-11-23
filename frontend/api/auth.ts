@@ -51,7 +51,7 @@ export async function logout(): Promise<void> {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to create user.');
+    throw new Error(errorData.error || 'Failed to log out.');
   }
 }
 

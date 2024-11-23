@@ -1,62 +1,114 @@
+import mongoose from 'mongoose';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../consts/pagination';
 import { DiveLog } from '../models/diveLog';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
-
-export const createUser = async (userData: {
-  email: string;
-  username: string;
-  supabaseId: string;
-  firstName: string;
-  lastName: string;
-}) => {
-  const user = new UserModel(userData);
-  return user.save();
-};
-
-export const findUserBySupabaseId = async (supabaseId: string) => {
-  return UserModel.findOne({ supabaseId });
-};
-
-export const editUserBySupabaseId = async (
-  supabaseId: string,
-  updatedJson: Record<string, any>,
-) => {
-  return UserModel.updateOne({ supabaseId }, { $set: updatedJson });
-};
+import { NotFoundError } from '../consts/errors';
 
 export interface UserService {
+  /**
+   * Retrieves a user by their ID.
+   * @param id - The ID of the user.
+   * @returns A promise that resolves to the user document or null if not found.
+   */
   getUserById(id: string): Promise<Document | null>;
-  followUser(
-    currentUserId: string,
-    targetUserId: string,
+
+  /**
+   * Retrieves a user by their Supabase ID.
+   * @param id - The Supabase ID of the user.
+   * @returns A promise that resolves to the user document or null if not found.
+   */
+  getUserBySupabaseId(id: string): Promise<Document | null>;
+
+  /**
+   * Edits a user by their Supabase ID.
+   * @param supabaseId - The Supabase ID of the user.
+   * @param updatedJson - The updated user data as a JSON object.
+   * @returns A promise that resolves to the updated user document or null if not found.
+   */
+  editUserBySupabaseId(
+    supabaseId: string,
+    updatedJson: Record<string, any>,
   ): Promise<Document | null>;
-  unfollowUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<Document | null>;
-  isFollowingUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<boolean>;
+
+  /**
+   * Creates a new user.
+   * @param userData - An object containing the user's data.
+   * @param userData.email - The email of the user.
+   * @param userData.username - The username of the user.
+   * @param userData.supabaseId - The Supabase ID of the user.
+   * @param userData.firstName - The first name of the user.
+   * @param userData.lastName - The last name of the user.
+   * @returns A promise that resolves to the created user document or null if creation fails.
+   */
+  createUser(userData: {
+    email: string;
+    username: string;
+    supabaseId: string;
+    firstName: string;
+    lastName: string;
+  }): Promise<Document | null>;
+
+  /**
+   * Retrieves a list of species associated with a user.
+   * @param userId - The ID of the user.
+   * @param limit - The maximum number of species to retrieve.
+   * @param page - The page number for pagination.
+   * @returns A promise that resolves to an array of species documents or null if not found.
+   */
   getSpecies(
-    id: string,
+    userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
+
+  /**
+   * Retrieves a list of dive logs associated with a user.
+   * @param userId - The ID of the user.
+   * @param limit - The maximum number of dive logs to retrieve.
+   * @param page - The page number for pagination.
+   * @returns A promise that resolves to an array of dive log documents or null if not found.
+   */
   getDiveLogs(
-    id: string,
+    userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
+
+  /**
+   * Retrieves a list of posts from users that the specified user is following.
+   * @param userId - The ID of the user.
+   * @param limit - The maximum number of posts to retrieve.
+   * @param page - The page number for pagination.
+   * @returns A promise that resolves to an array of post documents or null if not found.
+   */
   getFollowingPosts(
-    id: string,
+    userId: string,
     limit: number,
     page: number,
   ): Promise<Document[] | null>;
-  saveExpoToken(id: string, deviceToken: string): Promise<Document | null>;
-  removeExpoToken(id: string, deviceToken: string): Promise<Document | null>;
-  tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean>;
+
+  /**
+   * Updates the expo device token for a user. Remove it if it already exists. Add it if it has not existed.
+   * @param userId - The ID of the user.
+   * @param deviceToken - The new device token.
+   * @returns A promise that resolves to the updated user document or null if not found.
+   */
+  updateDeviceToken(
+    userId: string,
+    deviceToken: string,
+  ): Promise<Document | null>;
+
+  /**
+   * Toggles the follow status between the current user and a target user.
+   * @param currentUserId - The ID of the current user.
+   * @param targetUserId - The ID of the target user.
+   * @returns A promise that resolves to the updated follow status document or null if not found.
+   */
+  toggleFollow(
+    currentUserId: string,
+    targetUserId: string,
+  ): Promise<Document | null>;
 }
 
 export class UserServiceImpl implements UserService {
@@ -64,59 +116,91 @@ export class UserServiceImpl implements UserService {
     return UserModel.findById(id);
   }
 
-  async followUser(
+  async createUser(userData: {
+    email: string;
+    username: string;
+    supabaseId: string;
+    firstName: string;
+    lastName: string;
+  }) {
+    const user = new UserModel(userData);
+    return user.save();
+  }
+
+  async getUserBySupabaseId(supabaseId: string) {
+    return UserModel.findOne({ supabaseId });
+  }
+
+  async editUserBySupabaseId(
+    supabaseId: string,
+    updatedJson: Record<string, any>,
+  ) {
+    const user = await UserModel.updateOne(
+      { supabaseId },
+      { $set: updatedJson },
+    );
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user;
+  }
+
+  async toggleFollow(
     currentUserId: string,
     targetUserId: string,
   ): Promise<Document | null> {
-    await UserModel.findByIdAndUpdate(
-      currentUserId,
-      // $addToSet ensures that targetUserId is added only if it is not already in the array
-      { $addToSet: { following: targetUserId } }, // add targetUserId into following list of currentUser
-      { new: true },
-    );
-    return UserModel.findByIdAndUpdate(
-      targetUserId,
-      { $addToSet: { followers: currentUserId } }, // add currentUserId to follower list of targetUser
-      { new: true },
-    );
-  }
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-  async unfollowUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<Document | null> {
-    await UserModel.findByIdAndUpdate(
-      currentUserId,
-      { $pull: { following: targetUserId } }, // remove targetUserId into following list of currentUser
-      { new: true },
-    );
-    return UserModel.findByIdAndUpdate(
-      targetUserId,
-      { $pull: { followers: currentUserId } }, // remove currentUserId to follower list of targetUser
-      { new: true },
-    );
-  }
+    try {
+      const targetUser =
+        await UserModel.findById(targetUserId).session(session);
 
-  async isFollowingUser(
-    currentUserId: string,
-    targetUserId: string,
-  ): Promise<boolean> {
-    const user = await UserModel.findOne({
-      _id: currentUserId,
-      following: targetUserId, // search in following array if it contains targetUserId
-    });
-    return !!user;
+      if (!targetUser) {
+        throw new NotFoundError('Target user not found');
+      }
+
+      const isFollowing = targetUser.followers.includes(
+        new mongoose.Types.ObjectId(currentUserId),
+      );
+
+      const updateCurrentUser = isFollowing
+        ? { $pull: { following: targetUserId } }
+        : { $addToSet: { following: targetUserId } };
+
+      const updateTargetUser = isFollowing
+        ? { $pull: { followers: currentUserId } }
+        : { $addToSet: { followers: currentUserId } };
+
+      const [followUser, followedUser] = await Promise.all([
+        UserModel.findByIdAndUpdate(currentUserId, updateCurrentUser, {
+          new: true,
+        }).session(session),
+        UserModel.findByIdAndUpdate(targetUserId, updateTargetUser, {
+          new: true,
+        }).session(session),
+      ]);
+
+      if (!followUser || !followedUser) {
+        throw new NotFoundError('One or both users were not found');
+      }
+
+      await session.commitTransaction();
+      return followUser;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 
   async getSpecies(
-    id: string,
+    userId: string,
     limit: number = DEFAULT_LIMIT,
     page: number = DEFAULT_PAGE,
   ): Promise<Document[] | null> {
-    const user = await UserModel.findById(id);
-    if (!user) return null;
-
-    const species = await UserModel.findById(id)
+    const user = await UserModel.findById(userId)
       .populate({
         path: 'speciesCollected',
         options: {
@@ -127,19 +211,19 @@ export class UserServiceImpl implements UserService {
       })
       .exec();
 
-    return species?.speciesCollected || null;
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user?.speciesCollected || null;
   }
 
   async getDiveLogs(
     userId: string,
     limit: number = DEFAULT_LIMIT,
     page: number = DEFAULT_PAGE,
-  ): Promise<Document[] | null> {
-    const user = await UserModel.findById(userId);
-    if (!user) return null;
-
+  ): Promise<Document[]> {
     const calculatedSkip = (page - 1) * limit;
-    const userWithDiveLogs = await UserModel.findById(userId)
+    const user = await UserModel.findById(userId)
       .populate({
         path: 'diveLogs',
         options: {
@@ -154,60 +238,65 @@ export class UserServiceImpl implements UserService {
       })
       .exec();
 
-    return userWithDiveLogs?.diveLogs || null;
-  }
-
-  async saveExpoToken(
-    id: string,
-    deviceToken: string,
-  ): Promise<Document | null> {
-    const user = await UserModel.findByIdAndUpdate(
-      { _id: id },
-      { $addToSet: { deviceTokens: deviceToken } },
-      { new: true },
-    );
-    return user;
-  }
-
-  async removeExpoToken(
-    id: string,
-    deviceToken: string,
-  ): Promise<Document | null> {
-    const user = await UserModel.findByIdAndUpdate(
-      id,
-      { $pull: { deviceTokens: deviceToken } },
-      { new: true },
-    );
-    return user;
-  }
-
-  async tokenAlreadyExists(id: string, deviceToken: string): Promise<boolean> {
-    const user = await UserModel.findById(id);
-    if (user) {
-      return user.deviceTokens.includes(deviceToken);
+    if (!user) {
+      throw new NotFoundError('User not found');
     }
-    return false;
+
+    return user?.diveLogs || null;
+  }
+
+  async updateDeviceToken(
+    userId: string,
+    deviceToken: string,
+  ): Promise<Document | null> {
+    const user = await UserModel.findByIdAndUpdate(
+      userId,
+      [
+        {
+          $set: {
+            deviceTokens: {
+              $cond: {
+                if: { $in: [deviceToken, '$deviceTokens'] },
+                then: {
+                  $filter: {
+                    input: '$deviceTokens',
+                    cond: { $ne: ['$$this', deviceToken] },
+                  },
+                },
+                else: { $concatArrays: ['$deviceTokens', [deviceToken]] },
+              },
+            },
+          },
+        },
+      ],
+      { new: true },
+    );
+
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
+    return user;
   }
 
   async getFollowingPosts(
-    id: string,
+    userId: string,
     limit: number = 10,
     page: number = 1,
   ): Promise<Document[] | null> {
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findById(userId, 'following');
+
     if (!user) {
-      return null;
+      throw new NotFoundError('User not found');
     }
 
-    const followedUsers = user.following;
-
-    const divelogs = await DiveLog.find({
-      user: { $in: followedUsers },
+    const diveLogs = await DiveLog.find({
+      user: { $in: user.following },
     })
       .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(limit);
 
-    return divelogs;
+    return diveLogs;
   }
 }

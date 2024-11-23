@@ -14,9 +14,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   return (
     <Button
       onPress={onPress}
-      text={isPending ? 'Loading...' : isFollowing ? 'Following' : 'Follow'}
+      text={isFollowing ? 'Following' : 'Follow'}
       small
-      disabled={isPending}
     />
   );
 };

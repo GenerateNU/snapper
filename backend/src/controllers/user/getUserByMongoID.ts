@@ -1,17 +1,17 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import { ObjectId } from 'mongodb';
 
-const userService = new UserServiceImpl();
+const userService: UserService = new UserServiceImpl();
 
-//Will get the user by the given supabaseID
-export const getUserByID = async (
+//Will get the user by the given mongoId
+export const getUserByMongoID = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
     //Get the ID from the params
-    const id = req.params.userid;
+    const id = req.params.id;
 
     //Check to make sure that the id is defined
     if (!id) {
@@ -19,8 +19,12 @@ export const getUserByID = async (
       return res.status(400).json({ error: 'ID is a required argument' });
     }
 
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid user ID format' });
+    }
+
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(id);
+    const foundUser = await userService.getUserById(id);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {

@@ -42,9 +42,7 @@ export async function registerForPushNotifications(id: string) {
     ).data;
 
     const response = await manageExpoToken(token, id);
-    if (response.success) {
-      console.log(response.message);
-    } else {
+    if (!response.success) {
       console.error('Failed to save token:', response.error);
     }
 
@@ -60,9 +58,7 @@ export async function unregisterForPushNotifications(
 ) {
   try {
     const response = await manageExpoToken(token, id);
-    if (response.success) {
-      console.log(response.message);
-    } else {
+    if (!response.success) {
       console.error('Failed to delete token:', response.error);
     }
   } catch (error) {

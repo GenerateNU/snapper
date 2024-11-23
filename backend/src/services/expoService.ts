@@ -1,6 +1,7 @@
 import Expo, { ExpoPushToken } from 'expo-server-sdk';
 import mongoose from 'mongoose';
 import { UserModel } from '../models/users';
+import { NotFoundError } from '../consts/errors';
 
 export type PushNotification = {
   to: ExpoPushToken;
@@ -26,9 +27,36 @@ export interface Notification {
 }
 
 export interface ExpoService {
+  /**
+   * Sends a push notification.
+   *
+   * @param notification - An array of PushNotification objects to be sent.
+   * @returns A promise that resolves when the notification has been sent.
+   */
   sendPushNotification(notification: PushNotification[]): Promise<any>;
+
+  /**
+   * Sends a post notification.
+   *
+   * @param notification - The notification data to be sent.
+   * @returns A promise that resolves when the notification has been sent.
+   */
   sendPostNotification(notification: any): Promise<any>;
+
+  /**
+   * Sends a like notification.
+   *
+   * @param notification - The notification data to be sent.
+   * @returns A promise that resolves when the notification has been sent.
+   */
   sendLikeNotification(notification: any): Promise<any>;
+
+  /**
+   * Sends a follow notification.
+   *
+   * @param notification - The notification data to be sent.
+   * @returns A promise that resolves when the notification has been sent.
+   */
   sendFollowNotification(notification: any): Promise<any>;
 }
 
@@ -57,7 +85,6 @@ export class ExpoServiceImpl implements ExpoService {
         try {
           const ticketChunk = await this.expo.sendPushNotificationsAsync(chunk);
           tickets.push(...ticketChunk);
-          console.log('Notification sent:', ticketChunk);
         } catch (error) {
           console.error('Error sending notification:', error);
         }
@@ -68,74 +95,155 @@ export class ExpoServiceImpl implements ExpoService {
     return [];
   }
 
-  async sendPostNotification(notification: Notification): Promise<any> {
-    const { message, actor, target, targetModel } = notification;
+  async validatePostNotificationData(
+    notification: Notification,
+    session: mongoose.mongo.ClientSession,
+  ): Promise<{
+    actorUser: mongoose.Document & { username: string };
+    targetExists: mongoose.Document;
+  }> {
+    const { actor, target, targetModel } = notification;
+
+    const actorUser = await UserModel.findById(actor, 'username').session(
+      session,
+    );
+    if (!actorUser) {
+      throw new NotFoundError('Actor not found');
+    }
+
+    if (!targetModel) {
+      throw new NotFoundError('Target model is not specified');
+    }
+
+    const targetExists = await mongoose
+      .model(targetModel)
+      .findById(target)
+      .session(session);
+    if (!targetExists) {
+      throw new NotFoundError(`${targetModel} with the given ID not found`);
+    }
+
+    return { actorUser, targetExists };
+  }
+
+  async getFollowersDeviceTokens(
+    actor: string,
+    session: mongoose.mongo.ClientSession,
+  ): Promise<string[]> {
     const followers = await UserModel.find(
       { following: actor },
       'deviceTokens',
-    );
-    const deviceTokens = followers.flatMap((follower) => follower.deviceTokens);
+    ).session(session);
+    return followers.flatMap((follower) => follower.deviceTokens);
+  }
 
-    const actorUser = await UserModel.findById(actor);
-    const actorName = actorUser ? actorUser.username : 'A user';
-    const title = `${actorName} just posted new divelog!`;
-
-    const pushNotifications: PushNotification[] = deviceTokens.map(
-      (token: string) => ({
+  async buildPushNotifications(
+    deviceTokens: string[],
+    title: string,
+    message: string,
+    data?: { target: mongoose.Types.ObjectId; targetModel: 'DiveLog' | 'User' },
+  ): Promise<PushNotification[]> {
+    return deviceTokens.map(
+      (token: string): PushNotification => ({
         to: token as ExpoPushToken,
         title,
         body: message,
         sound: 'default',
         priority: 'high',
-        data: {
-          target,
-          targetModel,
-        },
+        ...(data && { data }),
       }),
     );
+  }
 
-    return this.sendPushNotification(pushNotifications);
+  async sendPostNotification(notification: Notification): Promise<any> {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const { actorUser } = await this.validatePostNotificationData(
+        notification,
+        session,
+      );
+      const deviceTokens = await this.getFollowersDeviceTokens(
+        notification.actor.toString(),
+        session,
+      );
+
+      const actorName = actorUser.username || 'A user';
+      const title = `${actorName} just posted a new divelog!`;
+
+      const pushNotifications = await this.buildPushNotifications(
+        deviceTokens,
+        title,
+        notification.message,
+        {
+          target: notification.target!,
+          targetModel: notification.targetModel!,
+        },
+      );
+
+      await session.commitTransaction();
+      return this.sendPushNotification(pushNotifications);
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 
   async sendLikeNotification(notification: Notification): Promise<any> {
-    const { message, receiver } = notification;
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const user = await UserModel.findById(receiver);
-    if (!user) {
-      throw new Error('User not found');
+    try {
+      const { message, receiver } = notification;
+
+      const user = await UserModel.findById(receiver);
+      if (!user) {
+        throw new NotFoundError('User not found');
+      }
+
+      const pushNotifications: PushNotification[] =
+        await this.buildPushNotifications(
+          user.deviceTokens,
+          'You have a new like!',
+          message,
+        );
+
+      return this.sendPushNotification(pushNotifications);
+    } catch (error) {
+      session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
-
-    const pushNotifications: PushNotification[] = user.deviceTokens.map(
-      (token: string) => ({
-        to: token as ExpoPushToken,
-        title: 'You have a new like!',
-        body: message,
-        sound: 'default',
-        priority: 'high',
-      }),
-    );
-
-    return this.sendPushNotification(pushNotifications);
   }
 
   async sendFollowNotification(notification: Notification): Promise<any> {
-    const { message, receiver } = notification;
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const user = await UserModel.findById(receiver);
-    if (!user) {
-      throw new Error('User not found');
+    try {
+      const { message, receiver } = notification;
+
+      const user = await UserModel.findById(receiver);
+      if (!user) {
+        throw new NotFoundError('User not found');
+      }
+
+      const pushNotifications: PushNotification[] =
+        await this.buildPushNotifications(
+          user.deviceTokens,
+          'You have a new follower!',
+          message,
+        );
+      return this.sendPushNotification(pushNotifications);
+    } catch (error) {
+      session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
     }
-
-    const pushNotifications: PushNotification[] = user.deviceTokens.map(
-      (token: string) => ({
-        to: token as ExpoPushToken,
-        title: 'You have a new follower!',
-        body: message,
-        sound: 'default',
-        priority: 'high',
-      }),
-    );
-
-    return this.sendPushNotification(pushNotifications);
   }
 }

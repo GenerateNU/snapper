@@ -6,9 +6,9 @@ import IconButton from '../../../components/icon-button';
 import User from '../user/components/user-profile';
 
 const Profile = () => {
-  const { supabaseId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
 
-  if (!supabaseId) {
+  if (!mongoDBId) {
     <View className="flex flex-1 justify-center items-center">
       <Text>Unable to load user</Text>
     </View>;
@@ -29,7 +29,7 @@ const Profile = () => {
         }}
       />
       <View className="flex flex-1">
-        <User id={supabaseId || ''} />
+        <User id={mongoDBId || ''} />
       </View>
     </>
   );

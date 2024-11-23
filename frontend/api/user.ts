@@ -11,6 +11,13 @@ export async function getUserById(id: string): Promise<any> {
   return await fetchData(`/user/${id}`, 'Failed to fetch user with id');
 }
 
+export async function getUserBySupabaseId(id: string): Promise<any> {
+  return await fetchData(
+    `/user/${id}/supabase`,
+    'Failed to fetch user with id',
+  );
+}
+
 export async function getUserDiveLogs(): Promise<any> {
   const data = await fetchData(
     '/user/items/divelogs',

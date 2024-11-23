@@ -9,7 +9,7 @@ import { useUserNotification } from '../../../hooks/user';
 import { categorizeTime } from '../../../utils/profile';
 
 const Notification = () => {
-  const { supabaseId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const [sections, setSections] = useState<{ title: string; data: any[] }[]>(
     [],
   );
@@ -22,7 +22,7 @@ const Notification = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useUserNotification(supabaseId || '');
+  } = useUserNotification(mongoDBId || '');
 
   const groupNotificationsAndSetSections = (pages: any) => {
     if (!pages) return;
@@ -76,29 +76,28 @@ const Notification = () => {
 
   const renderNotification = ({ item }: { item: any }) => {
     return (
-      <NotificationEntry
-        username={item.actor.username}
-        message={item.message}
-        actorId={item.actor.supabaseId}
-        targetId={item.target._id}
-        type={item.type}
-        postImage={item.target.photos ? item.target.photos[0] : ''}
-        time={item.time}
-        profilePicture={item.actor.profilePicture}
-      />
+      <View className="mb-4">
+        <NotificationEntry
+          username={item.actor.username}
+          message={item.message}
+          actorId={item.actor._id}
+          targetId={item.target._id}
+          type={item.type}
+          postImage={item.target.photos ? item.target.photos[0] : ''}
+          time={item.time}
+          profilePicture={item.actor.profilePicture}
+        />
+      </View>
     );
   };
 
-  const renderSectionHeader = ({ section: { title, index } }: any) => (
-    <View>
-      {index > 0 && (
-        <View className="mb-4">
-          <Divider />
-        </View>
-      )}
-      <Text className="text-xl pb-[2%]">{title}</Text>
-    </View>
-  );
+  const renderSectionHeader = ({ section: { title }, sectionIndex }: any) => {
+    return (
+      <View>
+        <Text className="text-base pb-[2%]">{title}</Text>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView className="flex-1 mt-[10%] justify-start mx-[8%]">

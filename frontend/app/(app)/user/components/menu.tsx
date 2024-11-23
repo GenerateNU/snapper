@@ -15,10 +15,10 @@ import DiveLog from '../../../../components/divelog/divelog';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
-  const { supabaseId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const { data: userData } = useUserById(id);
 
-  const isViewingOwnProfile = supabaseId === id;
+  const isViewingOwnProfile = mongoDBId === id;
 
   const {
     data: diveLogPages,

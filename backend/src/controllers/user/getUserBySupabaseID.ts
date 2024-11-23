@@ -1,13 +1,16 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
+import { UserService, UserServiceImpl } from '../../services/userService';
 
-export const getUserMe = async (
+const userService: UserService = new UserServiceImpl();
+
+//Will get the user by the given supabaseId
+export const getUserBySupabaseId = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    //Get the ID from current session
-    const id = req.session.userId;
+    //Get the ID from the params
+    const id = req.params.id;
 
     //Check to make sure that the id is defined
     if (!id) {
@@ -16,7 +19,7 @@ export const getUserMe = async (
     }
 
     //Query the given ID on the database and save the result
-    const foundUser = await findUserBySupabaseId(id);
+    const foundUser = await userService.getUserBySupabaseId(id);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {
@@ -25,7 +28,6 @@ export const getUserMe = async (
         .status(400)
         .json({ error: 'Unable to find user of ID: ' + id });
     }
-
     //Return the OK status
     return res.status(200).json({
       user: foundUser,

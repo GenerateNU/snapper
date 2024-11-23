@@ -3,7 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist } from 'zustand/middleware';
 import { LoginRequestBody, RegisterRequestBody } from '../types/auth';
 import { getSession, login, logout, register } from '../api/auth';
-import { getUserById } from '../api/user';
+import { getUserBySupabaseId } from '../api/user';
+import { unregisterForPushNotifications } from '../utils/notification';
+import { NOTIFICATION_TOKEN_KEY } from '../consts/notification';
 
 interface AuthState {
   user: any;
@@ -57,7 +59,7 @@ export const useAuthStore = create<AuthState>(
 
           const response = await login(userData);
           const session = await getSession();
-          const userMe = await getUserById(response.user.id);
+          const userMe = await getUserBySupabaseId(response.user.id);
 
           if (session && userMe) {
             set({
@@ -84,7 +86,7 @@ export const useAuthStore = create<AuthState>(
 
           const response = await register(userData);
           const session = await getSession();
-          const userMe = await getUserById(response.user.id);
+          const userMe = await getUserBySupabaseId(response.user.id);
 
           if (session && userMe) {
             set({
@@ -107,6 +109,26 @@ export const useAuthStore = create<AuthState>(
       logout: async () => {
         set({ loading: true, error: null });
         try {
+          const currentMongoDBId = get().mongoDBId;
+
+          const savedToken = await AsyncStorage.getItem(NOTIFICATION_TOKEN_KEY);
+          if (savedToken && currentMongoDBId) {
+            console.log(
+              'Unregistering device token for user:',
+              currentMongoDBId,
+            );
+            try {
+              await unregisterForPushNotifications(
+                currentMongoDBId,
+                savedToken,
+              );
+              await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
+              console.log('Successfully unregistered notifications');
+            } catch (error) {
+              console.error('Error unregistering notifications:', error);
+            }
+          }
+
           await logout();
           await get().clearStorage();
 

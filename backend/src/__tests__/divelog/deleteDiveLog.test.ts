@@ -1,4 +1,4 @@
-jest.mock('../../../middlewares/authMiddleware', () => ({
+jest.mock('../../middlewares/authMiddleware', () => ({
   isAuthenticated: (
     req: express.Request,
     res: express.Response,
@@ -11,7 +11,7 @@ jest.mock('../../../middlewares/authMiddleware', () => ({
 const mockExec = jest.fn();
 const mockFindByIdAndDelete = jest.fn(() => ({ exec: mockExec }));
 
-jest.mock('../../../models/diveLog', () => ({
+jest.mock('../../models/diveLog', () => ({
   DiveLog: {
     create: jest.fn(),
     deleteMany: jest.fn(),
@@ -21,10 +21,10 @@ jest.mock('../../../models/diveLog', () => ({
 
 import express from 'express';
 import request from 'supertest';
-import divelog from '../../../routes/divelog';
-import { isAuthenticated } from '../../../middlewares/authMiddleware';
+import divelog from '../../routes/divelog';
+import { isAuthenticated } from '../../middlewares/authMiddleware';
 import mongoose from 'mongoose';
-import { invalidIdCases } from '../../../consts/testConstant';
+import { invalidIdCases } from '../../consts/testConstant';
 
 const app = express();
 const router = express.Router();

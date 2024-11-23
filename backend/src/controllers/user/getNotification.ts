@@ -1,10 +1,11 @@
-import { DEFAULT_LIMIT, DEFAULT_PAGE } from './../../consts/pagination';
-import { findUserBySupabaseId } from '../../services/userService';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 import {
   NotificationService,
   NotificationServiceImpl,
-} from './../../services/notificationService';
+} from '../../services/notificationService';
 import express from 'express';
+import { NotFoundError } from '../../consts/errors';
+import { ObjectId } from 'mongodb';
 
 const notificationService: NotificationService = new NotificationServiceImpl();
 
@@ -17,13 +18,13 @@ export const getNotifications = async (
     const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
     const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
 
-    const user = await findUserBySupabaseId(userId);
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
     }
 
-    const userMongoDBId = user._id.toString();
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID format' });
+    }
 
     if (limit <= 0 || page <= 0) {
       return res
@@ -32,16 +33,15 @@ export const getNotifications = async (
     }
 
     const notifications = await notificationService.getUserNotification(
-      userMongoDBId,
+      userId,
       limit,
       page,
     );
-
-    // await notificationService.clearAllNotification();
-
     return res.status(200).json(notifications);
   } catch (error) {
-    console.error('Error fetching notifications:', error);
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ error: error.message });
+    }
     return res
       .status(500)
       .json({ error: 'An error occurred while fetching notifications.' });

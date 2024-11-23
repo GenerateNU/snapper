@@ -14,15 +14,18 @@ import PopulatedInfoPopupButton from '../../../components/populated-info-popup';
 import Profile from '../../../components/profile';
 import { PROFILE_PHOTO } from '../../../consts/profile';
 import { useDiveLog } from '../../../hooks/divelog';
+import useLike from '../../../hooks/like';
+import React from 'react';
 
 const DiveLog = () => {
-  const { supabaseId } = useAuthStore();
+  const { mongoDBId } = useAuthStore();
   const { id: diveLogId } = useLocalSearchParams<{ id: string }>();
 
   const { data, isLoading, error } = useDiveLog(diveLogId);
 
-  const navigateUserProfile = () =>
-    router.push(`/user/${data?.user.supabaseId}`);
+  const { isLiking, handleLikeToggle } = useLike(diveLogId);
+
+  const navigateUserProfile = () => router.push(`/user/${data?.user._id}`);
 
   const renderTag = (item: any) => {
     return (
@@ -37,8 +40,20 @@ const DiveLog = () => {
     );
   };
 
+  const [lastTap, setLastTap] = React.useState(0);
+
+  const handleDoubleTap = () => {
+    const currentTime = Date.now();
+    const timeDifference = currentTime - lastTap;
+
+    if (timeDifference < 300 && !isLiking) {
+      handleLikeToggle();
+    }
+    setLastTap(currentTime);
+  };
+
   return (
-    <>
+    <Pressable onPress={handleDoubleTap}>
       <SafeAreaView style={{ gap: 12 }} className="justify-center mx-[8%]">
         <View style={{ gap: 12 }} className="w-full flex-row items-center">
           <Pressable
@@ -81,7 +96,7 @@ const DiveLog = () => {
         </Text>
       </SafeAreaView>
       <InfoPopup />
-    </>
+    </Pressable>
   );
 };
 

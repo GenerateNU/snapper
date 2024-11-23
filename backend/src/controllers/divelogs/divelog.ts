@@ -11,9 +11,9 @@ import {
 } from '../../services/notificationService';
 import { ExpoService, ExpoServiceImpl } from '../../services/expoService';
 import sendFilesToS3 from '../../services/filesToS3';
+import { NotFoundError } from '../../consts/errors';
 
 const diveLogService: DiveLogService = new DiveLogServiceImpl();
-const userService: UserService = new UserServiceImpl();
 const notificationService: NotificationService = new NotificationServiceImpl();
 const expoService: ExpoService = new ExpoServiceImpl();
 
@@ -38,12 +38,6 @@ export const DiveLogController = {
       });
     }
 
-    const user = await userService.getUserById(req.body.user);
-    if (user == null) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-
     try {
       const diveLog: any = await diveLogService.createDiveLog(req.body);
       const notifications = await notificationService.createPostNotification(
@@ -55,6 +49,10 @@ export const DiveLogController = {
       }
       res.status(201).json(diveLog);
     } catch (error) {
+      if (error instanceof NotFoundError) {
+        res.status(404).json({ message: error.message });
+        return;
+      }
       res.status(500).json({ message: 'Internal server error' });
     }
   },

@@ -35,9 +35,11 @@ jest.mock('../models/users');
 
 const mockUserModelFindOne = jest.fn();
 const mockUserFindById = jest.fn();
+const mockUserUpdateOne = jest.fn();
 
 UserModel.findById = mockUserFindById;
 UserModel.findOne = mockUserModelFindOne;
+UserModel.updateOne = mockUserUpdateOne;
 
 const app = express();
 const router = express.Router();
@@ -45,7 +47,7 @@ userRoute(router);
 app.use(router);
 
 describe('User Routes', () => {
-  describe('GET /user/:id', () => {
+  describe('GET /user/:id/supabase', () => {
     it('Gets a specific user from id', async () => {
       const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
       const user = {
@@ -62,7 +64,7 @@ describe('User Routes', () => {
 
       mockUserModelFindOne.mockResolvedValue(user); // Mock resolved value for user find
 
-      const res = await request(app).get(`/user/${id}`);
+      const res = await request(app).get(`/user/${id}/supabase`);
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
         user: {
@@ -83,7 +85,7 @@ describe('User Routes', () => {
     it('Returns 400 if user is not found', async () => {
       const id = '9f824f26-59b7-4f7f-a1b4-fef456b69bdf';
       mockUserModelFindOne.mockResolvedValue(null); // Simulate user not found
-      const res = await request(app).get(`/user/${id}`);
+      const res = await request(app).get(`/user/${id}/supabase`);
       expect(res.status).toBe(400);
       expect(res.body).toEqual({ error: 'Unable to find user of ID: ' + id });
     });
@@ -149,7 +151,8 @@ describe('User Routes', () => {
         _id: id,
       };
 
-      mockUserModelFindOne.mockResolvedValue(user);
+      mockUserUpdateOne.mockResolvedValue(user);
+
       const res = await request(app)
         .put(`/user/actions/edit`)
         .send(updatedUser);

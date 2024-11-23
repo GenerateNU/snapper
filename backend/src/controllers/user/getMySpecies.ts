@@ -1,18 +1,19 @@
 import express from 'express';
-import { findUserBySupabaseId } from '../../services/userService';
 import { UserService, UserServiceImpl } from '../../services/userService';
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
 
 const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
-export const getUserSpeciesById = async (
+export const getMySpecies = async (
   req: express.Request,
   res: express.Response,
 ) => {
   try {
-    const userID = req.params.id;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const page = parseInt(req.query.page as string) || 1;
+    //Get the ID from the body of the request
+    const userID = req.session.userId;
+    const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
+    const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
 
     //Check to make sure that the id is defined
     if (!userID) {
@@ -21,7 +22,8 @@ export const getUserSpeciesById = async (
         .json({ error: 'User is not present in the current session!' });
     }
 
-    const foundUser = await findUserBySupabaseId(userID);
+    //Query the given ID on the database and save the result
+    const foundUser = await userService.getUserBySupabaseId(userID);
 
     //Ensure that there is a defined(non-null) result
     if (!foundUser) {

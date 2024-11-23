@@ -30,7 +30,6 @@ export const manageExpoToken = async (
 
     return {
       success: true,
-      message: data.message,
     };
   } catch (error) {
     console.error('Error registering token:', error);
