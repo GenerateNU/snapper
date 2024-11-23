@@ -1,38 +1,35 @@
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
-import { Modal, Text, View } from 'react-native';
-import { apiConfig } from '../../../../../api/apiContext';
-import { createDiveLog } from '../../../../../api/divelog';
-import { useAuthStore } from '../../../../../auth/authStore';
-import BigText from '../../../../../components/bigtext';
-import Button from '../../../../../components/button';
-import IconButton from '../../../../../components/icon-button';
-import ImagePicker from '../../../../../components/image-picker';
-import Map from '../../../../../components/map';
-import Tag from '../../../../../components/tag';
-import { FormFields, Location } from '../_layout';
+import { View, Text, Modal } from 'react-native';
+import { useFormContext, Controller } from 'react-hook-form';
+import ImagePicker from '../../../../components/image-picker';
+import BigText from '../../../../components/bigtext';
+import Button from '../../../../components/button';
 import PageButton from './page-button';
+import { router } from 'expo-router';
+import Tag from '../../../../components/tag';
+import Map from '../../../../components/map';
+import IconButton from '../../../../components/icon-button';
+import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { Location, FormFields, TagData } from '../../../../types/divelog';
+import { postDiveLog } from '../../../../api/divelog';
 
 export default function PostCreationForm() {
   const [modalVisible, setModalVisible] = useState(false);
   const [coordinate, setCoordinate] = useState([37.33, -122]);
   const { setValue, watch, reset } = useFormContext<FormFields>();
-  const tags: string[] = watch('tags') || [];
+  const tagData: TagData[] = watch('tagData') || [];
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [submittingPost, setSubmittingPost] = useState(false);
   const location: Location = watch('location') || {
     type: 'Point',
     coordinates: [],
   };
   const removeFish = (index: number) => {
-    const newFish = [...tags];
-
+    const newFish = [...tagData];
     newFish.splice(index, 1);
-
-    setValue('tags', newFish);
+    setValue('tagData', newFish);
   };
-
-  const API_BASE_URL = apiConfig;
 
   const { control, trigger, handleSubmit } = useFormContext<FormFields>();
 
@@ -41,13 +38,26 @@ export default function PostCreationForm() {
     setCoordinate([37.33, -122]);
     setModalVisible(false);
   };
+
   const submitPost = async (postData: FormFields) => {
-    const mongoDBId = useAuthStore.getState().mongoDBId;
-    if (mongoDBId) {
-      postData.user = mongoDBId;
+    try {
+      setSubmittingPost(true);
+      const response = await postDiveLog(postData);
+      const responseBody = await response.json();
+      if (response.status == 400) {
+        setError(true);
+        setErrorMessage(responseBody.error[0].msg);
+      }
+      if (response.status == 201) {
+        reset();
+        router.push('/(tabs)');
+      }
+    } catch (error: any) {
+      setError(true);
+      setErrorMessage(error.message);
+    } finally {
+      setSubmittingPost(false);
     }
-    await createDiveLog(postData);
-    reset();
   };
 
   return (
@@ -124,21 +134,21 @@ export default function PostCreationForm() {
         </View>
       </Modal>
       <Text className="text-[16px] ">Tag Fish</Text>
-      <View className="w-full mb-[4vh]">
-        {tags.length == 0 ? (
+      <View className="w-full mb-[2vh]">
+        {tagData.length == 0 ? (
           <PageButton
             outline="gray-400"
             text="Choose Fish"
             backgroundColor="white"
-            onPress={() => router.push('./post/tag-fish')}
+            onPress={() => router.push('/tag-fish')}
           />
         ) : (
-          <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-5">
+          <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-[2vh]">
             <View className="flex h-full w-full flex-row items-center flex-wrap items-center gap-2 p-2">
-              {tags.map((item, index) => {
+              {tagData.map((item, index) => {
                 return (
                   <View key={index}>
-                    <Tag fish={item} onPress={() => removeFish(index)} />
+                    <Tag fish={item.name} onPress={() => removeFish(index)} />
                   </View>
                 );
               })}
@@ -153,9 +163,19 @@ export default function PostCreationForm() {
             </View>
           </View>
         )}
+        {error ? (
+          <View className="flex items-center text-center pt-[1vh]">
+            <Text className="text-[16px] text-red-500"> {errorMessage} </Text>
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
-      <View className="pb-10">
-        <Button text="Post" onPress={handleSubmit(submitPost)} />
+      <View className="pb-2">
+        <Button
+          text={submittingPost ? 'Posting ...' : 'Post'}
+          onPress={handleSubmit(submitPost)}
+        />
       </View>
     </View>
   );
