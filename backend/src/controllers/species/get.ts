@@ -44,15 +44,3 @@ export const searchSpecies = async (
   }
   return res.status(200).json(results);
 };
-
-export const getByQuery = async (
-  req: express.Request,
-  res: express.Response,
-) => {
-  const query = req.params.query;
-  const fullQuery = query ? { $text: { $search: query } } : {};
-  console.log(fullQuery);
-  const species = await Species.find(fullQuery).limit(50);
-  if (!species) return res.status(404).json({ message: 'Species not found' });
-  return res.status(200).json(species);
-};

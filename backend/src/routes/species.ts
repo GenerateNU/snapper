@@ -2,7 +2,7 @@ import express from 'express';
 import {
   getById,
   getByScientificName,
-  searchSpecies
+  searchSpecies,
 } from '../controllers/species/get';
 import { isAuthenticated } from '../middlewares/authMiddleware';
 
