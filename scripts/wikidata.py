@@ -6,20 +6,37 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 
 ENDPOINT_URL = "https://query.wikidata.org/sparql"
 
-QUERY = """SELECT ?common_name ?locationLabel ?scientificName ?fish ?articleUrl ?articleTitle ?aphiaId ?image_url
-WHERE {{
-  ?fish wdt:P171* wd:{class_qid}.
-  ?fish wdt:P105 wd:Q7432.
-  ?fish wdt:P850 ?aphiaId.
-  ?fish wdt:P18 ?image_url.
-  ?fish wdt:P225 ?scientificName.
-  ?fish wdt:P1843 ?common_name.
-  ?articleUrl schema:about ?fish .
+# Query URL: https://w.wiki/C6u5
+QUERY = """SELECT ?common_name ?locationLabel ?scientificName ?species ?speciesLabel ?genus ?genusLabel ?family ?familyLabel ?order ?orderLabel ?class ?classLabel ?phylum ?phylumLabel ?kingdom ?kingdomLabel ?domain ?domainLabel ?articleUrl ?articleTitle ?aphiaId ?image_url
+WHERE {{  
+  BIND(wd:Q19088 AS ?domain).
+  BIND(wd:Q729 AS ?kingdom).
+  BIND(wd:Q10915 AS ?phylum).
+  BIND(wd:{class_qid} AS ?class).
+  
+  ?order wdt:P171* ?class.
+  ?order wdt:P105 wd:Q36602.
+  
+  ?family wdt:P171* ?order.
+  ?family wdt:P105 wd:Q35409.
+  
+  ?genus wdt:P171* ?family.
+  ?genus wdt:P105 wd:Q34740.
+  
+  ?species wdt:P171* ?genus.
+  ?species wdt:P105 wd:Q7432.
+  
+  ?species wdt:P850 ?aphiaId.
+  ?species wdt:P18 ?image_url.
+  ?species wdt:P225 ?scientificName.
+  
+  ?species wdt:P1843 ?common_name.
+  ?articleUrl schema:about ?species .
   ?articleUrl schema:inLanguage ?lang ;
            schema:name ?articleTitle;
            schema:isPartOf <https://en.wikipedia.org/> .
   
-  OPTIONAL{{?fish wdt:P9714 ?location.}}
+  OPTIONAL {{?species wdt:P9714 ?location.}}
   
   FILTER(LANGMATCHES(LANG(?common_name), "en"))
   SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
@@ -49,7 +66,7 @@ MARINE_CLASSES = [
 
 
 class Wikidata:
-    def __iter__(self, amount_per_page=10_000):
+    def __iter__(self, amount_per_page=1_000):
         self.offset = 0
         self.curr_class = 0
         self.amount_per_page = amount_per_page
