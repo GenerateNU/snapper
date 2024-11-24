@@ -48,7 +48,7 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
       </View>
       <View className="absolute bottom-2 left-2 flex-row items-center">
         <View>
-          <Profile outline image={profilePhoto} size="md" />
+          <Profile borderColor='border-white border-[1px]' outline image={profilePhoto} size="md" />
         </View>
         <Text
           className="text-white ml-2"

@@ -4,9 +4,10 @@ interface ProfileProps {
   image: string;
   outline?: boolean;
   size: 'sm' | 'md' | 'lg';
+  borderColor?: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ image, outline = false, size }) => {
+const Profile: React.FC<ProfileProps> = ({ image, outline = false, size, borderColor = 'border-darkblue' }) => {
   const sizeMap = {
     sm: 35,
     md: 50,
@@ -17,7 +18,7 @@ const Profile: React.FC<ProfileProps> = ({ image, outline = false, size }) => {
 
   return (
     <View
-      className={`bg-water rounded-full ${outline ? 'border border-2' : ''} border-darkblue overflow-hidden items-center justify-center`}
+      className={`bg-water rounded-full ${outline ? 'border border-2' : ''} ${borderColor} overflow-hidden items-center justify-center`}
     >
       <Image
         style={{ width: dimension, height: dimension }}
