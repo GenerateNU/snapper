@@ -42,7 +42,6 @@ export default function PostCreationForm() {
   const submitPost = async (postData: FormFields) => {
     try {
       setSubmittingPost(true);
-      console.log(postData.speciesTags);
       const response = await postDiveLog(postData);
       const responseBody = await response.json();
       if (response.status == 400) {
