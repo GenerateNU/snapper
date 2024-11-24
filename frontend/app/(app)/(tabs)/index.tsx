@@ -130,7 +130,8 @@ const Home = () => {
         </View>
 
         <View className="px-[5%]">
-          {selectedCategory === Category.FOLLOWING && (followingPosts?.pages?.flatMap((page) => page) ?? []).length > 0 ? (
+          {selectedCategory === Category.FOLLOWING &&
+          (followingPosts?.pages?.flatMap((page) => page) ?? []).length > 0 ? (
             isLoadingFollowing ? (
               <FlatList
                 data={[1, 2, 3]}
