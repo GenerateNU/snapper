@@ -1,6 +1,5 @@
-import { Text, TouchableOpacity } from 'react-native';
-import Fish from '../../../../assets/species.svg';
 import React from 'react';
+import { Image, Text, TouchableOpacity } from 'react-native';
 
 interface SpeciesProps {
   text?: string;
@@ -15,7 +14,13 @@ const Species: React.FC<SpeciesProps> = React.memo(
         onPress={onPress}
         className="bg-water mb-3 rounded-md flex flex-col w-[32%] justify-center items-center pt-[2%] pb-[5%]"
       >
-        <Fish height={80} width={80} />
+        <Image
+          height={80}
+          width={80}
+          source={{
+            uri: image,
+          }}
+        />
         <Text className="text-center px-2 font-bold text-xs sm:text-sm md:text-md">
           {text}
         </Text>
