@@ -2,9 +2,11 @@ import { Modal } from 'react-native';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { NewPFP } from './newPFP';
 import { UpdateProfileFields } from '../../../../types/userProfile';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import Button from '../../../../components/button';
 import { useAuthStore } from '../../../../auth/authStore';
+import { updateProfilePhoto } from '../../../../api/user';
+import { apiConfig } from '../../../../api/apiContext';
 
 interface PFPProps {
   visible: boolean;
@@ -12,13 +14,22 @@ interface PFPProps {
 }
 
 export function ChangePFP({ visible, onClose }: PFPProps) {
-  const methods = useForm<UpdateProfileFields>();
-  const onSubmit = (data: string) => console.log(data);
+  const API_BASE_URL = apiConfig;
+  const {handleSubmit} = useFormContext<UpdateProfileFields>();
+
+  const onSubmit = async (data: UpdateProfileFields) => {
+    onClose(false);
+    console.log("scum")
+    const response = await fetch(`${API_BASE_URL}/user/actions/edit`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+
+  };
   const currentUser = useAuthStore();
 
-  console.log(currentUser.supabaseId);
   return (
-    <FormProvider {...methods}>
       <Modal visible={visible} transparent animationType="fade">
         <View className="flex-1 justify-center items-center bg-black/50">
           <View className="bg-white rounded-lg p-6 w-4/5">
@@ -38,15 +49,13 @@ export function ChangePFP({ visible, onClose }: PFPProps) {
 
             <NewPFP id={''} />
             <Button
-              onPress={() => {
-                onClose(false);
-                onSubmit(methods.getValues().profilePhoto);
-              }}
+              onPress={
+                handleSubmit(onSubmit)
+              }
               text="Update"
             />
           </View>
         </View>
       </Modal>
-    </FormProvider>
   );
 }

@@ -7,12 +7,15 @@ import IconButton from '../../../components/icon-button';
 import { useState } from 'react';
 import { ChangePFP } from './profileComponents/editProfileModal';
 import { useEffect } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { UpdateProfileFields } from '../../../types/userProfile';
+import { logout } from '../../../api/auth';
 
 const Profile = () => {
-  const { mongoDBId } = useAuthStore();
+  const { mongoDBId, logout } = useAuthStore();
   const [isMenuOpen, setMenuOpened] = useState(false);
   const [isEditPFPOpen, setEditPFPOpen] = useState(false);
-
+  const methods = useForm<UpdateProfileFields>();
   if (!mongoDBId) {
     return (
       <View className="flex flex-1 justify-center items-center">
@@ -32,7 +35,7 @@ const Profile = () => {
   }, [isEditPFPOpen]);
 
   return (
-    <>
+    <FormProvider {...methods}>
       <Stack.Screen
         options={{
           headerTitle: '',
@@ -77,6 +80,15 @@ const Profile = () => {
                   >
                     <Text>Edit Profile</Text>
                   </TouchableHighlight>
+                  <TouchableHighlight
+                    className="w-full p-2"
+                    onPress={logout}
+                    activeOpacity={0.6}
+                    underlayColor="#DDDDDD"
+                  >
+                    <Text>Log out, scum.</Text>
+                  </TouchableHighlight>
+
                 </View>
               )}
             </View>
@@ -87,7 +99,8 @@ const Profile = () => {
         <User id={mongoDBId || ''} />
         <ChangePFP visible={isEditPFPOpen} onClose={setEditPFPOpen} />
       </View>
-    </>
+    </FormProvider>
+
   );
 };
 

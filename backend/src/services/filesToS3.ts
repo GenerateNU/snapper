@@ -23,7 +23,7 @@ export default async function sendFilesToS3(
 }
 
 //This function should be moved.
-function base64ToFile(
+export function base64ToFile(
   base64String: string,
   fileName: string,
   fileType: string,
