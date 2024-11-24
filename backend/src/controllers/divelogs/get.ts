@@ -26,7 +26,7 @@ export const getAllDiveLogsSortedPaginated = async (
   const user = await userService.getUserBySupabaseId(req.session.userId);
 
   if (!user) {
-    return res.status(404).json({ message: "User not found "});
+    return res.status(404).json({ message: 'User not found ' });
   }
 
   try {

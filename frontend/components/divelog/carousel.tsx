@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { View, Text, Image, LayoutChangeEvent } from 'react-native';
+import { View, Text, LayoutChangeEvent } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
+import { Image } from 'expo-image';
 
 interface CarouselProps {
   data: string[];

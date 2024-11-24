@@ -5,10 +5,11 @@ import ImageCarousel from './carousel';
 import LikeAndShare from './like-share';
 import Caption from './caption';
 import PopulatedInfoPopupButton from '../populated-info-popup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useLike from '../../hooks/like';
 import { router } from 'expo-router';
 import { timeAgo } from '../../utils/profile';
+import { reverseGeocode } from '../../api/location';
 
 interface DiveLogProps {
   userId: string;
@@ -19,6 +20,7 @@ interface DiveLogProps {
   speciesTags: any[];
   profilePicture: string;
   date: Date;
+  location: number[];
 }
 
 const BigDiveLog: React.FC<DiveLogProps> = ({
@@ -30,6 +32,7 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
   speciesTags,
   profilePicture,
   date,
+  location,
 }) => {
   const { isLiking, handleLikeToggle } = useLike(id);
   const [lastTap, setLastTap] = useState(0);
@@ -77,7 +80,7 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
             <Profile size="md" image={profilePicture || PROFILE_PHOTO} />
             <View className="flex flex-col items-start">
               <Text className="font-bold text-md">{username}</Text>
-              <Text className="text-gray-700">Western Reefs</Text>
+              <Text className="text-gray-700">{'Western Reefs'}</Text>
             </View>
           </Pressable>
         </View>

@@ -1,4 +1,4 @@
-import { View, Share} from 'react-native';
+import { View, Share } from 'react-native';
 import IconButton from '../icon-button';
 import useLike from '../../hooks/like';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
@@ -17,11 +17,9 @@ const LikeAndShare: React.FC<LikeAndShareProps> = ({ diveLogId }) => {
     try {
       const result = await Share.share({
         message: url,
-      }); 
-    } catch (error:any) {
-      
-    }
-};
+      });
+    } catch (error: any) {}
+  };
   return (
     <View style={{ gap: 10 }} className="flex-row">
       <IconButton

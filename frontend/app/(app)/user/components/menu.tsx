@@ -46,6 +46,7 @@ const Menu = ({ id }: { id: string }) => {
   const renderDiveLog = ({ item }: { item: any }) => {
     return (
       <BigDiveLog
+        location={item?.location.coordinates}
         date={item?.date}
         userId={item?.user}
         id={item?._id}

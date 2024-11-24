@@ -4,6 +4,7 @@ import {
   FlatList,
   ScrollView,
   Pressable,
+  Image,
 } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
@@ -20,7 +21,6 @@ import { PROFILE_PHOTO } from '../../../consts/profile';
 import { useNearbyDiveLogs } from '../../../hooks/divelog';
 import FilterMenu from '../../../components/home/filter';
 import InfoPopup from '../../../components/info-popup';
-import { useInfoPopup } from '../../../contexts/info-popup-context';
 
 const Home = () => {
   const { mongoDBId } = useAuthStore();
@@ -85,21 +85,27 @@ const Home = () => {
           username={item?.user.username}
           userId={item?.user._id}
           speciesTags={item?.speciesTags}
+          location={item?.location.coordinates}
         />
       </View>
     );
   };
 
-  const renderNearbyPost = ({ item, index }: { item: any; index: number }) => (
-    <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
-      <NearbyDiveLog
-        profilePhoto={item?.user.profilePicture || PROFILE_PHOTO}
-        description={item?.description}
-        divelogId={item?._id}
-        photos={item?.photos}
-      />
-    </View>
-  );
+  const renderNearbyPost = ({ item, index }: { item: any; index: number }) => {
+    const coverPhoto = item?.photos[0];
+    const profilePhoto = item?.user.profilePicture || PROFILE_PHOTO;
+
+    return (
+      <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
+        <NearbyDiveLog
+          profilePhoto={profilePhoto}
+          description={item?.description}
+          divelogId={item?._id}
+          coverPhoto={coverPhoto}
+        />
+      </View>
+    );
+  };
 
   const loadMoreFollowingPosts = () => {
     if (hasNextPageFollowing) {

@@ -1,48 +1,51 @@
-import { View, Image, Text, Pressable } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import Profile from '../profile';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
+import { Image } from 'expo-image';
+import ImageSize from 'react-native-image-size';
 
 interface NearbyDivelogProps {
   profilePhoto: string;
-  photos: string[];
+  coverPhoto: string;
   description: string;
   divelogId: string;
 }
 
 const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
   profilePhoto,
-  photos,
+  coverPhoto,
   description,
   divelogId,
 }) => {
-  const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [aspectRatio, setAspectRatio] = useState(1);
 
   useEffect(() => {
-    if (photos[0]) {
-      Image.getSize(photos[0], (width, height) => {
+    const fetchImageSize = async () => {
+      if (coverPhoto) {
+        const { width, height } = await ImageSize.getSize(coverPhoto);
         setAspectRatio(width / height);
-        setImageLoading(true);
-      });
-    }
-  }, [photos[0]]);
+      }
+    };
+
+    fetchImageSize();
+  }, [coverPhoto]);
 
   return (
     <Pressable
       onPress={() => router.push(`/divelog/${divelogId}`)}
       className="w-full"
     >
-      <View className="drop-shadow-2xl">
+      <View style={{ aspectRatio: aspectRatio }} className="drop-shadow-2xl w-full">
         <Image
           style={{
             width: '100%',
-            aspectRatio: aspectRatio,
-            resizeMode: 'cover',
+            flex: 1,
           }}
+          contentFit="contain"
           className="rounded-lg"
           source={{
-            uri: photos[0],
+            uri: coverPhoto,
           }}
         />
       </View>
