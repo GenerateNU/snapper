@@ -1,24 +1,14 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 import { Category } from '../../consts/home-menu';
 
-interface HomeMenuProps {
-  selected: Category;
-  setSelected: (category: Category) => void;
-}
-
-const HomeMenu: React.FC<HomeMenuProps> = ({ selected, setSelected }) => {
-  const animation = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: selected === Category.FOLLOWING ? 0 : 1,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  }, [selected]);
-
-  const MenuTab = ({
+const MenuTab = React.memo(
+  ({
     isSelected,
     label,
     onPress,
@@ -41,25 +31,42 @@ const HomeMenu: React.FC<HomeMenuProps> = ({ selected, setSelected }) => {
         <Text style={{ color: isSelected ? 'white' : 'gray' }}>{label}</Text>
       </TouchableOpacity>
     );
-  };
+  },
+);
 
-  const translateX = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 200],
-  });
+interface HomeMenuProps {
+  selected: Category;
+  setSelected: (category: Category) => void;
+}
+
+const HomeMenu: React.FC<HomeMenuProps> = ({ selected, setSelected }) => {
+  const translateX = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: withTiming(selected === Category.FOLLOWING ? 0 : 200, {
+            duration: 300,
+            easing: Easing.inOut(Easing.ease),
+          }),
+        },
+      ],
+    };
+  }, [selected]);
 
   return (
     <View className="w-full overflow-hidden flex-row items-center border-[1px] py-1 border-gray-400 rounded-full">
       <Animated.View
         className="bg-deep"
-        style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          width: '50%',
-          transform: [{ translateX }],
-          borderRadius: 50,
-        }}
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            width: '50%',
+            borderRadius: 50,
+          },
+          translateX,
+        ]}
       />
 
       <MenuTab

@@ -1,4 +1,10 @@
-import { View, Pressable, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import Profile from '../profile';
 import { PROFILE_PHOTO } from '../../consts/profile';
 import ImageCarousel from './carousel';
@@ -10,6 +16,7 @@ import useLike from '../../hooks/like';
 import { router } from 'expo-router';
 import { timeAgo } from '../../utils/profile';
 import { reverseGeocode } from '../../api/location';
+import usePulsingAnimation from '../../utils/skeleton'; // Import the pulsing animation hook
 
 interface DiveLogProps {
   userId: string;
@@ -36,6 +43,20 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
 }) => {
   const { isLiking, handleLikeToggle } = useLike(id);
   const [lastTap, setLastTap] = useState(0);
+  const [address, setAddress] = useState('Loading...');
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const address = await reverseGeocode(location[0], location[1]);
+        setAddress(address || 'Western Reefs');
+      } catch (error) {
+        setAddress('Western Reefs');
+      }
+    };
+
+    fetchAddress();
+  }, [location]);
 
   const handleDoubleTap = () => {
     const currentTime = Date.now();
@@ -80,7 +101,7 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
             <Profile size="md" image={profilePicture || PROFILE_PHOTO} />
             <View className="flex flex-col items-start">
               <Text className="font-bold text-md">{username}</Text>
-              <Text className="text-gray-700">{'Western Reefs'}</Text>
+              <Text className="text-gray-700">{address}</Text>
             </View>
           </Pressable>
         </View>

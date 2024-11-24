@@ -1,9 +1,10 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Animated } from 'react-native';
 import Profile from '../profile';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import { Image } from 'expo-image';
 import ImageSize from 'react-native-image-size';
+import usePulsingAnimation from '../../utils/skeleton';
 
 interface NearbyDivelogProps {
   profilePhoto: string;
@@ -18,18 +19,39 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
   description,
   divelogId,
 }) => {
-  const [aspectRatio, setAspectRatio] = useState(1);
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const opacity = usePulsingAnimation();
 
   useEffect(() => {
-    const fetchImageSize = async () => {
-      if (coverPhoto) {
+    const preloadImages = async () => {
+      try {
+        await Promise.all([
+          Image.prefetch(coverPhoto),
+          Image.prefetch(profilePhoto),
+        ]);
+
         const { width, height } = await ImageSize.getSize(coverPhoto);
         setAspectRatio(width / height);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error preloading images:', error);
+        setAspectRatio(1);
+        setIsLoading(false);
       }
     };
 
-    fetchImageSize();
-  }, [coverPhoto]);
+    preloadImages();
+  }, [coverPhoto, profilePhoto]);
+
+  if (aspectRatio === null || isLoading) {
+    return (
+      <Animated.View
+        style={{ opacity: opacity, aspectRatio: 4 / 3 }}
+        className="w-full bg-gray-100 rounded-lg"
+      />
+    );
+  }
 
   return (
     <Pressable
@@ -37,8 +59,8 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
       className="w-full"
     >
       <View
-        style={{ aspectRatio: aspectRatio }}
-        className="drop-shadow-2xl w-full"
+        style={{ aspectRatio }}
+        className="drop-shadow-2xl w-full bg-gray-100"
       >
         <Image
           style={{
@@ -50,6 +72,7 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
           source={{
             uri: coverPhoto,
           }}
+          transition={200} // Smooth fade-in transition
         />
       </View>
       <View className="absolute bottom-2 left-2 flex-row items-center">

@@ -59,6 +59,8 @@
     "@babel/core": "^7.20.0",
     "@tanstack/eslint-plugin-query": "^5.59.1",
     "@types/react": "^18.2.79",
+    "@types/react-native-dotenv": "^0.2.2",
+    "react-native-dotenv": "^3.4.11",
     "react-native-svg-transformer": "^1.5.0",
     "tailwindcss": "3.3.2",
     "typescript": "~5.3.3"
