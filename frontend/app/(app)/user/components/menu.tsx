@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-import { useAuthStore } from '../../../../auth/authStore';
 import {
   useUserById,
   useUserDiveLogs,
@@ -11,15 +10,11 @@ import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
-import DiveLog from '../../../../components/divelog/profile-divelog';
 import BigDiveLog from '../../../../components/divelog/divelog';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
-  const { mongoDBId } = useAuthStore();
   const { data: userData } = useUserById(id);
-
-  const isViewingOwnProfile = mongoDBId === id;
 
   const {
     data: diveLogPages,
@@ -46,7 +41,6 @@ const Menu = ({ id }: { id: string }) => {
     return;
   }
 
-  const profilePhoto = userData?.user.profilePicture || PROFILE_PHOTO;
   const username = userData?.user.username;
 
   const renderDiveLog = ({ item }: { item: any }) => {
@@ -59,7 +53,7 @@ const Menu = ({ id }: { id: string }) => {
         photos={item?.photos}
         description={item?.description}
         username={username}
-        profilePicture={item?.profilePicture}
+        profilePicture={item?.profilePicture || PROFILE_PHOTO}
       />
     );
   };
@@ -92,7 +86,7 @@ const Menu = ({ id }: { id: string }) => {
   const renderSpeciesFooter = () => {
     if (!speciesIsFetchingNextPage) return null;
     return (
-      <View className="flex-row gap-2">
+      <View style={{ gap: 10 }} className="flex-row">
         <SpeciesSkeleton />
         <SpeciesSkeleton />
         <SpeciesSkeleton />

@@ -45,13 +45,19 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
   };
 
   const renderTag = (item: any) => {
+    if (!item || !item.scientificName) return null;
+
+    const displayName = item.commonNames?.length
+      ? item.commonNames[0]
+      : item.scientificName;
+
     return (
       <PopulatedInfoPopupButton
         key={`${item._id}`}
         speciesId={item.scientificName}
       >
         <TouchableOpacity className="p-2 rounded-full border border-1">
-          <Text>{item.commonNames[0]}</Text>
+          <Text>{displayName}</Text>
         </TouchableOpacity>
       </PopulatedInfoPopupButton>
     );

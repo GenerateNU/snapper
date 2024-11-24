@@ -20,7 +20,8 @@ import { UpdateProfileFields } from '../../../../types/userProfile';
 
 export function NewPFP(id: any): JSX.Element {
   const { data, isError, isLoading } = useUserById(id);
-  const { register, setValue, formState } = useFormContext<UpdateProfileFields>();
+  const { register, setValue, formState } =
+    useFormContext<UpdateProfileFields>();
   const { isSubmitted, isDirty } = formState;
   const [image, setImage] = useState<string>();
   register('profilePicture');

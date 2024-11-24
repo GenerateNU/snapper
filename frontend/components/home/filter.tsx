@@ -1,26 +1,59 @@
-import { View, FlatList, Text, TouchableOpacity } from "react-native";
-import { Filter } from "../../consts/home-menu";
+import { FlatList, Text, TouchableOpacity } from 'react-native';
+import { Filter, FILTERS } from '../../consts/home-menu';
 
 interface FilterProps {
-    selected: Filter;
-    setSelected: (selected: Filter) => void;
+  selected: Filter[];
+  setSelected: (selected: Filter[]) => void;
 }
 
-const FilterMenu: React.FC<FilterProps> = ({selected, setSelected}) => {
-    const renderFilter = ({item}: {item: Filter}) => (
-        <TouchableOpacity className={`p-2 rounded-full ${selected === item ? "" : ""}`}>
-            <Text className={``}>{item}</Text>
-        </TouchableOpacity>
-    );
+const FilterMenu: React.FC<FilterProps> = ({ selected, setSelected }) => {
+  const isSelected = (item: Filter) => {
+    return selected.includes(item);
+  };
 
-    return (
-        <FlatList 
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={[Filter.ALL, Filter.CLAM, Filter.FISH, Filter.REEF, Filter.SHARK]}
-            renderItem={renderFilter}
-        />
-    );
+  const updateSelectedFilters = (touchedFilter: Filter) => {
+    let selectedFilters: Filter[];
+
+    if (touchedFilter === Filter.ALL) {
+      selectedFilters = [Filter.ALL];
+    } else {
+      selectedFilters = isSelected(touchedFilter)
+        ? selected.filter((filter: Filter) => filter !== touchedFilter)
+        : [
+            ...selected.filter((filter: Filter) => filter !== Filter.ALL),
+            touchedFilter,
+          ];
+    }
+
+    if (selectedFilters.length === 0) {
+      selectedFilters = [Filter.ALL];
+    }
+
+    setSelected(selectedFilters);
+  };
+
+  const renderFilter = ({ item }: { item: Filter }) => (
+    <TouchableOpacity
+      onPress={() => updateSelectedFilters(item)}
+      className={`py-2 px-4 mr-2 rounded-full ${isSelected(item) ? 'bg-deep' : 'border-[1px] border-gray-300'}`}
+    >
+      <Text className={`${isSelected(item) ? 'text-white' : 'text-gray-500'}`}>
+        {item}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <FlatList
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      data={FILTERS}
+      contentContainerStyle={{
+        marginLeft: 20,
+      }}
+      renderItem={renderFilter}
+    />
+  );
 };
 
 export default FilterMenu;

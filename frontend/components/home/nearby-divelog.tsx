@@ -16,18 +16,23 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
   description,
   divelogId,
 }) => {
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
   const [aspectRatio, setAspectRatio] = useState(1);
 
   useEffect(() => {
     if (photos[0]) {
       Image.getSize(photos[0], (width, height) => {
         setAspectRatio(width / height);
+        setImageLoading(true);
       });
     }
   }, [photos[0]]);
 
   return (
-    <Pressable onPress={() => router.push(`/divelog/${divelogId}`)} className="w-full">
+    <Pressable
+      onPress={() => router.push(`/divelog/${divelogId}`)}
+      className="w-full"
+    >
       <View className="drop-shadow-2xl">
         <Image
           style={{

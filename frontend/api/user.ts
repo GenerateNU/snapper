@@ -105,13 +105,13 @@ export async function toggleLikeDivelog(
   }
 }
 
-export async function updateProfilePhoto(photo: string): Promise<void>{
+export async function updateProfilePhoto(photo: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/user/actions/edit`, {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({profilePhoto: photo}),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ profilePhoto: photo }),
   });
-  if(!response.ok){
+  if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.error || 'failed to change profile pic');
   }

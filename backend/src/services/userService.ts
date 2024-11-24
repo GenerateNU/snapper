@@ -226,7 +226,7 @@ export class UserServiceImpl implements UserService {
       .populate({
         path: 'diveLogs',
         options: {
-          sort: { createdAt: -1 },
+          sort: { date: -1 },
           limit: limit,
           skip: calculatedSkip,
         },
@@ -292,7 +292,8 @@ export class UserServiceImpl implements UserService {
     const diveLogs = await DiveLog.find({
       user: { $in: user.following },
     })
-      .populate('user', 'username')
+      .populate('speciesTags')
+      .populate('user', 'username profilePicture')
       .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(limit);

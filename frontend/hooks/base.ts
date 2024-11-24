@@ -5,6 +5,9 @@ export const useQueryBase = (key: string[], queryFn: () => Promise<any>) => {
   return useQuery({
     queryKey: key,
     queryFn,
+    refetchOnWindowFocus: true,
+    staleTime: 30000,
+    refetchInterval: false,
   });
 };
 
@@ -14,7 +17,7 @@ export const useQueryPagination = (
   queryFunction: (id: string, page: number) => Promise<any[]>,
   infiniteScroll?: boolean,
 ) => {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: [model, id],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await queryFunction(id, pageParam);
@@ -22,13 +25,26 @@ export const useQueryPagination = (
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length > 0
-        ? allPages.length + 1
-        : infiniteScroll
-          ? 1
-          : undefined;
+      if (lastPage.length > 0) {
+        return allPages.length + 1;
+      }
+      return infiniteScroll ? 1 : undefined;
     },
+    refetchOnWindowFocus: true,
+    staleTime: 30000,
+    refetchInterval: false,
   });
+
+  const handleEndReached = useCallback(() => {
+    if (infiniteScroll && query.hasNextPage && !query.isFetching) {
+      query.fetchNextPage();
+    }
+  }, [infiniteScroll, query.hasNextPage, query.isFetching]);
+
+  return {
+    ...query,
+    handleEndReached,
+  };
 };
 
 interface ToggleBaseOptions<T, P> {

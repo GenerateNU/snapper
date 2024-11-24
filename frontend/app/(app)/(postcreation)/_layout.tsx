@@ -16,6 +16,7 @@ export default function Layout() {
             headerTitle: '',
             headerTransparent: true,
             headerShown: true,
+            gestureEnabled: false,
             headerLeft: () => (
               <Arrow direction="left" onPress={() => router.push('/(tabs)')} />
             ),
@@ -28,6 +29,9 @@ export default function Layout() {
             headerTitle: '',
             headerTransparent: true,
             gestureEnabled: false,
+            headerLeft: () => (
+              <Arrow direction="left" onPress={() => router.back()} />
+            ),
           }}
         />
       </Stack>

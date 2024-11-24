@@ -30,6 +30,27 @@ export const getAllDiveLogsSortedPaginated = async (
       },
       { $skip: (pageNumber - 1) * pageSize },
       { $limit: pageSize },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userDetails',
+        },
+      },
+      {
+        $unwind: '$userDetails',
+      },
+      {
+        $addFields: {
+          'user.profilePicture': '$userDetails.profilePicture',
+        },
+      },
+      {
+        $project: {
+          userDetails: 0,
+        },
+      },
     ]);
 
     res.status(200).json(diveLogs);
