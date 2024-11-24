@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
 import { DiveLog } from '../../models/diveLog';
+import { UserService, UserServiceImpl } from '../../services/userService';
+
+const userService: UserService = new UserServiceImpl();
 
 export const getAllDiveLogsSortedPaginated = async (
   req: Request,
@@ -15,6 +18,16 @@ export const getAllDiveLogsSortedPaginated = async (
 
   const pageNumber = parseInt(page as string);
   const pageSize = parseInt(limit as string);
+
+  if (!req.session.userId) {
+    return res.status(401);
+  }
+
+  const user = await userService.getUserBySupabaseId(req.session.userId);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found "});
+  }
 
   try {
     const diveLogs = await DiveLog.aggregate([
@@ -36,6 +49,11 @@ export const getAllDiveLogsSortedPaginated = async (
           localField: 'user',
           foreignField: '_id',
           as: 'userDetails',
+        },
+      },
+      {
+        $match: {
+          user: { $ne: user._id },
         },
       },
       {
