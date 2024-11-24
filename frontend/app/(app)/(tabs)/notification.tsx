@@ -77,14 +77,14 @@ const Notification = () => {
     return (
       <View className="mb-2">
         <NotificationEntry
-          username={item.actor.username}
-          message={item.message}
-          actorId={item.actor._id}
-          targetId={item.target._id}
-          type={item.type}
-          postImage={item.target.photos ? item.target.photos[0] : ''}
-          time={item.time}
-          profilePicture={item.actor.profilePicture}
+          username={item?.actor?.username}
+          message={item?.message}
+          actorId={item?.actor?._id}
+          targetId={item?.target?._id}
+          type={item?.type}
+          postImage={item?.target?.photos ? item.target.photos[0] : ''}
+          time={item?.time}
+          profilePicture={item?.actor?.profilePicture}
         />
       </View>
     );

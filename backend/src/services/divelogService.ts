@@ -2,6 +2,7 @@ import { DiveLog } from '../models/diveLog';
 import mongoose, { Document } from 'mongoose';
 import { UserModel } from '../models/users';
 import { NotFoundError } from '../consts/errors';
+import { Notification } from '../models/notification';
 
 export interface DiveLogService {
   /**
@@ -99,7 +100,61 @@ export class DiveLogServiceImpl implements DiveLogService {
   }
 
   async deleteDiveLog(id: string): Promise<Document | null> {
-    return DiveLog.findByIdAndDelete(id).exec();
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const diveLog = await DiveLog.findById(id).session(session);
+      if (!diveLog) {
+        throw new NotFoundError('DiveLog not found');
+      }
+
+      const userId = diveLog.user;
+
+      // delete notification related to divelog
+      await Notification.deleteMany({
+        target: id,
+        targetModel: 'DiveLog',
+      }).session(session);
+
+      // delete divelog
+      await DiveLog.findByIdAndDelete(id).session(session);
+
+      const remainingSpecies = await DiveLog.aggregate([
+        {
+          $match: {
+            user: userId,
+            _id: { $ne: new mongoose.Types.ObjectId(id) },
+          },
+        },
+        { $unwind: '$speciesCollected' },
+        { $group: { _id: null, species: { $addToSet: '$speciesCollected' } } },
+        { $project: { _id: 0, species: 1 } },
+      ]).session(session);
+
+      // remove species user collected if it is not in other divelogs
+      const remainingSpeciesIds = remainingSpecies[0]?.species || [];
+
+      const user = await UserModel.findById(userId).session(session);
+      if (!user) {
+        throw new NotFoundError('User not found');
+      }
+
+      user.speciesCollected = user.speciesCollected.filter((speciesId: any) =>
+        remainingSpeciesIds.some((id: any) => id.equals(speciesId)),
+      );
+
+      await user.save({ session });
+
+      await session.commitTransaction();
+
+      return diveLog;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
   }
 
   async toggleLikeDiveLog(

@@ -36,7 +36,10 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
       onPress={() => router.push(`/divelog/${divelogId}`)}
       className="w-full"
     >
-      <View style={{ aspectRatio: aspectRatio }} className="drop-shadow-2xl w-full">
+      <View
+        style={{ aspectRatio: aspectRatio }}
+        className="drop-shadow-2xl w-full"
+      >
         <Image
           style={{
             width: '100%',

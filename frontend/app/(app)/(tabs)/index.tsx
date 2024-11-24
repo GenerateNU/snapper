@@ -73,6 +73,10 @@ const Home = () => {
     hasNextPage: hasNextPageNearby,
   } = useNearbyDiveLogs(currentLocation.latitude, currentLocation.longitude);
 
+  if (followingPosts?.pages.flatMap((page) => page).length === 0) {
+    return;
+  }
+
   const renderFollowingPost = ({ item }: { item: any }) => {
     return (
       <View className="w-full">
