@@ -1,4 +1,4 @@
-import { View, SafeAreaView, FlatList } from 'react-native';
+import { View, SafeAreaView, FlatList,ScrollView } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category } from '../../../consts/home-menu';
@@ -12,6 +12,7 @@ import * as Location from 'expo-location';
 import { DEFAULT_SHERM_LOCATION } from '../../../consts/location';
 import { PROFILE_PHOTO } from '../../../consts/profile';
 import { useNearbyDiveLogs } from '../../../hooks/divelog';
+import Button from '../../../components/button';
 
 const Home = () => {
   const { mongoDBId } = useAuthStore();
@@ -104,13 +105,21 @@ const Home = () => {
     </View>
   );
 
+  const { logout, loading } = useAuthStore();
+
   return (
     <SafeAreaView className="flex-1">
-      <View
+      <View                                                          
         style={{ gap: 20 }}
-        className="flex-1 justify-start px-[5%] mt-[5%]"
+        className="flex-1 justify-start px-[5%]"
       >
+        <Button
+        onPress={logout}
+        textOnly
+        text={loading ? 'Logging out' : 'Logout'}
+      />
         <HomeMenu selected={selected} setSelected={setSelected} />
+
         {selected === Category.FOLLOWING ? (
           isLoadingFollowing ? (
             <FlatList data={[1, 2, 3]} renderItem={() => <DiveLogSkeleton />} />
