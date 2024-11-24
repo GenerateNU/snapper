@@ -21,7 +21,7 @@ Make sure you are located in the `scripts/` directory and run the following
 commands.
 
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```

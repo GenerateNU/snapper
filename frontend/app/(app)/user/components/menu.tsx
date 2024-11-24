@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useAuthStore } from '../../../../auth/authStore';
+import DiveLog from '../../../../components/divelog/divelog';
+import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
+import { PROFILE_PHOTO } from '../../../../consts/profile';
 import {
   useUserById,
   useUserDiveLogs,
   useUserSpecies,
 } from '../../../../hooks/user';
-import Species from './species';
 import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
-import { PROFILE_PHOTO } from '../../../../consts/profile';
-import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
-import DiveLog from '../../../../components/divelog/divelog';
+import Species from './species';
 
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
@@ -67,7 +67,7 @@ const Menu = ({ id }: { id: string }) => {
   const renderSpecies = ({ item }: { item: any }) => {
     return (
       <PopulatedInfoPopupButton key={item._id} speciesId={item.scientificName}>
-        <Species />
+        <Species image={item.iconUrl} />
       </PopulatedInfoPopupButton>
     );
   };

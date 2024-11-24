@@ -1,11 +1,20 @@
 export type SpeciesContent = {
   _id: string;
-  aphiaId: { type: String };
-  articleUrl: { type: String };
-  articleTitle: { type: String };
+  aphiaId: string;
+  articleUrl: string;
+  articleTitle: string;
   commonNames: string[];
-  scientificName: { type: String };
-  introduction: { type: String };
-  imageUrls: [String];
+  scientificName: string;
+  introduction: string;
+  imageUrls: string[];
+  iconUrl: string;
+  species: string;
+  genus: string;
+  family: string;
+  order: string;
+  class: string;
+  phylum: string;
+  kingdom: string;
+  domain: string;
   visibility: boolean;
 };
