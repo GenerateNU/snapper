@@ -35,11 +35,6 @@ const Profile = () => {
     );
   }
 
-  const closeEverything = () => {
-    setMenuOpened(false);
-    setClose();
-  };
-
   return (
     <FormProvider {...methods}>
       <Stack.Screen
@@ -101,7 +96,7 @@ const Profile = () => {
         }}
       />
       <Pressable
-        onPress={closeEverything}
+        onPress={() => setMenuOpened(false)}
         className="relative flex flex-1 items-center"
       >
         <User id={mongoDBId} />

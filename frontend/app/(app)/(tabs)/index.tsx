@@ -105,7 +105,7 @@ const Home = () => {
   );
 
   return (
-    <Pressable className="flex-1" onPress={setClose}>
+    <>
       <SafeAreaView className="flex-1 justify-start" style={{ gap: 15 }}>
         <View style={{ gap: 10 }} className="flex-col">
           <View className="px-[5%]">
@@ -155,7 +155,7 @@ const Home = () => {
         </View>
       </SafeAreaView>
       <InfoPopup />
-    </Pressable>
+    </>
   );
 };
 

@@ -7,7 +7,12 @@ interface ProfileProps {
   borderColor?: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ image, outline = false, size, borderColor = 'border-darkblue' }) => {
+const Profile: React.FC<ProfileProps> = ({
+  image,
+  outline = false,
+  size,
+  borderColor = 'border-darkblue',
+}) => {
   const sizeMap = {
     sm: 35,
     md: 50,
