@@ -31,10 +31,7 @@ TAXONOMY = [
 
 
 def populate_wikidata():
-    wikidata = db["species_new"]
-    taxons_db = db["taxons"]
-
-    taxons_db.drop()
+    wikidata = db["species"]
     wikidata.drop()
 
     wikidata_iter = iter(Wikidata())
@@ -55,24 +52,10 @@ def populate_wikidata():
 
             for taxon in TAXONOMY:
                 taxon_qids = out[taxon].str.split("/").str[-1]
-                taxon_names = out[f"{taxon}Label"]
 
                 out = out.drop(columns=[f"{taxon}Label"])
 
-                # Find or create
-                try:
-                    taxons_db.insert_many(
-                        [
-                            {"_id": qid, "name": name, "rank": taxon}
-                            for qid, name in zip(taxon_qids, taxon_names)
-                        ],
-                        ordered=False,
-                    )
-                except errors.BulkWriteError:
-                    pass
-
                 out[taxon] = taxon_qids
-            out["_id"] = out["species"]
             out = out.iloc[0].to_dict()
             out["commonNames"] = list(set(info["common_name"].to_list()))
             out["imageUrls"] = list(set(info["image_url"].to_list()))
@@ -95,7 +78,7 @@ def populate_wikidata():
 
 
 def populate_wikipedia_intros():
-    wikidata = db["species_new"]
+    wikidata = db["species"]
     BATCH_SIZE = 20
 
     pages = (wikidata.count_documents({}) // BATCH_SIZE) + 1
@@ -115,7 +98,7 @@ def populate_wikipedia_intros():
 
 
 def populate_worms():
-    wikidata = db["species_new"]
+    wikidata = db["species"]
     worms = db["worms"]
 
     BATCH_SIZE = 10
@@ -139,15 +122,15 @@ def populate_worms():
 
 def add_icons():
     for taxon in TAXONOMY:
-        wikidata = db["species_new"]
+        wikidata = db["species"]
 
         for qid, icon_url in ICON_MAPPING.items():
             wikidata.update_many({taxon: qid}, {"$set": {"iconUrl": icon_url}})
 
 
 def main():
-    # populate_wikidata()
-    # populate_wikipedia_intros()
+    #populate_wikidata()
+    populate_wikipedia_intros()
     add_icons()
 
 

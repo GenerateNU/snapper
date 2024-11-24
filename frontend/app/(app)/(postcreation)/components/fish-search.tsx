@@ -1,19 +1,17 @@
-import React from 'react';
-import {
-  TextInput,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useState, useEffect } from 'react';
-import Tag from '../../../../components/tag';
-import { apiConfig } from '../../../../api/apiContext';
-import { SpeciesContent } from '../../../../types/species';
-import { TagData } from '../../../../types/divelog';
+import {
+  Image,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { searchSpecies } from '../../../../api/species';
+import Tag from '../../../../components/tag';
+import { TagData } from '../../../../types/divelog';
+import { SpeciesContent } from '../../../../types/species';
 
 export default function FishSearch() {
   const { setValue, watch } = useFormContext();
@@ -38,6 +36,7 @@ export default function FishSearch() {
 
   const updateBoolAtIndex = (index: number, value: boolean) => {
     const newData = [...data];
+    console.log(data);
     if (value && !tagIncludes(data[index].commonNames[0], data[index]._id)) {
       setValue('tagData', [
         { name: data[index].commonNames[0], id: data[index]._id },

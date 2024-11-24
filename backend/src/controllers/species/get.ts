@@ -24,6 +24,7 @@ export const searchSpecies = async (
   res: express.Response,
 ) => {
   const allSpecies = await Species.find();
+  console.log(allSpecies)
   console.log(allSpecies.length);
   //More options can be added later
   //https://www.fusejs.io/api/options.html

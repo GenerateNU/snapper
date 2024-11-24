@@ -41,6 +41,8 @@ ICON_MAPPING = {
   "Q9292308": "https://dodo.ac/np/images/3/34/Football_Fish_NH_Icon.png",
   "Q139783": "https://dodo.ac/np/images/1/17/Giant_Trevally_NH_Icon.png",
   "Q132133": "https://dodo.ac/np/images/e/ea/Killifish_NH_Icon.png",
+  "Q1431202": "https://dodo.ac/np/images/e/ea/Killifish_NH_Icon.png",
+  "Q2359231": "https://dodo.ac/np/images/e/ea/Killifish_NH_Icon.png",
   "Q387587": "https://dodo.ac/np/images/e/ee/Puffer_Fish_NH_Icon.png",
   "Q14443": "https://dodo.ac/np/images/f/fe/Dorado_NH_Icon.png",
   "Q134268": "https://dodo.ac/np/images/0/0b/Nibble_Fish_NH_Icon.png",

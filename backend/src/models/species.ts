@@ -8,32 +8,15 @@ const SpeciesSchema = new mongoose.Schema({
   scientificName: { type: String },
   introduction: { type: String },
   imageUrls: [String],
-  iconUrl: { type: String },
-  genus: { type: mongoose.Schema.Types.ObjectId, ref: 'Taxon', required: true },
-  family: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Taxon',
-    required: true,
-  },
-  order: { type: mongoose.Schema.Types.ObjectId, ref: 'Taxon', required: true },
-  class: { type: mongoose.Schema.Types.ObjectId, ref: 'Taxon', required: true },
-  phylum: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Taxon',
-    required: true,
-  },
-  kingdom: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Taxon',
-    required: true,
-  },
-  domain: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Taxon',
-    required: true,
-  },
+  iconUrl: { type: String, required: true },
+  species: { type: String, required: true },
+  genus: { type: String },
+  family: { type: String },
+  order: { type: String },
+  class: { type: String },
+  phylum: { type: String },
+  kingdom: { type: String },
+  domain: { type: String },
 });
-
-SpeciesSchema.index({ commonNames: 'text' });
 
 export const Species = mongoose.model('Species', SpeciesSchema);
