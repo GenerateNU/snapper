@@ -73,10 +73,6 @@ const Home = () => {
     hasNextPage: hasNextPageNearby,
   } = useNearbyDiveLogs(currentLocation.latitude, currentLocation.longitude);
 
-  if (followingPosts?.pages.flatMap((page) => page).length === 0) {
-    return;
-  }
-
   const renderFollowingPost = ({ item }: { item: any }) => {
     return (
       <View className="w-full">
@@ -134,7 +130,7 @@ const Home = () => {
         </View>
 
         <View className="px-[5%]">
-          {selectedCategory === Category.FOLLOWING ? (
+          {selectedCategory === Category.FOLLOWING && (followingPosts?.pages?.flatMap((page) => page) ?? []).length > 0 ? (
             isLoadingFollowing ? (
               <FlatList
                 data={[1, 2, 3]}
