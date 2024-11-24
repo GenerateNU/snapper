@@ -1,4 +1,4 @@
-{
+ICON_MAPPING = {
   "Q726399": "https://dodo.ac/np/images/0/0b/Betta_NH_Icon.png",
   "Q127282": "https://dodo.ac/np/images/0/00/Black_Bass_NH_Icon.png",
   "Q60500115": "https://dodo.ac/np/images/4/47/Butterfly_Fish_NH_Icon.png",

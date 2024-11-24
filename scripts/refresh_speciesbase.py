@@ -5,6 +5,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from pymongo import MongoClient, errors
 
+from icon_mapping import ICON_MAPPING
 from wikidata import Wikidata
 from wikipedia import get_intros
 from worms import fetch_worms
@@ -17,8 +18,20 @@ client = MongoClient(MONGO_URL)
 db = client["test"]
 
 
+TAXONOMY = [
+    "domain",
+    "kingdom",
+    "phylum",
+    "class",
+    "order",
+    "family",
+    "genus",
+    "species",
+]
+
+
 def populate_wikidata():
-    wikidata = db["species"]
+    wikidata = db["species_new"]
     taxons_db = db["taxons"]
 
     taxons_db.drop()
@@ -40,18 +53,7 @@ def populate_wikidata():
             # Replace NaN with None in the locationLabel column
             info["locationLabel"] = info["locationLabel"].replace({np.nan: None})
 
-            taxonomy = [
-                "species",
-                "domain",
-                "kingdom",
-                "phylum",
-                "class",
-                "order",
-                "family",
-                "genus",
-            ]
-
-            for taxon in taxonomy:
+            for taxon in TAXONOMY:
                 taxon_qids = out[taxon].str.split("/").str[-1]
                 taxon_names = out[f"{taxon}Label"]
 
@@ -93,7 +95,7 @@ def populate_wikidata():
 
 
 def populate_wikipedia_intros():
-    wikidata = db["species"]
+    wikidata = db["species_new"]
     BATCH_SIZE = 20
 
     pages = (wikidata.count_documents({}) // BATCH_SIZE) + 1
@@ -113,7 +115,7 @@ def populate_wikipedia_intros():
 
 
 def populate_worms():
-    wikidata = db["species"]
+    wikidata = db["species_new"]
     worms = db["worms"]
 
     BATCH_SIZE = 10
@@ -135,9 +137,18 @@ def populate_worms():
             print("Error when fetching and/or inserting worms", e)
 
 
+def add_icons():
+    for taxon in TAXONOMY:
+        wikidata = db["species_new"]
+
+        for qid, icon_url in ICON_MAPPING.items():
+            wikidata.update_many({taxon: qid}, {"$set": {"iconUrl": icon_url}})
+
+
 def main():
-    populate_wikidata()
+    # populate_wikidata()
     # populate_wikipedia_intros()
+    add_icons()
 
 
 if __name__ == "__main__":
