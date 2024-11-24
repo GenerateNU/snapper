@@ -53,7 +53,7 @@ const Menu = ({ id }: { id: string }) => {
         photos={item?.photos}
         description={item?.description}
         username={username}
-        profilePicture={item?.profilePicture || PROFILE_PHOTO}
+        profilePicture={item?.user.profilePicture || PROFILE_PHOTO}
       />
     );
   };

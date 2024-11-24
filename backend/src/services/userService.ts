@@ -230,10 +230,16 @@ export class UserServiceImpl implements UserService {
           limit: limit,
           skip: calculatedSkip,
         },
-        populate: {
-          path: 'speciesTags',
-          select: 'commonNames scientificName',
-        },
+        populate: [
+          {
+            path: 'speciesTags',
+            select: 'commonNames scientificName',
+          },
+          {
+            path: 'user',
+            select: 'profilePicture',
+          },
+        ],
       })
       .exec();
 

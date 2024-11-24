@@ -1,4 +1,10 @@
-import { View, SafeAreaView, FlatList, ScrollView } from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  FlatList,
+  ScrollView,
+  Pressable,
+} from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category, Filter } from '../../../consts/home-menu';
@@ -14,9 +20,11 @@ import { PROFILE_PHOTO } from '../../../consts/profile';
 import { useNearbyDiveLogs } from '../../../hooks/divelog';
 import FilterMenu from '../../../components/home/filter';
 import InfoPopup from '../../../components/info-popup';
+import { useInfoPopup } from '../../../contexts/info-popup-context';
 
 const Home = () => {
   const { mongoDBId } = useAuthStore();
+  const { setClose } = useInfoPopup();
   const [selectedCategory, setSelectedCategory] = useState<Category>(
     Category.FOLLOWING,
   );
@@ -97,7 +105,7 @@ const Home = () => {
   );
 
   return (
-    <>
+    <Pressable className="flex-1" onPress={setClose}>
       <SafeAreaView className="flex-1 justify-start" style={{ gap: 15 }}>
         <View style={{ gap: 10 }} className="flex-col">
           <View className="px-[5%]">
@@ -147,7 +155,7 @@ const Home = () => {
         </View>
       </SafeAreaView>
       <InfoPopup />
-    </>
+    </Pressable>
   );
 };
 
