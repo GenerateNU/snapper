@@ -22,8 +22,13 @@ def get_intros(titles: list[str]) -> dict[list[str]]:
     out = {}
 
     print(res.json())
+    
+    data = res.json()
+    
+    if not data.get("query", {}).get("pages"):
+        return out
 
-    for page in res.json()["query"]["pages"]:
+    for page in data["query"]["pages"]:
         out[page["title"]] = page.get("extract")
 
     return out
