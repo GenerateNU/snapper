@@ -8,11 +8,9 @@ import { useState, useEffect } from 'react';
 import { ChangePFP } from './profileComponents/editProfileModal';
 import { useForm, FormProvider } from 'react-hook-form';
 import { UpdateProfileFields } from '../../../types/userProfile';
-import { useInfoPopup } from '../../../contexts/info-popup-context';
 
 const Profile = () => {
   const { mongoDBId, logout } = useAuthStore();
-  const { setClose } = useInfoPopup();
   const [isMenuOpen, setMenuOpened] = useState(false);
   const [isEditPFPOpen, setEditPFPOpen] = useState(false);
   const methods = useForm<UpdateProfileFields>();

@@ -24,7 +24,6 @@ import { useInfoPopup } from '../../../contexts/info-popup-context';
 
 const Home = () => {
   const { mongoDBId } = useAuthStore();
-  const { setClose } = useInfoPopup();
   const [selectedCategory, setSelectedCategory] = useState<Category>(
     Category.FOLLOWING,
   );
@@ -63,7 +62,6 @@ const Home = () => {
     fetchNextPage: fetchNextPageFollowing,
     hasNextPage: hasNextPageFollowing,
     isFetchingNextPage: isFetchingNextPageFollowing,
-    handleEndReached: handleEndReachFollowingPosts,
   } = useUserFollowingPosts(mongoDBId!);
 
   const {
@@ -73,7 +71,6 @@ const Home = () => {
     refetch: refetchNearby,
     fetchNextPage: fetchNextPageNearby,
     hasNextPage: hasNextPageNearby,
-    isFetchingNextPage: isFetchingNextPageNearby,
   } = useNearbyDiveLogs(currentLocation.latitude, currentLocation.longitude);
 
   const renderFollowingPost = ({ item }: { item: any }) => {
@@ -104,6 +101,12 @@ const Home = () => {
     </View>
   );
 
+  const loadMoreFollowingPosts = () => {
+    if (hasNextPageFollowing) {
+      fetchNextPageFollowing();
+    }
+  };
+
   return (
     <>
       <SafeAreaView className="flex-1 justify-start" style={{ gap: 15 }}>
@@ -133,7 +136,17 @@ const Home = () => {
                 renderItem={renderFollowingPost}
                 showsVerticalScrollIndicator={false}
                 onEndReachedThreshold={0.3}
-                onEndReached={handleEndReachFollowingPosts}
+                onEndReached={loadMoreFollowingPosts}
+                ListFooterComponent={
+                  isFetchingNextPageFollowing ? (
+                    <View className="mt-5">
+                      <DiveLogSkeleton />
+                    </View>
+                  ) : null
+                }
+                contentContainerStyle={{
+                  paddingBottom: 150,
+                }}
                 ItemSeparatorComponent={() => <View className="h-12" />}
                 data={followingPosts?.pages.flatMap((page) => page) || []}
               />

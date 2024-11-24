@@ -17,7 +17,7 @@ export const useQueryPagination = (
   queryFunction: (id: string, page: number) => Promise<any[]>,
   infiniteScroll?: boolean,
 ) => {
-  const query = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: [model, id],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await queryFunction(id, pageParam);
@@ -25,26 +25,31 @@ export const useQueryPagination = (
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length > 0) {
-        return allPages.length + 1;
+      if (lastPage.length < allPages[0].length) {
+        return infiniteScroll ? 1 : undefined;
       }
-      return infiniteScroll ? 1 : undefined;
+
+      const pageSignatures = allPages.map((page) => JSON.stringify(page));
+
+      const currentSignature = JSON.stringify(lastPage);
+      const firstOccurrence = pageSignatures.indexOf(currentSignature);
+      const hasRepeatedPattern = firstOccurrence < pageSignatures.length - 1;
+
+      if (hasRepeatedPattern) {
+        const cycleLength = pageSignatures.length - firstOccurrence - 1;
+
+        const currentPosition = allPages.length - firstOccurrence;
+        return currentPosition >= cycleLength
+          ? firstOccurrence + 1
+          : allPages.length + 1;
+      }
+
+      return allPages.length + 1;
     },
     refetchOnWindowFocus: true,
     staleTime: 30000,
     refetchInterval: false,
   });
-
-  const handleEndReached = useCallback(() => {
-    if (infiniteScroll && query.hasNextPage && !query.isFetching) {
-      query.fetchNextPage();
-    }
-  }, [infiniteScroll, query.hasNextPage, query.isFetching]);
-
-  return {
-    ...query,
-    handleEndReached,
-  };
 };
 
 interface ToggleBaseOptions<T, P> {
