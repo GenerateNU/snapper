@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -18,6 +24,7 @@ import Species from './species';
 import BigDiveLog from '../../../../components/divelog/divelog';
 
 const Menu = ({ id }: { id: string }) => {
+  const { width } = Dimensions.get('window');
   const [category, setCategory] = useState('Dives');
   const { data: userData } = useUserById(id);
 
@@ -25,7 +32,7 @@ const Menu = ({ id }: { id: string }) => {
     return {
       transform: [
         {
-          translateX: withTiming(category === 'Dives' ? 0 : 190, {
+          translateX: withTiming(category === 'Dives' ? 0 : (width / 2) * 0.9, {
             duration: 300,
             easing: Easing.bezier(0.25, 0.1, 0.25, 1),
           }),

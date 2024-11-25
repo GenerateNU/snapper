@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -37,14 +37,19 @@ interface HomeMenuProps {
 }
 
 const HomeMenu: React.FC<HomeMenuProps> = ({ selected, setSelected }) => {
+  const { width } = Dimensions.get('window');
+
   const translateX = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateX: withTiming(selected === Category.FOLLOWING ? 0 : 200, {
-            duration: 300,
-            easing: Easing.inOut(Easing.ease),
-          }),
+          translateX: withTiming(
+            selected === Category.FOLLOWING ? 0 : (width / 2) * 0.9,
+            {
+              duration: 300,
+              easing: Easing.inOut(Easing.ease),
+            },
+          ),
         },
       ],
     };
@@ -53,7 +58,7 @@ const HomeMenu: React.FC<HomeMenuProps> = ({ selected, setSelected }) => {
   return (
     <View className="w-full overflow-hidden flex-row items-center border-[1px] py-1 border-gray-400 rounded-full">
       <Animated.View
-        className="bg-deep absolute top-0 bottom-0 w-1/2 rounded-full"
+        className="bg-deep absolute top-0 bottom-0 rounded-full w-1/2"
         style={[translateX]}
       />
 

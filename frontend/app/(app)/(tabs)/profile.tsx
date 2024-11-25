@@ -93,13 +93,10 @@ const Profile = () => {
           ),
         }}
       />
-      <Pressable
-        onPress={() => setMenuOpened(false)}
-        className="relative flex flex-1 items-center"
-      >
+      <View className="relative flex flex-1 items-center">
         <User id={mongoDBId} />
         <ChangePFP visible={isEditPFPOpen} onClose={setEditPFPOpen} />
-      </Pressable>
+      </View>
     </FormProvider>
   );
 };
