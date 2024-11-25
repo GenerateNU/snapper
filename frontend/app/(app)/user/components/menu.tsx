@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import {
@@ -15,6 +20,19 @@ import BigDiveLog from '../../../../components/divelog/divelog';
 const Menu = ({ id }: { id: string }) => {
   const [category, setCategory] = useState('Dives');
   const { data: userData } = useUserById(id);
+
+  const indicatorStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: withTiming(category === 'Dives' ? 0 : 190, {
+            duration: 300,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+          }),
+        },
+      ],
+    };
+  }, [category]);
 
   const {
     data: diveLogPages,
@@ -38,10 +56,8 @@ const Menu = ({ id }: { id: string }) => {
   const speciesData = speciesPages?.pages.flatMap((page) => page) ?? [];
 
   if (diveLogData.length === 0 && speciesData.length === 0) {
-    return;
+    return null;
   }
-
-  const username = userData?.user.username;
 
   const renderDiveLog = ({ item }: { item: any }) => {
     return (
@@ -53,7 +69,7 @@ const Menu = ({ id }: { id: string }) => {
         speciesTags={item?.speciesTags}
         photos={item?.photos}
         description={item?.description}
-        username={username}
+        username={userData?.user.username}
         profilePicture={item?.user.profilePicture || PROFILE_PHOTO}
       />
     );
@@ -97,32 +113,42 @@ const Menu = ({ id }: { id: string }) => {
 
   return (
     <View className="flex flex-col w-full mb-10">
-      <View className="flex w-full flex-row justify-around pb-[5%]">
+      <View className="flex w-full flex-row justify-around pb-[5%] relative">
+        <Animated.View
+          className="bg-deep absolute h-[2px] w-1/2 bottom-10"
+          style={[
+            {
+              bottom: '40%',
+            },
+            indicatorStyle,
+          ]}
+        />
         <TouchableOpacity
-          className={`py-[3%] w-[50%] justify-center items-center ${
-            category === 'Dives'
-              ? 'border-b-2 border-darkblue'
-              : 'border-b-2 border-gray-200'
-          }`}
+          className="py-2 w-[50%] justify-center items-center"
           onPress={() => setCategory('Dives')}
         >
-          <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">
+          <Text
+            className={`font-bold text-base sm:text-lg md:text-xl ${
+              category === 'Dives' ? 'text-darkblue' : 'text-gray-400'
+            }`}
+          >
             Dives
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className={`py-[3%] w-[50%] justify-center items-center ${
-            category === 'Species'
-              ? 'border-b-2 border-darkblue'
-              : 'border-b-2 border-gray-200'
-          }`}
+          className="py-[3%] w-[50%] justify-center items-center"
           onPress={() => setCategory('Species')}
         >
-          <Text className="font-bold text-base sm:text-lg md:text-xl text-darkblue">
+          <Text
+            className={`font-bold text-base sm:text-lg md:text-xl ${
+              category === 'Species' ? 'text-darkblue' : 'text-gray-400'
+            }`}
+          >
             Species
           </Text>
         </TouchableOpacity>
       </View>
+
       {category === 'Dives' &&
         (diveLogIsLoading ? (
           <FlatList

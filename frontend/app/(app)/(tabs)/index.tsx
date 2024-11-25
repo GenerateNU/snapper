@@ -1,11 +1,4 @@
-import {
-  View,
-  SafeAreaView,
-  FlatList,
-  ScrollView,
-  Pressable,
-  Image,
-} from 'react-native';
+import { View, SafeAreaView, FlatList, ScrollView } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category, Filter } from '../../../consts/home-menu';
@@ -58,7 +51,6 @@ const Home = () => {
     data: followingPosts,
     isLoading: isLoadingFollowing,
     error: errorFollowing,
-    refetch: refetchFollowing,
     fetchNextPage: fetchNextPageFollowing,
     hasNextPage: hasNextPageFollowing,
     isFetchingNextPage: isFetchingNextPageFollowing,
@@ -68,7 +60,6 @@ const Home = () => {
     data: nearbyPosts,
     isLoading: isLoadingNearby,
     error: errorNearby,
-    refetch: refetchNearby,
     fetchNextPage: fetchNextPageNearby,
     hasNextPage: hasNextPageNearby,
   } = useNearbyDiveLogs(currentLocation.latitude, currentLocation.longitude);

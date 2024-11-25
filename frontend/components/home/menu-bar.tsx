@@ -21,14 +21,11 @@ const MenuTab = React.memo(
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.7}
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingVertical: 10,
-        }}
+        className="flex-1 justify-center items-center py-2"
       >
-        <Text style={{ color: isSelected ? 'white' : 'gray' }}>{label}</Text>
+        <Text className={isSelected ? 'text-white' : 'text-gray-500'}>
+          {label}
+        </Text>
       </TouchableOpacity>
     );
   },
@@ -56,17 +53,8 @@ const HomeMenu: React.FC<HomeMenuProps> = ({ selected, setSelected }) => {
   return (
     <View className="w-full overflow-hidden flex-row items-center border-[1px] py-1 border-gray-400 rounded-full">
       <Animated.View
-        className="bg-deep"
-        style={[
-          {
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            width: '50%',
-            borderRadius: 50,
-          },
-          translateX,
-        ]}
+        className="bg-deep absolute top-0 bottom-0 w-1/2 rounded-full"
+        style={[translateX]}
       />
 
       <MenuTab

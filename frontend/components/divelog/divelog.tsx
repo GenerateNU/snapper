@@ -1,10 +1,4 @@
-import {
-  View,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  Animated,
-} from 'react-native';
+import { View, Pressable, Text, TouchableOpacity } from 'react-native';
 import Profile from '../profile';
 import { PROFILE_PHOTO } from '../../consts/profile';
 import ImageCarousel from './carousel';
@@ -16,7 +10,6 @@ import useLike from '../../hooks/like';
 import { router } from 'expo-router';
 import { timeAgo } from '../../utils/profile';
 import { reverseGeocode } from '../../api/location';
-import usePulsingAnimation from '../../utils/skeleton'; // Import the pulsing animation hook
 
 interface DiveLogProps {
   userId: string;
@@ -80,8 +73,8 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
         key={`${item._id}`}
         speciesId={item.scientificName}
       >
-        <TouchableOpacity className="p-2 rounded-full border border-1">
-          <Text>{displayName}</Text>
+        <TouchableOpacity className="p-2 rounded-full border border-[0.5px] border-gray-500">
+          <Text className="text-gray-600">{displayName}</Text>
         </TouchableOpacity>
       </PopulatedInfoPopupButton>
     );
