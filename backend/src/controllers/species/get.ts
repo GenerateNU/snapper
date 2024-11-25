@@ -1,6 +1,6 @@
 import express from 'express';
-import { Species } from '../../models/species';
 import Fuse from 'fuse.js';
+import { Species } from '../../models/species';
 
 export const getById = async (req: express.Request, res: express.Response) => {
   const id = req.params.id;
@@ -24,7 +24,6 @@ export const searchSpecies = async (
   res: express.Response,
 ) => {
   const allSpecies = await Species.find();
-  console.log(allSpecies.length);
   //More options can be added later
   //https://www.fusejs.io/api/options.html
   const fuse = new Fuse(allSpecies, {

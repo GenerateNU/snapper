@@ -1,10 +1,10 @@
 import express from 'express';
-import { isAuthenticated } from '../middlewares/authMiddleware';
 import {
   getById,
   getByScientificName,
   searchSpecies,
 } from '../controllers/species/get';
+import { isAuthenticated } from '../middlewares/authMiddleware';
 
 /**
  * @swagger

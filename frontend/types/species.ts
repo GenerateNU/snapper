@@ -7,6 +7,15 @@ export type SpeciesContent = {
   scientificName: string;
   introduction: string;
   imageUrls: string[];
+  iconUrl: string;
+  species: string;
+  genus: string;
+  family: string;
+  order: string;
+  class: string;
+  phylum: string;
+  kingdom: string;
+  domain: string;
   visibility: boolean;
   locations: string[];
 };
