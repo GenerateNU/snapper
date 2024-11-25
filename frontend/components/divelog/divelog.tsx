@@ -10,6 +10,7 @@ import useLike from '../../hooks/like';
 import { router } from 'expo-router';
 import { timeAgo } from '../../utils/profile';
 import { reverseGeocode } from '../../api/location';
+import { useAuthStore } from '../../auth/authStore';
 
 interface DiveLogProps {
   userId: string;
@@ -34,6 +35,7 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
   date,
   location,
 }) => {
+  const { mongoDBId } = useAuthStore();
   const { isLiking, handleLikeToggle } = useLike(id);
   const [lastTap, setLastTap] = useState(0);
   const [address, setAddress] = useState('Loading...');
@@ -80,7 +82,7 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
     );
   };
 
-  const navigateUserProfile = () => router.push(`/user/${userId}`);
+  const navigateUserProfile = mongoDBId !== userId ? () => router.push(`/user/${userId}`) : () => null;
 
   return (
     <Pressable className="w-full" onPress={handleDoubleTap}>
