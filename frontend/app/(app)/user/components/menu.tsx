@@ -71,7 +71,7 @@ const Menu = ({ id }: { id: string }) => {
       <BigDiveLog
         location={item?.location.coordinates}
         date={item?.date}
-        userId={item?.user}
+        userId={item?.user._id}
         id={item?._id}
         speciesTags={item?.speciesTags}
         photos={item?.photos}
