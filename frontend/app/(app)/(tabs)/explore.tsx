@@ -92,8 +92,8 @@ export default function Explore() {
     <View className="h-screen w-screen flex items-center">
       <View className='w-96 pt-20 pb-4'>
         <Input border='black' onChangeText={changeText}></Input>
+        <ToggleButtons />
       </View>
-      <ToggleButtons />
       {!isPending && (values.length > 0) &&
         <ScrollView className="w-96">
           {values.map((d: any) =>
