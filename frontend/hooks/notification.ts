@@ -35,6 +35,7 @@ export const useNotificationPermission = ({
       if (currentStatus === 'granted') {
         if (!savedToken) {
           const token = await registerForPushNotifications(mongoDBId);
+          console.log('Successfully registered for notification');
           if (token) {
             await AsyncStorage.setItem(NOTIFICATION_TOKEN_KEY, token);
             setNotificationToken(token); // Update state to trigger re-render
@@ -45,6 +46,7 @@ export const useNotificationPermission = ({
       } else {
         if (savedToken) {
           await unregisterForPushNotifications(mongoDBId, savedToken);
+          console.log('Successfully unregistered for notification');
           await AsyncStorage.removeItem(NOTIFICATION_TOKEN_KEY);
           setNotificationToken(null); // Reset the token
         }

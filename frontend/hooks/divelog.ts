@@ -1,9 +1,5 @@
 import { getDiveLogById, getNearbyDivelogs } from '../api/divelog';
-import {
-  useInfiniteScrollQuery,
-  useQueryBase,
-  useQueryPagination,
-} from './base';
+import { useInfiniteScrollQuery, useQueryBase } from './base';
 
 export const useDiveLog = (id: string) => {
   return useQueryBase(['divelog', id], () => getDiveLogById(id));

@@ -11,7 +11,10 @@ import { router } from 'expo-router';
 type NotificationData = {
   title?: string;
   body?: string;
-  data?: any;
+  data?: {
+    targetModel?: 'DiveLog' | 'User';
+    target?: string;
+  };
 };
 
 type NotificationContextType = {
@@ -57,8 +60,17 @@ export const NotificationProvider = ({
       Notifications.addNotificationResponseReceivedListener((response) => {
         const data = response.notification.request.content
           .data as NotificationData;
-        setLastNotification(data);
-        router.push('/(tabs)/notification');
+
+        if (
+          lastNotification?.data?.target &&
+          lastNotification?.data?.targetModel
+        ) {
+          if (lastNotification.data.targetModel === 'DiveLog') {
+            router.push(`/divelog/${lastNotification.data.target}`);
+          }
+        } else {
+          router.push('/(tabs)/notification');
+        }
       });
 
     return () => {
