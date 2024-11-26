@@ -82,7 +82,8 @@ const BigDiveLog: React.FC<DiveLogProps> = ({
     );
   };
 
-  const navigateUserProfile = mongoDBId !== userId ? () => router.push(`/user/${userId}`) : () => null;
+  const navigateUserProfile =
+    mongoDBId !== userId ? () => router.push(`/user/${userId}`) : () => null;
 
   return (
     <Pressable className="w-full" onPress={handleDoubleTap}>

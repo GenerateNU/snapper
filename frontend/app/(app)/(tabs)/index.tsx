@@ -149,6 +149,9 @@ const Home = () => {
                 data={followingPosts?.pages.flatMap((page) => page) || []}
               />
             )
+          ) : (followingPosts?.pages?.flatMap((page) => page) ?? []).length ===
+            0 ? (
+            <></>
           ) : (
             <ScrollView showsVerticalScrollIndicator={false}>
               <MasonryFlashList
