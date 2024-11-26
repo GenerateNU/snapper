@@ -103,7 +103,14 @@ const Home = () => {
   const renderFollowingPosts = () => {
     if (isLoadingFollowing) {
       return (
-        <FlatList data={[1, 2, 3]} renderItem={() => <DiveLogSkeleton />} />
+        <FlatList
+          data={[1, 2, 3]}
+          renderItem={() => (
+            <View className="mt-10">
+              <DiveLogSkeleton />
+            </View>
+          )}
+        />
       );
     }
 
@@ -118,7 +125,11 @@ const Home = () => {
         }
         onEndReachedThreshold={0.3}
         ListFooterComponent={
-          isFetchingNextPageFollowing ? <DiveLogSkeleton /> : null
+          isFetchingNextPageFollowing ? (
+            <View className="mt-10">
+              <DiveLogSkeleton />
+            </View>
+          ) : null
         }
         contentContainerStyle={{ paddingBottom: 150 }}
         ItemSeparatorComponent={() => <View className="h-12" />}
