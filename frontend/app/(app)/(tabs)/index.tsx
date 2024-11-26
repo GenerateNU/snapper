@@ -20,23 +20,36 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category>(
     Category.FOLLOWING,
   );
-  const [currentLocation, setCurrentLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  }>(DEFAULT_SHERM_LOCATION);
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: DEFAULT_SHERM_LOCATION.latitude,
+    longitude: DEFAULT_SHERM_LOCATION.longitude,
+  });
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>([
     Filter.ALL,
   ]);
 
+  const {
+    data: followingPosts,
+    isLoading: isLoadingFollowing,
+    fetchNextPage: fetchNextPageFollowing,
+    hasNextPage: hasNextPageFollowing,
+    isFetchingNextPage: isFetchingNextPageFollowing,
+  } = useUserFollowingPosts(mongoDBId!);
+
+  const {
+    data: nearbyPosts,
+    isLoading: isLoadingNearby,
+    fetchNextPage: fetchNextPageNearby,
+    hasNextPage: hasNextPageNearby,
+  } = useNearbyDiveLogs(currentLocation.latitude, currentLocation.longitude);
+
   useEffect(() => {
     const fetchLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        return;
-      }
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') return;
 
       if (selectedCategory === Category.NEARBY) {
-        let location = await Location.getCurrentPositionAsync({});
+        const location = await Location.getCurrentPositionAsync({});
         setCurrentLocation({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -47,67 +60,91 @@ const Home = () => {
     fetchLocation();
   }, [selectedCategory]);
 
-  const {
-    data: followingPosts,
-    isLoading: isLoadingFollowing,
-    error: errorFollowing,
-    fetchNextPage: fetchNextPageFollowing,
-    hasNextPage: hasNextPageFollowing,
-    isFetchingNextPage: isFetchingNextPageFollowing,
-  } = useUserFollowingPosts(mongoDBId!);
+  const renderFollowingPost = ({ item }: { item: any }) => (
+    <View className="w-full">
+      <BigDiveLog
+        id={item?._id}
+        date={item?.date}
+        profilePicture={item?.user.profilePicture || PROFILE_PHOTO}
+        photos={item?.photos}
+        description={item?.description}
+        username={item?.user.username}
+        userId={item?.user._id}
+        speciesTags={item?.speciesTags}
+        location={item?.location.coordinates}
+      />
+    </View>
+  );
 
-  const {
-    data: nearbyPosts,
-    isLoading: isLoadingNearby,
-    error: errorNearby,
-    fetchNextPage: fetchNextPageNearby,
-    hasNextPage: hasNextPageNearby,
-  } = useNearbyDiveLogs(currentLocation.latitude, currentLocation.longitude);
+  const renderNearbyPost = ({ item, index }: { item: any; index: number }) => (
+    <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
+      <NearbyDiveLog
+        profilePhoto={item?.user.profilePicture || PROFILE_PHOTO}
+        description={item?.description}
+        divelogId={item?._id}
+        coverPhoto={item?.photos[0]}
+      />
+    </View>
+  );
 
-  const renderFollowingPost = ({ item }: { item: any }) => {
-    return (
-      <View className="w-full">
-        <BigDiveLog
-          id={item?._id}
-          date={item?.date}
-          profilePicture={item?.user.profilePicture || PROFILE_PHOTO}
-          photos={item?.photos}
-          description={item?.description}
-          username={item?.user.username}
-          userId={item?.user._id}
-          speciesTags={item?.speciesTags}
-          location={item?.location.coordinates}
-        />
-      </View>
-    );
-  };
-
-  const renderNearbyPost = ({ item, index }: { item: any; index: number }) => {
-    const coverPhoto = item?.photos[0];
-    const profilePhoto = item?.user.profilePicture || PROFILE_PHOTO;
-
-    return (
-      <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
-        <NearbyDiveLog
-          profilePhoto={profilePhoto}
-          description={item?.description}
-          divelogId={item?._id}
-          coverPhoto={coverPhoto}
-        />
-      </View>
-    );
-  };
-
-  const loadMoreFollowingPosts = () => {
-    if (hasNextPageFollowing) {
-      fetchNextPageFollowing();
+  const loadMorePosts = (fetchNextPage: () => void, hasNextPage: boolean) => {
+    if (hasNextPage) {
+      fetchNextPage();
     }
+  };
+
+  const renderPosts = () => {
+    if (selectedCategory === Category.FOLLOWING) {
+      return renderFollowingPosts();
+    }
+    return renderNearbyPosts();
+  };
+
+  const renderFollowingPosts = () => {
+    if (isLoadingFollowing) {
+      return (
+        <FlatList data={[1, 2, 3]} renderItem={() => <DiveLogSkeleton />} />
+      );
+    }
+
+    return (
+      <FlatList
+        data={followingPosts?.pages.flatMap((page) => page) || []}
+        renderItem={renderFollowingPost}
+        key="following-divelogs"
+        showsVerticalScrollIndicator={false}
+        onEndReached={() =>
+          loadMorePosts(fetchNextPageFollowing, hasNextPageFollowing)
+        }
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={
+          isFetchingNextPageFollowing ? <DiveLogSkeleton /> : null
+        }
+        contentContainerStyle={{ paddingBottom: 150 }}
+        ItemSeparatorComponent={() => <View className="h-12" />}
+      />
+    );
+  };
+
+  const renderNearbyPosts = () => {
+    return (
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <MasonryFlashList
+          data={nearbyPosts?.pages.flatMap((page) => page) || []}
+          numColumns={2}
+          renderItem={renderNearbyPost}
+          estimatedItemSize={200}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
+        />
+      </ScrollView>
+    );
   };
 
   return (
     <>
       <SafeAreaView className="flex-1 justify-start" style={{ gap: 15 }}>
-        <View style={{ gap: 10 }} className="flex-col">
+        <View className="flex-col" style={{ gap: 10 }}>
           <View className="px-[5%]">
             <HomeMenu
               selected={selectedCategory}
@@ -120,53 +157,7 @@ const Home = () => {
           />
         </View>
 
-        <View className="px-[5%]">
-          {selectedCategory === Category.FOLLOWING &&
-          (followingPosts?.pages?.flatMap((page) => page) ?? []).length > 0 ? (
-            isLoadingFollowing ? (
-              <FlatList
-                data={[1, 2, 3]}
-                renderItem={() => <DiveLogSkeleton />}
-              />
-            ) : (
-              <FlatList
-                key="following-divelogs"
-                renderItem={renderFollowingPost}
-                showsVerticalScrollIndicator={false}
-                onEndReachedThreshold={0.3}
-                onEndReached={loadMoreFollowingPosts}
-                ListFooterComponent={
-                  isFetchingNextPageFollowing ? (
-                    <View className="mt-5">
-                      <DiveLogSkeleton />
-                    </View>
-                  ) : null
-                }
-                contentContainerStyle={{
-                  paddingBottom: 150,
-                }}
-                ItemSeparatorComponent={() => <View className="h-12" />}
-                data={followingPosts?.pages.flatMap((page) => page) || []}
-              />
-            )
-          ) : (followingPosts?.pages?.flatMap((page) => page) ?? []).length ===
-            0 ? (
-            <></>
-          ) : (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <MasonryFlashList
-                data={nearbyPosts?.pages.flatMap((page) => page) || []}
-                numColumns={2}
-                renderItem={renderNearbyPost}
-                estimatedItemSize={200}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                  paddingBottom: 100,
-                }}
-              />
-            </ScrollView>
-          )}
-        </View>
+        <View className="px-[5%]">{renderPosts()}</View>
       </SafeAreaView>
       <InfoPopup />
     </>

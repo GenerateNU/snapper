@@ -20,6 +20,13 @@ const InfoPopup = () => {
   const modalOpacity = useRef(new Animated.Value(0)).current;
   const screenHeight = Dimensions.get('window').height;
   const translateY = useRef(new Animated.Value(screenHeight)).current;
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+    }
+  }, [isOpen]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -114,7 +121,7 @@ const InfoPopup = () => {
             }}
           />
         </View>
-        <ScrollView className="bg-white px-8 py-8 gap-y-2">
+        <ScrollView ref={scrollViewRef} className="bg-white px-8 py-8 gap-y-2">
           <View>
             <View className="flex flex-row justify-between pb-2">
               <Text className="text-xs font-bold">Photos:</Text>
@@ -164,6 +171,7 @@ const InfoPopup = () => {
             >
               <View className="flex-1 pt-[60%]">
                 <ImageCarousel
+                  rounded={false}
                   initialPage={fullscreenIndex}
                   data={speciesContent.imageUrls}
                 />

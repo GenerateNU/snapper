@@ -7,9 +7,14 @@ import { Image } from 'expo-image';
 interface CarouselProps {
   data: string[];
   initialPage?: number;
+  rounded?: boolean;
 }
 
-const ImageCarousel: React.FC<CarouselProps> = ({ data, initialPage = 0 }) => {
+const ImageCarousel: React.FC<CarouselProps> = ({
+  data,
+  initialPage = 0,
+  rounded = true,
+}) => {
   const [page, setPage] = useState<number>(0);
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const scrollOffsetValue = useSharedValue<number>(0);
@@ -19,12 +24,15 @@ const ImageCarousel: React.FC<CarouselProps> = ({ data, initialPage = 0 }) => {
     setContainerWidth(width);
   };
 
+  const borderRadius = rounded ? 12 : 0;
+
   const renderItem = ({ item }: { item: string }) => (
     <View style={{ width: '100%' }}>
       <Image
-        className="w-full rounded-lg"
+        className="w-full"
         style={{
           aspectRatio: 1,
+          borderRadius: borderRadius,
         }}
         source={{
           uri: item,
@@ -55,7 +63,7 @@ const ImageCarousel: React.FC<CarouselProps> = ({ data, initialPage = 0 }) => {
             snapEnabled={true}
             enabled={data.length !== 1}
             defaultIndex={initialPage}
-            style={{ position: 'relative', borderRadius: 10 }}
+            style={{ position: 'relative', borderRadius: borderRadius }}
             onProgressChange={(_, index) => setPage(Math.round(index))}
             data={data}
             defaultScrollOffsetValue={scrollOffsetValue}
