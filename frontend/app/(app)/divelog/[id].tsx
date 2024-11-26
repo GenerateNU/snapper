@@ -61,6 +61,7 @@ const DiveLog = () => {
           className="flex"
         >
           <BigDiveLog
+            location={data?.location.coords}
             date={data?.date}
             id={diveLogId}
             profilePicture={data?.user.profilePicture || PROFILE_PHOTO}

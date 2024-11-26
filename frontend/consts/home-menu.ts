@@ -5,10 +5,14 @@ export enum Category {
 
 export enum Filter {
   ALL = 'All',
-  FISH = 'Fish',
-  REEF = 'Reef',
   SHARK = 'Shark',
-  CLAM = 'Clam',
+  SEA_TURTLE = 'Sea Turtle',
+  RAY = 'Ray',
+  WHALE = 'Whale',
+  DOLPHIN = 'Dolphin',
+  OCTOPUS = 'Octopus',
+  JELLYFISH = 'Jellyfish',
+  EEL = 'Eel',
 }
 
 export const FILTERS = Object.values(Filter);

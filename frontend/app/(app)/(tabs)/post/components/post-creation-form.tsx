@@ -173,6 +173,7 @@ export default function PostCreationForm() {
       </View>
       <View className="pb-2">
         <Button
+          disabled={submittingPost}
           text={submittingPost ? 'Posting ...' : 'Post'}
           onPress={handleSubmit(submitPost)}
         />

@@ -49,7 +49,8 @@ const FilterMenu: React.FC<FilterProps> = ({ selected, setSelected }) => {
       showsHorizontalScrollIndicator={false}
       data={FILTERS}
       contentContainerStyle={{
-        marginLeft: 20,
+        paddingLeft: 20,
+        paddingRight: 10
       }}
       renderItem={renderFilter}
     />
