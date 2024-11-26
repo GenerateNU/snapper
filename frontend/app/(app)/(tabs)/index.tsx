@@ -1,4 +1,10 @@
-import { View, SafeAreaView, FlatList, ScrollView } from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  FlatList,
+  ScrollView,
+  Animated,
+} from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category, Filter } from '../../../consts/home-menu';
@@ -14,6 +20,7 @@ import { PROFILE_PHOTO } from '../../../consts/profile';
 import { useNearbyDiveLogs } from '../../../hooks/divelog';
 import FilterMenu from '../../../components/home/filter';
 import InfoPopup from '../../../components/info-popup';
+import usePulsingAnimation from '../../../utils/skeleton';
 
 const Home = () => {
   const { mongoDBId } = useAuthStore();
@@ -27,6 +34,7 @@ const Home = () => {
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>([
     Filter.ALL,
   ]);
+  const opacity = usePulsingAnimation();
 
   const {
     data: followingPosts,
@@ -114,6 +122,10 @@ const Home = () => {
       );
     }
 
+    if (followingPosts?.pages.flatMap((page) => page).length === 0) {
+      return;
+    }
+
     return (
       <FlatList
         data={followingPosts?.pages.flatMap((page) => page) || []}
@@ -138,6 +150,25 @@ const Home = () => {
   };
 
   const renderNearbyPosts = () => {
+    if (isLoadingNearby) {
+      return (
+        <FlatList
+          data={[1, 2, 3, 4]}
+          numColumns={2}
+          renderItem={({ item, index }: { item: any; index: number }) => (
+            <Animated.View
+              className={`w-1/2 h-32 bg-slate-300 mb-4 rounded-xl ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}
+              style={{ opacity: opacity }}
+            />
+          )}
+        />
+      );
+    }
+
+    if (nearbyPosts?.pages.flatMap((page) => page).length === 0) {
+      return;
+    }
+
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <MasonryFlashList
@@ -145,6 +176,10 @@ const Home = () => {
           numColumns={2}
           renderItem={renderNearbyPost}
           estimatedItemSize={200}
+          onEndReachedThreshold={0}
+          onEndReached={() =>
+            loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
+          }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
         />
