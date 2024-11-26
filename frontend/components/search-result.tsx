@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity } from "react-native"
 import Profile from "./profile"
 import { PROFILE_PHOTO } from "../consts/profile"
 import { router } from 'expo-router';
+import PopulatedInfoPopupButton from "./populated-info-popup";
+import SpeciesTag from "../app/(app)/user/components/species-tag";
 
 type UserResult = {
     profilePicture?: string
@@ -12,7 +14,10 @@ type UserResult = {
 
 type FishResult = {
     iconUrl: string
+    _id: string
     species: string
+    scientificName : string
+    commonNames : string[]
 }
 
 const email = "email";
@@ -65,15 +70,25 @@ function renderUserResult(props: UserResult) {
     )
 }
 
+function renderFishResult(props: FishResult) {
+    const img = props.iconUrl;
+    const name = props.scientificName ? props.scientificName : "Unknown Fish"
+    const onPress = () => {
+        return <PopulatedInfoPopupButton speciesId={props.scientificName} children={<SpeciesTag/>}/>
+    }
+    return (<TouchableOpacity onPress={onPress} className="flex flex-row items-center w-96">
+        <Profile image={img} size="md" />
+        <View className="flex flex-col pl-2">
+            <Text>
+                {name}
+            </Text>
+        </View>
+    </TouchableOpacity>);
+}
+
 export default function SearchResult(props: UserResult | FishResult) {
     if (isFish(props)) {
-        return (
-            <View>
-                <Text className="text-bold w-full h-full">
-                    Fish PlaceHolder.
-                </Text>
-            </View>
-        )
+       return renderFishResult(props);
     } else if (isUser(props)) {
         return renderUserResult(props);
     } else {
