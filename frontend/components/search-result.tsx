@@ -4,9 +4,6 @@ import { PROFILE_PHOTO } from "../consts/profile"
 import { router } from 'expo-router';
 import PopulatedInfoPopupButton from "./populated-info-popup";
 import SpeciesTag from "../app/(app)/user/components/species-tag";
-import InfoPopup from "./info-popup";
-import { useState } from "react";
-import { useInfoPopup } from "../contexts/info-popup-context";
 
 type UserResult = {
     profilePicture?: string
@@ -78,17 +75,17 @@ function renderFishResult(props: FishResult) {
     const img = props.iconUrl;
     const scientificName = props.scientificName ? props.scientificName : "Unknown Scientific Name."
     const commonName = props.commonNames.length > 0 ? props.commonNames[0] : "Unknown Common Name."
-    const onPress = () => {
-        return <PopulatedInfoPopupButton speciesId={props.scientificName} children={<SpeciesTag />} />
-    }
-    return (<TouchableOpacity onPress={onPress} className="flex flex-row items-center w-96">
-        <Profile image={img} size="md" />
-        <View className="flex flex-col pl-2">
-            <Text>
-                {commonName}, {scientificName}
-            </Text>
-        </View>
-    </TouchableOpacity>);
+    return (
+        <PopulatedInfoPopupButton speciesId={props.scientificName}>
+            <TouchableOpacity className="flex flex-row items-center w-96">
+                <Profile image={img} size="md" />
+                <View className="flex flex-col pl-2">
+                    <Text>
+                        {commonName}, {scientificName}
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        </PopulatedInfoPopupButton>);
 }
 
 export default function SearchResult(props: UserResult | FishResult) {

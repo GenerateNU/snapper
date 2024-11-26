@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
 import { useState } from 'react';
 import SearchResult from '../../../components/search-result';
+import InfoPopup from '../../../components/info-popup';
 
 type Toggle = "Fish" | "Users" | "Posts"
 
@@ -117,6 +118,7 @@ export default function Explore() {
             </View>)}
         </ScrollView>
       }
+      <InfoPopup/>
     </View>
   );
 };
