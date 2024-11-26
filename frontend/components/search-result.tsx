@@ -4,6 +4,9 @@ import { PROFILE_PHOTO } from "../consts/profile"
 import { router } from 'expo-router';
 import PopulatedInfoPopupButton from "./populated-info-popup";
 import SpeciesTag from "../app/(app)/user/components/species-tag";
+import InfoPopup from "./info-popup";
+import { useState } from "react";
+import { useInfoPopup } from "../contexts/info-popup-context";
 
 type UserResult = {
     profilePicture?: string
@@ -16,8 +19,8 @@ type FishResult = {
     iconUrl: string
     _id: string
     species: string
-    scientificName : string
-    commonNames : string[]
+    scientificName: string
+    commonNames: string[]
 }
 
 const email = "email";
@@ -74,7 +77,7 @@ function renderFishResult(props: FishResult) {
     const img = props.iconUrl;
     const name = props.scientificName ? props.scientificName : "Unknown Fish"
     const onPress = () => {
-        return <PopulatedInfoPopupButton speciesId={props.scientificName} children={<SpeciesTag/>}/>
+        return <PopulatedInfoPopupButton speciesId={props.scientificName} children={<SpeciesTag />} />
     }
     return (<TouchableOpacity onPress={onPress} className="flex flex-row items-center w-96">
         <Profile image={img} size="md" />
@@ -88,7 +91,7 @@ function renderFishResult(props: FishResult) {
 
 export default function SearchResult(props: UserResult | FishResult) {
     if (isFish(props)) {
-       return renderFishResult(props);
+        return renderFishResult(props);
     } else if (isUser(props)) {
         return renderUserResult(props);
     } else {
