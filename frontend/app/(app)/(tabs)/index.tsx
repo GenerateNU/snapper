@@ -176,10 +176,10 @@ const Home = () => {
           numColumns={2}
           renderItem={renderNearbyPost}
           estimatedItemSize={200}
-          onEndReachedThreshold={0}
-          onEndReached={() =>
-            loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
-          }
+          // onEndReachedThreshold={0}
+          // onEndReached={() =>
+          //   loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
+          // }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 100 }}
         />
