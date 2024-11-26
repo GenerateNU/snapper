@@ -15,6 +15,6 @@ export default (): express.Router => {
   user(router);
   species(router);
   swagger(router);
-  users(router)
+  users(router);
   return router;
 };

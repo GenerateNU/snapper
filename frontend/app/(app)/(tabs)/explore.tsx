@@ -6,22 +6,22 @@ import { useState } from 'react';
 import SearchResult from '../../../components/search-result';
 import InfoPopup from '../../../components/info-popup';
 
-type Toggle = "Fish" | "Users" | "Posts"
+type Toggle = 'Fish' | 'Users' | 'Posts';
 
 export default function Explore() {
-  const options: Toggle[] = ["Users", "Fish", "Posts"]
-  const [search, setSearch] = useState("");
+  const options: Toggle[] = ['Users', 'Fish', 'Posts'];
+  const [search, setSearch] = useState('');
   const [toggle, setToggle] = useState<Toggle>(options[0]);
   const [selected, setSelected] = useState<Toggle>(options[0]);
 
   const changeText = (input: string) => {
     setSearch(input);
-  }
+  };
 
   /**
    * Depending on what data comes from the endpoint, it could be formatted differently.
    * This method ensures that no matter what data comes through, it will be an array.
-   * @param data 
+   * @param data
    * @returns an Array of the data
    */
   const matchOnData = (data: any): any[] => {
@@ -32,9 +32,9 @@ export default function Explore() {
     } else if (Array.isArray(data.results)) {
       return data.results as any[];
     } else {
-      throw new Error("Malformed Data")
+      throw new Error('Malformed Data');
     }
-  }
+  };
 
   /**
    * On Query, will pattern match against the toggle options which will
@@ -45,20 +45,20 @@ export default function Explore() {
     if (!search) return null;
     let endpoint;
     switch (toggle) {
-      case 'Fish': endpoint = `/species/search/${search}`; break;
-      default: endpoint = `/users?text=${search}`;
+      case 'Fish':
+        endpoint = `/species/search/${search}`;
+        break;
+      default:
+        endpoint = `/users?text=${search}`;
     }
-    const res = await fetchData(
-      endpoint,
-      'Failed to fetch users',
-    );
+    const res = await fetchData(endpoint, 'Failed to fetch users');
     return res;
-  }
+  };
 
   const { isPending, error, data } = useQuery({
-    queryKey: ["search", search],
+    queryKey: ['search', search],
     queryFn: () => onQueryFunction(),
-    enabled: search.length > 0
+    enabled: search.length > 0,
   });
 
   const values = matchOnData(data);
@@ -70,10 +70,10 @@ export default function Explore() {
    */
   const ToggleButtons = () => {
     const onSelected = (selection: Toggle) => {
-      setToggle(selection)
-      setSelected(selection)
-      setSearch("")
-    }
+      setToggle(selection);
+      setSelected(selection);
+      setSearch('');
+    };
     return (
       <View className="w-full flex justify-between flex-row w-96">
         {options.map((option, key) => (
@@ -83,8 +83,7 @@ export default function Explore() {
             className="flex items-center"
           >
             <Text
-              className={`text-xl ${selected === option ? "underline" : ""
-                }`}
+              className={`text-xl ${selected === option ? 'underline' : ''}`}
             >
               {option}
             </Text>
@@ -96,30 +95,32 @@ export default function Explore() {
 
   if (error) {
     return (
-      <View className='h-screen w-screen'>
-        <Text>
-          Error occurred {error.message}
-        </Text>
+      <View className="h-screen w-screen">
+        <Text>Error occurred {error.message}</Text>
       </View>
-    )
+    );
   }
 
   return (
     <View className="h-screen w-screen flex items-center">
-      <View className='w-96 pt-20 pb-4'>
-        <Input border='black' onChangeText={changeText} value={search} />
+      <View className="w-96 pt-20 pb-4">
+        <Input border="black" onChangeText={changeText} value={search} />
         <ToggleButtons />
       </View>
-      {isPending ? <Text> Nothing to see here... </Text> : (values.length > 0) &&
-        <ScrollView className="w-96">
-          {values.map((d: any) =>
-            <View className='mb-4' key={d._id}>
-              <SearchResult {...d} />
-            </View>)}
-        </ScrollView>
-      }
-      <InfoPopup/>
+      {isPending ? (
+        <Text> Nothing to see here... </Text>
+      ) : (
+        values.length > 0 && (
+          <ScrollView className="w-96">
+            {values.map((d: any) => (
+              <View className="mb-4" key={d._id}>
+                <SearchResult {...d} />
+              </View>
+            ))}
+          </ScrollView>
+        )
+      )}
+      <InfoPopup />
     </View>
   );
-};
-
+}
