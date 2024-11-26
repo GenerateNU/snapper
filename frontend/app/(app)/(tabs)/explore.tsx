@@ -8,7 +8,7 @@ import SearchResult from '../../../components/search-result';
 type Toggle = "Fish" | "Users" | "Posts"
 
 export default function Explore() {
-  const options : Toggle[] = ["Users", "Fish", "Posts"]
+  const options: Toggle[] = ["Users", "Fish", "Posts"]
   const [search, setSearch] = useState("");
   const [toggle, setToggle] = useState<Toggle>(options[0]);
   const [selected, setSelected] = useState<Toggle>(options[0]);
@@ -60,16 +60,6 @@ export default function Explore() {
     enabled: search.length > 0
   });
 
-  if (error) {
-    return (
-      <View className='h-screen w-screen'>
-        <Text>
-          Error occurred {error.message}
-        </Text>
-      </View>
-    )
-  }
-
   const values = matchOnData(data);
 
   /**
@@ -78,9 +68,10 @@ export default function Explore() {
    * @returns A button component
    */
   const ToggleButtons = () => {
-    const onSelected = (selection : Toggle) => {
+    const onSelected = (selection: Toggle) => {
       setToggle(selection)
       setSelected(selection)
+      setSearch("")
     }
     return (
       <View className="w-full flex justify-between flex-row w-96">
@@ -91,9 +82,8 @@ export default function Explore() {
             className="flex items-center"
           >
             <Text
-              className={`text-xl ${
-                selected === option ? "underline" : ""
-              }`}
+              className={`text-xl ${selected === option ? "underline" : ""
+                }`}
             >
               {option}
             </Text>
@@ -102,15 +92,24 @@ export default function Explore() {
       </View>
     );
   };
-  
+
+  if (error) {
+    return (
+      <View className='h-screen w-screen'>
+        <Text>
+          Error occurred {error.message}
+        </Text>
+      </View>
+    )
+  }
 
   return (
     <View className="h-screen w-screen flex items-center">
       <View className='w-96 pt-20 pb-4'>
-        <Input border='black' onChangeText={changeText}></Input>
+        <Input border='black' onChangeText={changeText} value={search} />
         <ToggleButtons />
       </View>
-      {!isPending && (values.length > 0) &&
+      {isPending ? <Text> Nothing to see here... </Text> : (values.length > 0) &&
         <ScrollView className="w-96">
           {values.map((d: any) =>
             <View className='mb-4' key={d._id}>
