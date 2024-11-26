@@ -1,11 +1,13 @@
-import { View, Text } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
 import Profile from "./profile"
 import { PROFILE_PHOTO } from "../consts/profile"
+import { router } from 'expo-router';
 
 type UserResult = {
-    profilePhoto?: string
+    profilePicture?: string
     email: string
     username: string
+    _id: string
 }
 
 type FishResult = {
@@ -43,18 +45,24 @@ function isFish(obj: unknown): obj is FishResult {
 }
 
 function renderUserResult(props: UserResult) {
-    const uri = props.profilePhoto ? props.profilePhoto : PROFILE_PHOTO;
-    return (<View className="flex flex-row items-center w-96">
-        <Profile image={uri} size="md" />
-        <View className="flex flex-col pl-2">
-            <Text>
-                {props.username}
-            </Text>
-            <Text>
-                {props.email}
-            </Text>
-        </View>
-    </View>)
+    const uri = props.profilePicture ? props.profilePicture : PROFILE_PHOTO;
+    const _id = props._id;
+    const onPress = () => {
+        router.push(`/user/${_id}`)
+    }
+    return (
+        <TouchableOpacity onPress={onPress} className="flex flex-row items-center w-96">
+            <Profile image={uri} size="md" />
+            <View className="flex flex-col pl-2">
+                <Text>
+                    {props.username}
+                </Text>
+                <Text>
+                    {props.email}
+                </Text>
+            </View>
+        </TouchableOpacity>
+    )
 }
 
 export default function SearchResult(props: UserResult | FishResult) {
