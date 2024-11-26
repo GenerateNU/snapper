@@ -1,16 +1,17 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Input from '../../../components/input';
 import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
 import { useState } from 'react';
 import SearchResult from '../../../components/search-result';
 
-type Toggle = "fish" | "users" | "divelogs"
+type Toggle = "Fish" | "Users" | "Posts"
 
 export default function Explore() {
-
+  const options : Toggle[] = ["Users", "Fish", "Posts"]
   const [search, setSearch] = useState("");
-  const [toggle, setToggle] = useState<Toggle>("fish");
+  const [toggle, setToggle] = useState<Toggle>(options[0]);
+  const [selected, setSelected] = useState<Toggle>(options[0]);
 
   const changeText = (input: string) => {
     setSearch(input);
@@ -32,7 +33,7 @@ export default function Explore() {
     if (!search) return null;
     let endpoint;
     switch (toggle) {
-      case 'fish': endpoint = `/species/search/${search}`; break;
+      case 'Fish': endpoint = `/species/search/${search}`; break;
       default: endpoint = `/users?text=${search}`;
     }
     const res = await fetchData(
@@ -60,14 +61,42 @@ export default function Explore() {
 
   const values = matchOnData(data);
 
+  const ToggleButtons = () => {
+    const onSelected = (selection : Toggle) => {
+      setToggle(selection)
+      setSelected(selection)
+    }
+    return (
+      <View className="w-full flex justify-between flex-row w-96">
+        {options.map((option, key) => (
+          <TouchableOpacity
+            key={key}
+            onPress={() => onSelected(option)}
+            className="flex items-center"
+          >
+            <Text
+              className={`text-xl ${
+                selected === option ? "underline" : ""
+              }`}
+            >
+              {option}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+  
+
   return (
     <View className="h-screen w-screen flex items-center">
       <View className='w-96 pt-20 pb-4'>
         <Input border='black' onChangeText={changeText}></Input>
       </View>
+      <ToggleButtons />
       {!isPending && (values.length > 0) &&
         <ScrollView className="w-96">
-          {data.map((d: any) =>
+          {values.map((d: any) =>
             <View className='mb-4' key={d._id}>
               <SearchResult {...d} />
             </View>)}
