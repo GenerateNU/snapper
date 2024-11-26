@@ -32,10 +32,13 @@ const Menu = ({ id }: { id: string }) => {
     return {
       transform: [
         {
-          translateX: withTiming(category === 'Dives' ? 0 : (width / 2) * 0.9, {
-            duration: 300,
-            easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-          }),
+          translateX: withTiming(
+            category === 'Dives' ? 0 : (width / 2) * 0.86,
+            {
+              duration: 300,
+              easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            },
+          ),
         },
       ],
     };
@@ -122,10 +125,10 @@ const Menu = ({ id }: { id: string }) => {
     <View className="flex flex-col w-full mb-10">
       <View className="flex w-full flex-row justify-around pb-[5%] relative">
         <Animated.View
-          className="bg-deep absolute h-[2px] w-1/2 bottom-10"
+          className="bg-deep absolute h-[2px] w-1/2"
           style={[
             {
-              bottom: '40%',
+              bottom: '30%',
             },
             indicatorStyle,
           ]}

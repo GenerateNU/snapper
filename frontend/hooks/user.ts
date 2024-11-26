@@ -8,7 +8,11 @@ import {
   toggleLikeDivelog,
   getUserFollowingPosts,
 } from '../api/user';
-import { useQueryBase, useQueryPagination } from './base';
+import {
+  useInfiniteScrollQuery,
+  useQueryBase,
+  useQueryPagination,
+} from './base';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useUserData = () => {
@@ -49,14 +53,13 @@ export const useUserNotification = (id: string) => {
 };
 
 export const useUserFollowingPosts = (id: string) => {
-  return useQueryPagination(
+  return useInfiniteScrollQuery(
     id,
     'following',
     async (id, page): Promise<any[]> => {
       const response = await getUserFollowingPosts(id, page);
       return response;
     },
-    true,
   );
 };
 

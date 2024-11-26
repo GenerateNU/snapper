@@ -8,14 +8,15 @@ export const useQueryBase = (key: string[], queryFn: () => Promise<any>) => {
     refetchOnWindowFocus: true,
     staleTime: 30000,
     refetchInterval: false,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
   });
 };
 
-export const useQueryPagination = (
+export const useInfiniteScrollQuery = (
   id: string,
   model: string,
   queryFunction: (id: string, page: number) => Promise<any[]>,
-  infiniteScroll?: boolean,
 ) => {
   return useInfiniteQuery({
     queryKey: [model, id],
@@ -26,7 +27,7 @@ export const useQueryPagination = (
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length < allPages[0].length) {
-        return infiniteScroll ? 1 : undefined;
+        return 1;
       }
 
       const pageSignatures = allPages.map((page) => JSON.stringify(page));
@@ -47,8 +48,31 @@ export const useQueryPagination = (
       return allPages.length + 1;
     },
     refetchOnWindowFocus: true,
-    staleTime: 30000,
-    refetchInterval: false,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
+    refetchInterval: 10000,
+  });
+};
+
+export const useQueryPagination = (
+  id: string,
+  model: string,
+  queryFunction: (id: string, page: number) => Promise<any[]>,
+) => {
+  return useInfiniteQuery({
+    queryKey: [model, id],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await queryFunction(id, pageParam);
+      return response;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage?.length ? allPages.length + 1 : undefined;
+    },
+    refetchInterval: 10000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
   });
 };
 

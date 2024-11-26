@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
-} from 'react-native';
-import ParsedText from 'react-native-parsed-text';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface CaptionProps {
   description: string;
@@ -14,11 +7,7 @@ interface CaptionProps {
   onPress: () => void;
 }
 
-const Caption: React.FC<CaptionProps> = ({
-  description,
-  username,
-  onPress,
-}) => {
+const Caption: React.FC<CaptionProps> = ({ description }) => {
   const [viewMore, setViewMore] = useState<boolean>(false);
   const [isOverflowing, setIsOverflowing] = useState<boolean>(false);
 
@@ -31,12 +20,9 @@ const Caption: React.FC<CaptionProps> = ({
     }
   }, [fullTextHeight, threeLineHeight]);
 
-  const usernameRegex = new RegExp(username);
-  const descriptionRegex = new RegExp(description);
-
-  const handleUsernamePress = () => {};
-
-  const handleCaptionPress = () => {};
+  if (!description) {
+    return;
+  }
 
   return (
     <View>
@@ -50,7 +36,6 @@ const Caption: React.FC<CaptionProps> = ({
             numberOfLines={viewMore ? undefined : 3}
             ellipsizeMode="tail"
             onLayout={(event) => {
-              // Capture the height of the visible (3-line) text
               if (!threeLineHeight && !viewMore) {
                 setThreeLineHeight(event.nativeEvent.layout.height);
               }

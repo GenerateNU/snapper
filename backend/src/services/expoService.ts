@@ -89,7 +89,6 @@ export class ExpoServiceImpl implements ExpoService {
           console.error('Error sending notification:', error);
         }
       }
-
       return tickets;
     }
     return [];
