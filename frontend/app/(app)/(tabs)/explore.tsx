@@ -17,6 +17,12 @@ export default function Explore() {
     setSearch(input);
   }
 
+  /**
+   * Depending on what data comes from the endpoint, it could be formatted differently.
+   * This method ensures that no matter what data comes through, it will be an array.
+   * @param data 
+   * @returns an Array of the data
+   */
   const matchOnData = (data: any): any[] => {
     if (!data) {
       return [];
@@ -29,6 +35,11 @@ export default function Explore() {
     }
   }
 
+  /**
+   * On Query, will pattern match against the toggle options which will
+   * trigger different endpoints
+   * @returns the corresponding data from the endpoint
+   */
   const onQueryFunction = async () => {
     if (!search) return null;
     let endpoint;
@@ -61,6 +72,11 @@ export default function Explore() {
 
   const values = matchOnData(data);
 
+  /**
+   * Renders the buttons that are toggleable and switches against the particular selection
+   * based off which button is pressed.
+   * @returns A button component
+   */
   const ToggleButtons = () => {
     const onSelected = (selection : Toggle) => {
       setToggle(selection)
