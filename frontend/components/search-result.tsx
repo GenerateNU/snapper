@@ -27,6 +27,7 @@ const email = "email";
 const username = "username";
 const iconUrl = "iconUrl";
 const species = "species"
+const alphaId = "aphiaId";
 
 /**
  * Is that object of type UserResult?
@@ -49,7 +50,7 @@ function isFish(obj: unknown): obj is FishResult {
     if (!obj || typeof obj !== "object") {
         return false;
     }
-    return Object.hasOwn(obj, iconUrl) && Object.hasOwn(obj, species);
+    return Object.hasOwn(obj, iconUrl) && Object.hasOwn(obj, species) || Object.hasOwn(obj, alphaId);
 }
 
 function renderUserResult(props: UserResult) {
@@ -75,7 +76,8 @@ function renderUserResult(props: UserResult) {
 
 function renderFishResult(props: FishResult) {
     const img = props.iconUrl;
-    const name = props.scientificName ? props.scientificName : "Unknown Fish"
+    const scientificName = props.scientificName ? props.scientificName : "Unknown Scientific Name."
+    const commonName = props.commonNames.length > 0 ? props.commonNames[0] : "Unknown Common Name."
     const onPress = () => {
         return <PopulatedInfoPopupButton speciesId={props.scientificName} children={<SpeciesTag />} />
     }
@@ -83,7 +85,7 @@ function renderFishResult(props: FishResult) {
         <Profile image={img} size="md" />
         <View className="flex flex-col pl-2">
             <Text>
-                {name}
+                {commonName}, {scientificName}
             </Text>
         </View>
     </TouchableOpacity>);
@@ -95,7 +97,7 @@ export default function SearchResult(props: UserResult | FishResult) {
     } else if (isUser(props)) {
         return renderUserResult(props);
     } else {
-        throw new Error("Illegal Prop Type, input must be of type UserResult or FishResult.")
+        return <Text> Unknown Search Result... </Text>
     }
 
 }
