@@ -1,10 +1,16 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
+import { useAuthStore } from '../auth/authStore';
 
 export const useQueryBase = (key: string[], queryFn: () => Promise<any>) => {
+  const { refreshSession } = useAuthStore();
+
   return useQuery({
     queryKey: key,
-    queryFn,
+    queryFn: async () => {
+      await refreshSession();
+      return queryFn();
+    },
     refetchOnWindowFocus: true,
     staleTime: 15000,
     refetchInterval: false,
@@ -18,9 +24,12 @@ export const useInfiniteScrollQuery = (
   model: string,
   queryFunction: (id: string, page: number) => Promise<any[]>,
 ) => {
+  const { refreshSession } = useAuthStore();
+
   return useInfiniteQuery({
     queryKey: [model, id],
     queryFn: async ({ pageParam = 1 }) => {
+      await refreshSession();
       const response = await queryFunction(id, pageParam);
       return response;
     },
@@ -59,9 +68,12 @@ export const useQueryPagination = (
   model: string,
   queryFunction: (id: string, page: number) => Promise<any[]>,
 ) => {
+  const { refreshSession } = useAuthStore();
+
   return useInfiniteQuery({
     queryKey: [model, id],
     queryFn: async ({ pageParam = 1 }) => {
+      await refreshSession();
       const response = await queryFunction(id, pageParam);
       return response;
     },
@@ -95,6 +107,7 @@ export const useToggleBase = <T, P>({
   mutationParams,
 }: ToggleBaseOptions<T, P>) => {
   const [isActive, setIsActive] = useState(initialState);
+  const { refreshSession } = useAuthStore();
 
   useEffect(() => {
     if (data) {
@@ -105,11 +118,11 @@ export const useToggleBase = <T, P>({
 
   const handleToggle = useCallback(async () => {
     setIsActive((prev) => !prev);
+    await refreshSession();
 
     try {
       await mutation.mutateAsync(mutationParams);
     } catch (error) {
-      console.error('Error toggling status:', error);
       setIsActive((prev) => !prev);
     }
   }, [mutation, mutationParams]);

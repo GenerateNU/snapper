@@ -57,5 +57,6 @@ export interface AuthResponse {
 export interface SessionResponse {
   access_token: string;
   expires_at: number;
+  expires_in: number;
   refresh_token: string;
 }

@@ -1,3 +1,4 @@
+import { useAuthStore } from '../auth/authStore';
 import { apiConfig } from './apiContext';
 import { fetchData } from './base';
 
@@ -9,13 +10,6 @@ export async function getMe(): Promise<any> {
 
 export async function getUserById(id: string): Promise<any> {
   return await fetchData(`/user/${id}`, 'Failed to fetch user with id');
-}
-
-export async function getUserBySupabaseId(id: string): Promise<any> {
-  return await fetchData(
-    `/user/${id}/supabase`,
-    'Failed to fetch user with id',
-  );
 }
 
 export async function getUserDiveLogs(): Promise<any> {

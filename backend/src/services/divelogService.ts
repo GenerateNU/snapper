@@ -1,5 +1,5 @@
 import { DiveLog } from '../models/diveLog';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 import { UserModel } from '../models/users';
 import { NotFoundError } from '../consts/errors';
 import { Notification } from '../models/notification';
@@ -233,22 +233,6 @@ export class DiveLogServiceImpl implements DiveLogService {
         },
       },
       {
-        $match:
-          taxonomyArrays.order.length > 0 ||
-          taxonomyArrays.class.length > 0 ||
-          taxonomyArrays.family.length > 0
-            ? {
-                $or: [
-                  { 'speciesInfo.order': { $in: taxonomyArrays.order } },
-                  { 'speciesInfo.class': { $in: taxonomyArrays.class } },
-                  { 'speciesInfo.family': { $in: taxonomyArrays.family } },
-                ],
-              }
-            : {},
-      },
-      { $skip: (page - 1) * limit },
-      { $limit: limit },
-      {
         $lookup: {
           from: 'users',
           localField: 'user',
@@ -258,9 +242,26 @@ export class DiveLogServiceImpl implements DiveLogService {
       },
       {
         $match: {
-          user: { $ne: userId },
+          $and: [
+            { user: { $ne: new Types.ObjectId(userId) } },
+            ...(taxonomyArrays.order.length > 0 ||
+            taxonomyArrays.class.length > 0 ||
+            taxonomyArrays.family.length > 0
+              ? [
+                  {
+                    $or: [
+                      { 'speciesInfo.order': { $in: taxonomyArrays.order } },
+                      { 'speciesInfo.class': { $in: taxonomyArrays.class } },
+                      { 'speciesInfo.family': { $in: taxonomyArrays.family } },
+                    ],
+                  },
+                ]
+              : []),
+          ],
         },
       },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
       {
         $unwind: '$userDetails',
       },
@@ -272,6 +273,7 @@ export class DiveLogServiceImpl implements DiveLogService {
       {
         $project: {
           userDetails: 0,
+          speciesInfo: 0,
         },
       },
     ]);

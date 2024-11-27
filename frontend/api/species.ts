@@ -1,6 +1,4 @@
-import { SpeciesContent } from '../types/species';
 import { apiConfig } from './apiContext';
-import { fetchData } from './base';
 
 const API_BASE_URL = apiConfig;
 

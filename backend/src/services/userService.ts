@@ -301,24 +301,6 @@ export class UserServiceImpl implements UserService {
 
     const taxonomyArrays = getTaxonomyArrays(filterValues);
 
-    const matchStage: any = {
-      $and: [{ user: { $in: user.following } }],
-    };
-
-    if (
-      taxonomyArrays.order.length > 0 ||
-      taxonomyArrays.class.length > 0 ||
-      taxonomyArrays.family.length > 0
-    ) {
-      matchStage.$and.push({
-        $or: [
-          { 'speciesInfo.order': { $in: taxonomyArrays.order } },
-          { 'speciesInfo.class': { $in: taxonomyArrays.class } },
-          { 'speciesInfo.family': { $in: taxonomyArrays.family } },
-        ],
-      });
-    }
-
     const diveLogs = await DiveLog.aggregate([
       {
         $lookup: {
