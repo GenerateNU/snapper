@@ -4,6 +4,7 @@ import { DiveLog } from '../models/diveLog';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 import { NotFoundError } from '../consts/errors';
+import { getTaxonomyArrays } from '../consts/filter';
 
 export interface UserService {
   /**
@@ -80,12 +81,14 @@ export interface UserService {
    * @param userId - The ID of the user.
    * @param limit - The maximum number of posts to retrieve.
    * @param page - The page number for pagination.
+   * @param filterValues - Arrays of string for filtering.
    * @returns A promise that resolves to an array of post documents or null if not found.
    */
   getFollowingPosts(
     userId: string,
     limit: number,
     page: number,
+    filterValues: string[],
   ): Promise<Document[] | null>;
 
   /**
@@ -288,6 +291,7 @@ export class UserServiceImpl implements UserService {
     userId: string,
     limit: number = 10,
     page: number = 1,
+    filterValues: string[],
   ): Promise<Document[] | null> {
     const user = await UserModel.findById(userId, 'following');
 
@@ -295,14 +299,84 @@ export class UserServiceImpl implements UserService {
       throw new NotFoundError('User not found');
     }
 
-    const diveLogs = await DiveLog.find({
-      user: { $in: user.following },
-    })
-      .populate('speciesTags')
-      .populate('user', 'username profilePicture')
-      .sort({ date: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit);
+    const taxonomyArrays = getTaxonomyArrays(filterValues);
+
+    const matchStage: any = {
+      $and: [{ user: { $in: user.following } }],
+    };
+
+    if (
+      taxonomyArrays.order.length > 0 ||
+      taxonomyArrays.class.length > 0 ||
+      taxonomyArrays.family.length > 0
+    ) {
+      matchStage.$and.push({
+        $or: [
+          { 'speciesInfo.order': { $in: taxonomyArrays.order } },
+          { 'speciesInfo.class': { $in: taxonomyArrays.class } },
+          { 'speciesInfo.family': { $in: taxonomyArrays.family } },
+        ],
+      });
+    }
+
+    const diveLogs = await DiveLog.aggregate([
+      {
+        $lookup: {
+          from: 'species',
+          localField: 'speciesTags',
+          foreignField: '_id',
+          as: 'speciesInfo',
+        },
+      },
+      {
+        $match: {
+          $and: [
+            { user: { $in: user.following } },
+            ...(taxonomyArrays.order.length > 0 ||
+            taxonomyArrays.class.length > 0 ||
+            taxonomyArrays.family.length > 0
+              ? [
+                  {
+                    $or: [
+                      { 'speciesInfo.order': { $in: taxonomyArrays.order } },
+                      { 'speciesInfo.class': { $in: taxonomyArrays.class } },
+                      { 'speciesInfo.family': { $in: taxonomyArrays.family } },
+                    ],
+                  },
+                ]
+              : []),
+          ],
+        },
+      },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      { $sort: { date: -1 } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userInfo',
+        },
+      },
+      { $unwind: '$userInfo' },
+      {
+        $project: {
+          _id: 1,
+          date: 1,
+          location: 1,
+          photos: 1,
+          description: 1,
+          likes: 1,
+          speciesTags: '$speciesInfo',
+          user: {
+            _id: '$userInfo._id',
+            username: '$userInfo.username',
+            profilePicture: '$userInfo.profilePicture',
+          },
+        },
+      },
+    ]);
 
     return diveLogs;
   }

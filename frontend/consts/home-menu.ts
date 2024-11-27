@@ -6,12 +6,11 @@ export enum Category {
 export enum Filter {
   ALL = 'All',
   SHARK = 'Shark',
-  SEA_TURTLE = 'Sea Turtle',
   RAY = 'Ray',
-  WHALE = 'Whale',
-  DOLPHIN = 'Dolphin',
   OCTOPUS = 'Octopus',
+  SEAHORSE = 'Seahorse',
   JELLYFISH = 'Jellyfish',
+  CORAL = 'Coral',
   EEL = 'Eel',
 }
 
