@@ -6,7 +6,7 @@ export const useQueryBase = (key: string[], queryFn: () => Promise<any>) => {
     queryKey: key,
     queryFn,
     refetchOnWindowFocus: true,
-    staleTime: 30000,
+    staleTime: 15000,
     refetchInterval: false,
     refetchOnReconnect: true,
     refetchOnMount: true,

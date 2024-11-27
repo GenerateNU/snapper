@@ -50,7 +50,7 @@ const FilterMenu: React.FC<FilterProps> = ({ selected, setSelected }) => {
       data={FILTERS}
       contentContainerStyle={{
         paddingLeft: 20,
-        paddingRight: 10
+        paddingRight: 10,
       }}
       renderItem={renderFilter}
     />

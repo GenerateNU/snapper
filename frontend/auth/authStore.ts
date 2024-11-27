@@ -9,9 +9,6 @@ import { NOTIFICATION_TOKEN_KEY } from '../consts/notification';
 
 interface AuthState {
   user: any;
-  token: string | null;
-  refreshToken: string | null;
-  expirationTime: number | null;
   isAuthenticated: boolean;
   error: string | null;
   loading: boolean;
@@ -29,9 +26,6 @@ export const useAuthStore = create<AuthState>(
   persist(
     (set, get) => ({
       user: null,
-      token: null,
-      refreshToken: null,
-      expirationTime: null,
       isAuthenticated: false,
       error: null,
       loading: false,
@@ -42,10 +36,9 @@ export const useAuthStore = create<AuthState>(
         try {
           await AsyncStorage.multiRemove([
             'auth-storage',
-            'supabase.auth.token',
-            'supabase.auth.refreshToken',
-            '@supabase.auth.token',
-            '@supabase.auth.refreshToken',
+            'token',
+            'refresh_token',
+            'expires_at',
           ]);
         } catch (error) {
           console.error('Error clearing storage:', error);
@@ -64,15 +57,15 @@ export const useAuthStore = create<AuthState>(
           if (session && userMe) {
             set({
               user: userMe.user,
-              token: session.access_token,
-              refreshToken: session.refresh_token,
-              expirationTime: Date.now() + session.expires_in * 1000,
               isAuthenticated: true,
               loading: false,
               error: null,
               supabaseId: response.user.id,
               mongoDBId: userMe.user._id,
             });
+            AsyncStorage.setItem('token', session.access_token);
+            AsyncStorage.setItem('refresh_token', session.refresh_token);
+            AsyncStorage.setItem('expires_at', session.expires_at.toString());
           }
         } catch (error: any) {
           set({ loading: false, error: error.message || 'Login failed' });
@@ -91,15 +84,15 @@ export const useAuthStore = create<AuthState>(
           if (session && userMe) {
             set({
               user: userMe.user,
-              token: session.access_token,
-              refreshToken: session.refresh_token,
-              expirationTime: Date.now() + session.expires_in * 1000,
               isAuthenticated: true,
               loading: false,
               error: null,
               supabaseId: response.user.id,
               mongoDBId: userMe.user._id,
             });
+            AsyncStorage.setItem('token', session.access_token);
+            AsyncStorage.setItem('refresh_token', session.refresh_token);
+            AsyncStorage.setItem('expires_at', session.expires_at.toString());
           }
         } catch (error: any) {
           set({ loading: false, error: error.message || 'Signup failed' });
@@ -134,9 +127,6 @@ export const useAuthStore = create<AuthState>(
 
           set({
             user: null,
-            token: null,
-            refreshToken: null,
-            expirationTime: null,
             isAuthenticated: false,
             loading: false,
             error: null,

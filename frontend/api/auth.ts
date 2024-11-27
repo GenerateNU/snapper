@@ -69,10 +69,9 @@ export async function getSession(): Promise<SessionResponse | null> {
   const data = await response.json();
 
   const sessionResponse: SessionResponse = {
-    access_token: data.access_token,
-    refresh_token: data.refresh_token,
-    expires_in: data.expires_in,
-    user: data.user,
+    access_token: data.session.access_token,
+    refresh_token: data.session.refresh_token,
+    expires_at: data.session.expires_at,
   };
 
   return sessionResponse;
