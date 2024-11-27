@@ -2,7 +2,7 @@ export interface TaxonomyFilter {
   [key: string]: { [taxonomyField: string]: string[] };
 }
 
-const TAXONOMY_FILTER_MAP: TaxonomyFilter = {
+export const TAXONOMY_FILTER_MAP: TaxonomyFilter = {
   shark: {
     order: [
       'Q48178',
@@ -33,29 +33,4 @@ const TAXONOMY_FILTER_MAP: TaxonomyFilter = {
   coral: {
     order: ['Q195605'],
   },
-};
-
-/**
- * Get taxonomy arrays for order, class, and family from filters.
- * @param filterValues Array of filter strings like ["shark", "jellyfish"]
- * @returns Object with arrays for order, class, and family
- */
-export const getTaxonomyArrays = (filterValues: string[]) => {
-  const result: any = { order: [], class: [], family: [] };
-
-  filterValues.map((filter) => {
-    const taxonomy = TAXONOMY_FILTER_MAP[filter.toLowerCase()];
-
-    if (taxonomy) {
-      Object.entries(taxonomy).forEach(([taxonomyField, values]) => {
-        if (result[taxonomyField]) {
-          result[taxonomyField].push(...values);
-        }
-      });
-    }
-  });
-
-  console.log(result);
-
-  return result;
 };

@@ -4,7 +4,7 @@ import { DiveLog } from '../models/diveLog';
 import { UserModel } from '../models/users';
 import { Document } from 'mongodb';
 import { NotFoundError } from '../consts/errors';
-import { getTaxonomyArrays } from '../consts/filter';
+import { getTaxonomyArrays } from '../utils/filter';
 
 export interface UserService {
   /**

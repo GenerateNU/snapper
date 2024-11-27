@@ -3,6 +3,7 @@ import mongoose, { Document } from 'mongoose';
 import { UserModel } from '../models/users';
 import { NotFoundError } from '../consts/errors';
 import { Notification } from '../models/notification';
+import { getTaxonomyArrays } from '../utils/filter';
 
 export interface DiveLogService {
   /**
@@ -44,6 +45,22 @@ export interface DiveLogService {
     userId: string,
     divelogId: string,
   ): Promise<Document | null>;
+
+  getNearbyDivelogs({
+    lng,
+    lat,
+    userId,
+    page,
+    limit,
+    filterValues,
+  }: {
+    lng: string;
+    lat: string;
+    userId: string;
+    page: number;
+    limit: number;
+    filterValues: string[];
+  }): Promise<Document[]>;
 }
 
 export class DiveLogServiceImpl implements DiveLogService {
@@ -177,5 +194,88 @@ export class DiveLogServiceImpl implements DiveLogService {
     } finally {
       session.endSession();
     }
+  }
+
+  async getNearbyDivelogs({
+    lng,
+    lat,
+    userId,
+    page,
+    limit,
+    filterValues,
+  }: {
+    lng: string;
+    lat: string;
+    userId: string;
+    page: number;
+    limit: number;
+    filterValues: string[];
+  }): Promise<Document[]> {
+    const taxonomyArrays = getTaxonomyArrays(filterValues);
+
+    const diveLogs = await DiveLog.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [parseFloat(lng as string), parseFloat(lat as string)],
+          },
+          distanceField: 'distance',
+          spherical: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'species',
+          localField: 'speciesTags',
+          foreignField: '_id',
+          as: 'speciesInfo',
+        },
+      },
+      {
+        $match:
+          taxonomyArrays.order.length > 0 ||
+          taxonomyArrays.class.length > 0 ||
+          taxonomyArrays.family.length > 0
+            ? {
+                $or: [
+                  { 'speciesInfo.order': { $in: taxonomyArrays.order } },
+                  { 'speciesInfo.class': { $in: taxonomyArrays.class } },
+                  { 'speciesInfo.family': { $in: taxonomyArrays.family } },
+                ],
+              }
+            : {},
+      },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'userDetails',
+        },
+      },
+      {
+        $match: {
+          user: { $ne: userId },
+        },
+      },
+      {
+        $unwind: '$userDetails',
+      },
+      {
+        $addFields: {
+          'user.profilePicture': '$userDetails.profilePicture',
+        },
+      },
+      {
+        $project: {
+          userDetails: 0,
+        },
+      },
+    ]);
+
+    return diveLogs;
   }
 }
