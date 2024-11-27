@@ -37,6 +37,7 @@ export const getFollowingPosts = async (
     if (error instanceof NotFoundError) {
       return res.status(404).json({ error: error.message });
     }
+    console.error(error);
     return res
       .status(500)
       .json({ error: 'An error occurred while retrieving divelogs' });

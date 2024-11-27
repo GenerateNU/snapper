@@ -2,6 +2,7 @@ import { apiConfig } from './apiContext';
 import { fetchData } from './base';
 import { FormFields } from '../types/divelog';
 import { useAuthStore } from '../auth/authStore';
+import { Filter } from '../consts/home-menu';
 const API_BASE_URL = apiConfig;
 
 export async function getDiveLogById(id: string): Promise<any> {
@@ -33,10 +34,15 @@ export async function getNearbyDivelogs(
   lat: number,
   lng: number,
   page: number,
+  filters: Filter[],
   limit: number = 10,
 ): Promise<any> {
+  const filterParam = filters
+    .map((filter) => filter.toLowerCase().toString())
+    .join(',');
+
   const data = await fetchData(
-    `/divelogs?lat=${lat}&lng=${lng}&page=${page}&limit=${limit}`,
+    `/divelogs?lat=${lat}&lng=${lng}&page=${page}&limit=${limit}&filter=${filterParam}`,
     'Failed to fetch user notifications',
   );
   return data;

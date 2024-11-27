@@ -1,14 +1,10 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
-import { useAuthStore } from '../auth/authStore';
 
 export const useQueryBase = (key: string[], queryFn: () => Promise<any>) => {
-  const { refreshSession } = useAuthStore();
-
   return useQuery({
     queryKey: key,
     queryFn: async () => {
-      await refreshSession();
       return queryFn();
     },
     refetchOnWindowFocus: true,
@@ -24,12 +20,9 @@ export const useInfiniteScrollQuery = (
   model: string,
   queryFunction: (id: string, page: number) => Promise<any[]>,
 ) => {
-  const { refreshSession } = useAuthStore();
-
   return useInfiniteQuery({
     queryKey: [model, id],
     queryFn: async ({ pageParam = 1 }) => {
-      await refreshSession();
       const response = await queryFunction(id, pageParam);
       return response;
     },
@@ -56,10 +49,9 @@ export const useInfiniteScrollQuery = (
 
       return allPages.length + 1;
     },
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
     refetchOnReconnect: true,
     refetchOnMount: true,
-    refetchInterval: 10000,
   });
 };
 
@@ -68,12 +60,9 @@ export const useQueryPagination = (
   model: string,
   queryFunction: (id: string, page: number) => Promise<any[]>,
 ) => {
-  const { refreshSession } = useAuthStore();
-
   return useInfiniteQuery({
     queryKey: [model, id],
     queryFn: async ({ pageParam = 1 }) => {
-      await refreshSession();
       const response = await queryFunction(id, pageParam);
       return response;
     },
@@ -107,7 +96,6 @@ export const useToggleBase = <T, P>({
   mutationParams,
 }: ToggleBaseOptions<T, P>) => {
   const [isActive, setIsActive] = useState(initialState);
-  const { refreshSession } = useAuthStore();
 
   useEffect(() => {
     if (data) {
@@ -118,7 +106,6 @@ export const useToggleBase = <T, P>({
 
   const handleToggle = useCallback(async () => {
     setIsActive((prev) => !prev);
-    await refreshSession();
 
     try {
       await mutation.mutateAsync(mutationParams);

@@ -300,6 +300,7 @@ export class UserServiceImpl implements UserService {
     }
 
     const taxonomyArrays = getTaxonomyArrays(filterValues);
+    console.log(JSON.stringify(taxonomyArrays));
 
     const diveLogs = await DiveLog.aggregate([
       {
@@ -316,13 +317,13 @@ export class UserServiceImpl implements UserService {
             { user: { $in: user.following } },
             ...(taxonomyArrays.order.length > 0 ||
             taxonomyArrays.class.length > 0 ||
-            taxonomyArrays.family.length > 0
+            taxonomyArrays.genus.length > 0
               ? [
                   {
                     $or: [
                       { 'speciesInfo.order': { $in: taxonomyArrays.order } },
                       { 'speciesInfo.class': { $in: taxonomyArrays.class } },
-                      { 'speciesInfo.family': { $in: taxonomyArrays.family } },
+                      { 'speciesInfo.genus': { $in: taxonomyArrays.genus } },
                     ],
                   },
                 ]

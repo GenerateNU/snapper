@@ -1,4 +1,5 @@
 import { useAuthStore } from '../auth/authStore';
+import { Filter } from '../consts/home-menu';
 import { apiConfig } from './apiContext';
 import { fetchData } from './base';
 
@@ -35,10 +36,15 @@ export async function getUserNotifications(
 export async function getUserFollowingPosts(
   id: string,
   page: number,
+  filters: Filter[],
   limit: number = 10,
 ): Promise<any> {
+  const filterParam = filters
+    .map((filter) => filter.toLowerCase().toString())
+    .join(',');
+
   const data = await fetchData(
-    `/user/${id}/followingPosts?page=${page}&limit=${limit}`,
+    `/user/${id}/followingPosts?page=${page}&limit=${limit}&filter=${filterParam}`,
     'Failed to fetch user following posts',
   );
   return data;

@@ -4,6 +4,7 @@ import {
   FlatList,
   ScrollView,
   Animated,
+  Text,
 } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
@@ -38,18 +39,26 @@ const Home = () => {
 
   const {
     data: followingPosts,
-    isLoading: isLoadingFollowing,
+    isLoading: isLoadingFollowingPosts,
     fetchNextPage: fetchNextPageFollowing,
     hasNextPage: hasNextPageFollowing,
     isFetchingNextPage: isFetchingNextPageFollowing,
-  } = useUserFollowingPosts(mongoDBId!);
+    refetch: refetchFollowingPosts,
+    isRefetching: isRefetchingFollowingPosts,
+  } = useUserFollowingPosts(mongoDBId!, selectedFilters);
 
   const {
     data: nearbyPosts,
     isLoading: isLoadingNearby,
     fetchNextPage: fetchNextPageNearby,
     hasNextPage: hasNextPageNearby,
-  } = useNearbyDiveLogs(currentLocation.latitude, currentLocation.longitude);
+    refetch: refetchNearByPosts,
+    isFetching: isFetchingNearbyPosts,
+  } = useNearbyDiveLogs(
+    currentLocation.latitude,
+    currentLocation.longitude,
+    selectedFilters,
+  );
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -67,6 +76,14 @@ const Home = () => {
 
     fetchLocation();
   }, [selectedCategory]);
+
+  useEffect(() => {
+    if (selectedCategory === Category.NEARBY) {
+      refetchNearByPosts();
+    } else {
+      refetchFollowingPosts();
+    }
+  }, [selectedFilters, selectedCategory]);
 
   const renderFollowingPost = ({ item }: { item: any }) => (
     <View className="w-full">
@@ -108,13 +125,20 @@ const Home = () => {
     return renderNearbyPosts();
   };
 
+  const NoPostFound = () => (
+    <View className="w-full items-center mt-5">
+      <Text className="text-gray-500">No posts found</Text>
+    </View>
+  );
+
   const renderFollowingPosts = () => {
-    if (isLoadingFollowing) {
+    if (isLoadingFollowingPosts || isRefetchingFollowingPosts) {
       return (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={[1, 2, 3]}
           renderItem={() => (
-            <View className="mt-10">
+            <View className="mb-10">
               <DiveLogSkeleton />
             </View>
           )}
@@ -123,7 +147,7 @@ const Home = () => {
     }
 
     if (followingPosts?.pages.flatMap((page) => page).length === 0) {
-      return;
+      return <NoPostFound />;
     }
 
     return (
@@ -150,14 +174,14 @@ const Home = () => {
   };
 
   const renderNearbyPosts = () => {
-    if (isLoadingNearby) {
+    if (isFetchingNearbyPosts) {
       return (
         <FlatList
           data={[1, 2, 3, 4]}
           numColumns={2}
           renderItem={({ item, index }: { item: any; index: number }) => (
             <Animated.View
-              className={`w-1/2 h-32 bg-slate-300 mb-4 rounded-xl ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}
+              className={`w-[48%] h-32 bg-slate-200 mb-4 rounded-xl ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}
               style={{ opacity: opacity }}
             />
           )}
@@ -166,11 +190,11 @@ const Home = () => {
     }
 
     if (nearbyPosts?.pages.flatMap((page) => page).length === 0) {
-      return;
+      return <NoPostFound />;
     }
 
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView className="h-[100%]" showsVerticalScrollIndicator={false}>
         <MasonryFlashList
           data={nearbyPosts?.pages.flatMap((page) => page) || []}
           numColumns={2}
@@ -181,7 +205,9 @@ const Home = () => {
           //   loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
           // }
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{
+            paddingBottom: 100,
+          }}
         />
       </ScrollView>
     );
@@ -193,6 +219,7 @@ const Home = () => {
         <View className="flex-col" style={{ gap: 10 }}>
           <View className="px-[5%]">
             <HomeMenu
+              categories={Object.values(Category)}
               selected={selectedCategory}
               setSelected={setSelectedCategory}
             />
@@ -202,7 +229,6 @@ const Home = () => {
             setSelected={setSelectedFilters}
           />
         </View>
-
         <View className="px-[5%]">{renderPosts()}</View>
       </SafeAreaView>
       <InfoPopup />

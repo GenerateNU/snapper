@@ -8,6 +8,7 @@ import {
   toggleLikeDivelog,
   getUserFollowingPosts,
 } from '../api/user';
+import { Filter } from '../consts/home-menu';
 import {
   useInfiniteScrollQuery,
   useQueryBase,
@@ -52,12 +53,12 @@ export const useUserNotification = (id: string) => {
   );
 };
 
-export const useUserFollowingPosts = (id: string) => {
+export const useUserFollowingPosts = (id: string, filters: Filter[]) => {
   return useInfiniteScrollQuery(
     id,
     'following',
     async (id, page): Promise<any[]> => {
-      const response = await getUserFollowingPosts(id, page);
+      const response = await getUserFollowingPosts(id, page, filters);
       return response;
     },
   );
