@@ -4,13 +4,13 @@ import { PROFILE_PHOTO } from '../../consts/profile';
 import ImageCarousel from './carousel';
 import LikeAndShare from './like-share';
 import Caption from './caption';
-import PopulatedInfoPopupButton from '../populated-info-popup';
 import { useState, useEffect } from 'react';
 import useLike from '../../hooks/like';
 import { router } from 'expo-router';
 import { timeAgo } from '../../utils/profile';
 import { reverseGeocode } from '../../api/location';
 import { useAuthStore } from '../../auth/authStore';
+import PopulatedInfoPopupButton from '../populated-info-popup';
 
 interface DiveLogProps {
   userId: string;

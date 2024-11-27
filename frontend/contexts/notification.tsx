@@ -58,17 +58,16 @@ export const NotificationProvider = ({
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        const data = response.notification.request.content
-          .data as NotificationData;
+        const data = response.notification.request.content.data;
 
-        if (
-          lastNotification?.data?.target &&
-          lastNotification?.data?.targetModel
-        ) {
-          if (lastNotification.data.targetModel === 'DiveLog') {
-            router.push(`/divelog/${lastNotification.data.target}`);
+        if (data && data.targetModel && data.target) {
+          // navigate to divelog page if notification is DiveLog
+          if (data.targetModel === 'DiveLog') {
+            router.push(`/divelog/${data.target}`);
           }
-        } else {
+        }
+        // navigate to notification page if notification is related to user follow or like
+        else {
           router.push('/(tabs)/notification');
         }
       });

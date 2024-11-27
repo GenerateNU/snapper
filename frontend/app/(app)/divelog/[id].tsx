@@ -1,11 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
 import { Dimensions, SafeAreaView, ScrollView, Text, View } from 'react-native';
-import InfoPopup from '../../../components/info-popup';
 import { useDiveLog } from '../../../hooks/divelog';
 import React, { useState, useCallback } from 'react';
 import DiveLogSkeleton from './components/skeleton';
 import BigDiveLog from '../../../components/divelog/divelog';
 import { PROFILE_PHOTO } from '../../../consts/profile';
+import InfoPopup from '../../../components/info-popup';
 
 const DiveLog = () => {
   const { id: diveLogId } = useLocalSearchParams<{ id: string }>();

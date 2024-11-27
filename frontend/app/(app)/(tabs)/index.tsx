@@ -20,10 +20,54 @@ import { DEFAULT_SHERM_LOCATION } from '../../../consts/location';
 import { PROFILE_PHOTO } from '../../../consts/profile';
 import { useNearbyDiveLogs } from '../../../hooks/divelog';
 import FilterMenu from '../../../components/home/filter';
-import InfoPopup from '../../../components/info-popup';
 import usePulsingAnimation from '../../../utils/skeleton';
+import { useInfoPopup } from '../../../contexts/info-popup-context';
+import InfoPopup from '../../../components/info-popup';
+import SpeciesInfo from '../../../components/species-info';
+
+const speciesData = {
+  _id: '6746410540c040de1093b6a2',
+  domain: 'Q19088',
+  kingdom: 'Q729',
+  phylum: 'Q10915',
+  class: 'Q127282',
+  order: 'Q127595',
+  family: 'Q465563',
+  genus: 'Q1515467',
+  species: 'Q674381',
+  aphiaId: '219665',
+  scientificName: 'Naso lituratus',
+  articleUrl: 'https://en.wikipedia.org/wiki/Naso_lituratus',
+  articleTitle: 'Naso lituratus',
+  commonNames: [
+    'Naso trang',
+    'Pacific orange-spine Unicorn',
+    'Striped Unicornfish',
+    'Orange-spine Unicornfish',
+    'Clown Tang',
+    'Poll Unicornfish',
+    'Redlip Surgeonfish',
+    'Masked Unicornfish',
+    'Striped-faced Unicornfish',
+    'Smooth-head Unicornfish',
+    'Barcheek Unicornfish',
+    'Orange Spine Surgeonfish',
+  ],
+  imageUrls: [
+    'http://commons.wikimedia.org/wiki/Special:FilePath/Orangespine%20Unicornfish%20-%20Naso%20lituratus.jpg',
+    'http://commons.wikimedia.org/wiki/Special:FilePath/Orangespine%20unicornfish%20Naso%20lituratus.jpg',
+  ],
+  locations: ['South China Sea'],
+  visibility: true,
+  introduction: `Naso lituratus, the clown unicornfish, orangespined unicornfish, black-finned unicornfish, Pacific orangespined unicornfish, blackfinned unicornfish or stripefaced unicornfish, is a species of marine ray-finned fish belonging to the family Acanthuridae, the surgeonfishes, unicornfishes and tangs. This fish is found in the eastern Indian Ocean and western Pacific Ocean. 
+Unique to members of Acanthuridae, including Naso lituratus, are the Epulopiscium bacteria. These bacteria influence the digestion of Naso lituratus, helping them process the algae in their diet.
+Naso lituratus can be found in the Indian Ocean and the Pacific Ocean. This species can be easily recognised by two bright orange forward-hooked spines on the caudal peduncle (the tail base), its orange lips and black face mask. The body is brownish grey with yellow nape and there is a broad black band on the dorsal fin. It reaches about 45 cm (18 in) in length.
+It can be found on coral reefs, often in pairs.`,
+  iconUrl: 'https://dodo.ac/np/images/0/00/Black_Bass_NH_Icon.png',
+};
 
 const Home = () => {
+  const { setClose } = useInfoPopup();
   const { mongoDBId } = useAuthStore();
   const [selectedCategory, setSelectedCategory] = useState<Category>(
     Category.FOLLOWING,
@@ -37,6 +81,7 @@ const Home = () => {
   ]);
   const opacity = usePulsingAnimation();
 
+  // hooks call for following posts
   const {
     data: followingPosts,
     isLoading: isLoadingFollowingPosts,
@@ -47,6 +92,7 @@ const Home = () => {
     isRefetching: isRefetchingFollowingPosts,
   } = useUserFollowingPosts(mongoDBId!, selectedFilters);
 
+  // hooks call for nearby posts
   const {
     data: nearbyPosts,
     isLoading: isLoadingNearby,
@@ -60,6 +106,7 @@ const Home = () => {
     selectedFilters,
   );
 
+  // fetch the current location of user
   useEffect(() => {
     const fetchLocation = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -77,7 +124,9 @@ const Home = () => {
     fetchLocation();
   }, [selectedCategory]);
 
+  // refetch to when filters or categories change
   useEffect(() => {
+    setClose();
     if (selectedCategory === Category.NEARBY) {
       refetchNearByPosts();
     } else {
@@ -85,6 +134,7 @@ const Home = () => {
     }
   }, [selectedFilters, selectedCategory]);
 
+  // render a following post
   const renderFollowingPost = ({ item }: { item: any }) => (
     <View className="w-full">
       <BigDiveLog
@@ -101,6 +151,7 @@ const Home = () => {
     </View>
   );
 
+  // render a nearby post
   const renderNearbyPost = ({ item, index }: { item: any; index: number }) => (
     <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
       <NearbyDiveLog
@@ -118,18 +169,20 @@ const Home = () => {
     }
   };
 
+  // component to show no post found
+  const NoPostFound = () => (
+    <View className="w-full items-center mt-5">
+      <Text className="text-gray-500">No posts found</Text>
+    </View>
+  );
+
+  // render posts based on category selected
   const renderPosts = () => {
     if (selectedCategory === Category.FOLLOWING) {
       return renderFollowingPosts();
     }
     return renderNearbyPosts();
   };
-
-  const NoPostFound = () => (
-    <View className="w-full items-center mt-5">
-      <Text className="text-gray-500">No posts found</Text>
-    </View>
-  );
 
   const renderFollowingPosts = () => {
     if (isLoadingFollowingPosts || isRefetchingFollowingPosts) {

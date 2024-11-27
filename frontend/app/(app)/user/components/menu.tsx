@@ -11,7 +11,6 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
 import { PROFILE_PHOTO } from '../../../../consts/profile';
 import {
   useUserById,
@@ -22,6 +21,7 @@ import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import Species from './species';
 import BigDiveLog from '../../../../components/divelog/divelog';
+import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
 
 const Menu = ({ id }: { id: string }) => {
   const { width } = Dimensions.get('window');
