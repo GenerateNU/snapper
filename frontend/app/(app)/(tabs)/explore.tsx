@@ -5,15 +5,22 @@ import { fetchData } from '../../../api/base';
 import { useState } from 'react';
 import SearchResult from '../../../components/search-result';
 import InfoPopup from '../../../components/info-popup';
+import HomeMenu from '../../../components/home/menu-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Map from '../../../components/map';
 
 type Toggle = 'Fish' | 'Users' | 'Posts';
 
 export default function Explore() {
   const options: Toggle[] = ['Users', 'Fish', 'Posts'];
+  const categories: string[] = ["Map", "Search"]
   const [search, setSearch] = useState('');
   const [toggle, setToggle] = useState<Toggle>(options[0]);
   const [selected, setSelected] = useState<Toggle>(options[0]);
-
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    categories[0],
+  );
+  const [coordinate, setCoordinate] = useState<number[]>([200, 200]);
   const changeText = (input: string) => {
     setSearch(input);
   };
@@ -101,26 +108,44 @@ export default function Explore() {
     );
   }
 
-  return (
-    <View className="h-screen w-screen flex items-center">
-      <View className="w-96 pt-20 pb-4">
+  const renderSearchPage = () => {
+    return (
+      <View className='w-full h-full'>
         <Input border="black" onChangeText={changeText} value={search} />
         <ToggleButtons />
+        <ScrollView className="w-96">
+          {values.map((d: any) => (
+            <View className="mb-4" key={d._id}>
+              <SearchResult {...d} />
+            </View>
+          ))}
+        </ScrollView>
       </View>
-      {isPending ? (
-        <Text> Nothing to see here... </Text>
-      ) : (
-        values.length > 0 && (
-          <ScrollView className="w-96">
-            {values.map((d: any) => (
-              <View className="mb-4" key={d._id}>
-                <SearchResult {...d} />
-              </View>
-            ))}
-          </ScrollView>
-        )
-      )}
+    )
+  }
+
+  const renderMapPage = () => {
+    return (
+      <View className='w-screen h-screen'>
+        <Map coordinate={coordinate} setCoordinate={setCoordinate} />
+      </View>
+    )
+  }
+
+  return (
+    <SafeAreaView className="h-screen w-screen flex items-center">
+      <View className="w-full px-[5%]">
+        <View className='mb-2 bg-transparent'>
+          <HomeMenu
+            categories={categories}
+            selected={selectedCategory}
+            setSelected={setSelectedCategory}
+          />
+        </View>
+        {selectedCategory === "Search" && renderSearchPage()}
+      </View>
+      {selectedCategory === "Map" && renderMapPage()}
       <InfoPopup />
-    </View>
+    </SafeAreaView>
   );
 }
