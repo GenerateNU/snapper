@@ -71,6 +71,7 @@ export const useAuthStore = create<AuthState>(
           const tokenExpiresAt = parseInt(expiresAt, 10);
 
           if (currentTime < tokenExpiresAt) {
+            console.log('Token still valid, no need to refresh');
             return; // Token is still valid; no need to refresh
           }
 

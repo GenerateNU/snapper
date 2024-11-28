@@ -47,7 +47,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow Snapper to use your location."
         }
-      ]
+      ],
+      "expo-router"
     ],
     "packagerOpts": {
       "config": "metro.config.js"
