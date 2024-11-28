@@ -102,7 +102,7 @@ export default function Explore() {
   }
 
   return (
-    <View className="h-screen w-screen flex items-center">
+    <View className="h-screen w-screen flex items-center bg-white">
       <View className="w-96 pt-20 pb-4">
         <Input border="black" onChangeText={changeText} value={search} />
         <ToggleButtons />

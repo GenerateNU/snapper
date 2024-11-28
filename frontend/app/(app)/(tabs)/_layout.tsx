@@ -24,10 +24,9 @@ const Layout = () => {
           tabBarStyle: {
             borderTopColor: 'gray',
             height: 80,
+            justifyContent: 'center',
+            alignItems: 'center',
           },
-        }}
-        sceneContainerStyle={{
-          backgroundColor: 'white',
         }}
       >
         <Tabs.Screen

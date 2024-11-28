@@ -14,7 +14,6 @@ import {
   useFormState,
 } from 'react-hook-form';
 import { Photo } from '../../../../types/divelog';
-import { User } from '../../../../types/auth';
 import { useUserById } from '../../../../hooks/user';
 import { UpdateProfileFields } from '../../../../types/userProfile';
 

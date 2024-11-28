@@ -268,7 +268,10 @@ const Home = () => {
 
   return (
     <>
-      <SafeAreaView className="flex-1 justify-start" style={{ gap: 15 }}>
+      <SafeAreaView
+        className="flex-1 justify-start bg-white"
+        style={{ gap: 15 }}
+      >
         <View className="flex-col" style={{ gap: 10 }}>
           <View className="px-[5%]">
             <HomeMenu

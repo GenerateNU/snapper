@@ -17,11 +17,11 @@ import {
   useUserDiveLogs,
   useUserSpecies,
 } from '../../../../hooks/user';
-import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import Species from './species';
 import BigDiveLog from '../../../../components/divelog/divelog';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
+import DiveLogSkeleton from '../../divelog/components/skeleton';
 
 const Menu = ({ id }: { id: string }) => {
   const { width } = Dimensions.get('window');
