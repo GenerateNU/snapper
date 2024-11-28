@@ -13,6 +13,9 @@ export const getFollowingPosts = async (
   const userId = req.params.id;
   const limit = parseInt(req.query.limit as string) || DEFAULT_LIMIT;
   const page = parseInt(req.query.page as string) || DEFAULT_PAGE;
+  const filter: string = (req.query.filter as string) || '';
+
+  const filterValues = filter ? filter.split(',') : [];
 
   if (!userId) {
     return res.status(400).json({ message: 'User ID is required' });
@@ -27,12 +30,14 @@ export const getFollowingPosts = async (
       userId,
       limit,
       page,
+      filterValues,
     );
     return res.status(200).json(followingDiveLogs);
   } catch (error) {
     if (error instanceof NotFoundError) {
       return res.status(404).json({ error: error.message });
     }
+    console.error(error);
     return res
       .status(500)
       .json({ error: 'An error occurred while retrieving divelogs' });

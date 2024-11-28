@@ -7,7 +7,6 @@ interface FollowButtonProps {
 }
 
 const FollowButton: React.FC<FollowButtonProps> = ({
-  isPending,
   isFollowing,
   onPress,
 }) => {

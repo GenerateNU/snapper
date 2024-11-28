@@ -118,6 +118,7 @@ export class NotificationServiceImpl implements NotificationService {
       actor: actorId,
       target: targetId,
       targetModel,
+      time: new Date(),
     };
 
     let notification;

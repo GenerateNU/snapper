@@ -17,4 +17,5 @@ export type SpeciesContent = {
   kingdom: string;
   domain: string;
   visibility: boolean;
+  locations: string[];
 };

@@ -2,6 +2,8 @@ import { ReactNode, createContext, useContext, useState } from 'react';
 import { SpeciesContent } from '../types/species';
 
 const defaultContent: SpeciesContent = {
+  _id: 'default-id',
+  visibility: true,
   commonNames: ['common'],
   aphiaId: '0',
   scientificName: 'scientific',

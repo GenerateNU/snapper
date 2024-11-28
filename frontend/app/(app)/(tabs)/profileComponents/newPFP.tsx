@@ -20,10 +20,11 @@ import { UpdateProfileFields } from '../../../../types/userProfile';
 
 export function NewPFP(id: any): JSX.Element {
   const { data, isError, isLoading } = useUserById(id);
-  const { register, setValue, formState } = useFormContext();
+  const { register, setValue, formState } =
+    useFormContext<UpdateProfileFields>();
   const { isSubmitted, isDirty } = formState;
   const [image, setImage] = useState<string>();
-  register('profilePhoto');
+  register('profilePicture');
 
   const PFPSelector = () => {
     return (
@@ -53,7 +54,7 @@ export function NewPFP(id: any): JSX.Element {
   return PFPSelector();
 }
 
-async function pickImage(setValue: UseFormSetValue<FieldValues>) {
+async function pickImage(setValue: UseFormSetValue<UpdateProfileFields>) {
   let result = await ExpoImagePicker.launchImageLibraryAsync({
     mediaTypes: ExpoImagePicker.MediaTypeOptions.All,
     allowsEditing: true,
@@ -95,8 +96,8 @@ async function pickImage(setValue: UseFormSetValue<FieldValues>) {
 
     const base64s = await Promise.all([fs]);
 
-    setValue('profilePhoto', base64s);
-
+    //console.log(base64s[0].base64);
+    setValue('profilePicture', base64s[0].base64);
     return result.assets[0].uri;
   }
 }

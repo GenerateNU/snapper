@@ -7,24 +7,37 @@ import { useAuthStore } from '../auth/authStore';
 import { InfoPopupProvider } from '../contexts/info-popup-context';
 import { NotificationProvider } from '../contexts/notification';
 import { useNotificationPermission } from '../hooks/notification';
+import { useLocationPermission } from '../hooks/location';
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from 'react-native-reanimated';
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 const queryClient = new QueryClient();
 
 const InitialLayout = () => {
-  const { isAuthenticated, mongoDBId } = useAuth();
+  const { isAuthenticated, mongoDBId, refreshSession } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/(app)');
-    } else {
-      router.push('/(auth)/');
-    }
+    const refresh = async () => {
+      await refreshSession();
+      if (isAuthenticated) {
+        router.push('/(app)');
+      } else {
+        router.push('/(auth)/');
+      }
+    };
+    refresh();
   }, [isAuthenticated]);
 
-  useNotificationPermission({
-    isAuthenticated,
-    mongoDBId,
-  });
+  useNotificationPermission({ isAuthenticated, mongoDBId });
+
+  useLocationPermission();
 
   return (
     <Stack>

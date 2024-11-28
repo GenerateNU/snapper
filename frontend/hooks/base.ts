@@ -4,7 +4,54 @@ import { useCallback, useEffect, useState } from 'react';
 export const useQueryBase = (key: string[], queryFn: () => Promise<any>) => {
   return useQuery({
     queryKey: key,
-    queryFn,
+    queryFn: async () => {
+      return queryFn();
+    },
+    refetchOnWindowFocus: true,
+    staleTime: 15000,
+    refetchInterval: false,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
+  });
+};
+
+export const useInfiniteScrollQuery = (
+  id: string,
+  model: string,
+  queryFunction: (id: string, page: number) => Promise<any[]>,
+) => {
+  return useInfiniteQuery({
+    queryKey: [model, id],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await queryFunction(id, pageParam);
+      return response;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < allPages[0].length) {
+        return 1;
+      }
+
+      const pageSignatures = allPages.map((page) => JSON.stringify(page));
+
+      const currentSignature = JSON.stringify(lastPage);
+      const firstOccurrence = pageSignatures.indexOf(currentSignature);
+      const hasRepeatedPattern = firstOccurrence < pageSignatures.length - 1;
+
+      if (hasRepeatedPattern) {
+        const cycleLength = pageSignatures.length - firstOccurrence - 1;
+
+        const currentPosition = allPages.length - firstOccurrence;
+        return currentPosition >= cycleLength
+          ? firstOccurrence + 1
+          : allPages.length + 1;
+      }
+
+      return allPages.length + 1;
+    },
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
   });
 };
 
@@ -21,8 +68,12 @@ export const useQueryPagination = (
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length > 0 ? allPages.length + 1 : undefined;
+      return lastPage?.length ? allPages.length + 1 : undefined;
     },
+    refetchInterval: 10000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
   });
 };
 
@@ -59,7 +110,6 @@ export const useToggleBase = <T, P>({
     try {
       await mutation.mutateAsync(mutationParams);
     } catch (error) {
-      console.error('Error toggling status:', error);
       setIsActive((prev) => !prev);
     }
   }, [mutation, mutationParams]);

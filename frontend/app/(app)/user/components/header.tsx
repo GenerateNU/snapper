@@ -56,7 +56,13 @@ const Header = ({ id }: { id: string }) => {
       <View className="flex flex-row justify-between py-[5%]">
         <View>
           <Text className="font-bold text-lg sm:text-xl md:text-2xl text-darkblue">
-            {data?.user.name || 'First Last'}
+            {data?.user.firstName && data?.user.lastName
+              ? `${data.user.firstName} ${data.user.lastName}`
+              : data?.user.firstName
+                ? data.user.firstName
+                : data?.user.lastName
+                  ? data.user.lastName
+                  : ''}
           </Text>
           <Text className="text-ocean text-sm sm:text-base">{`@${data?.user.username}`}</Text>
         </View>

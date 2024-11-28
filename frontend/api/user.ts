@@ -1,3 +1,5 @@
+import { useAuthStore } from '../auth/authStore';
+import { Filter } from '../consts/home-menu';
 import { apiConfig } from './apiContext';
 import { fetchData } from './base';
 
@@ -9,13 +11,6 @@ export async function getMe(): Promise<any> {
 
 export async function getUserById(id: string): Promise<any> {
   return await fetchData(`/user/${id}`, 'Failed to fetch user with id');
-}
-
-export async function getUserBySupabaseId(id: string): Promise<any> {
-  return await fetchData(
-    `/user/${id}/supabase`,
-    'Failed to fetch user with id',
-  );
 }
 
 export async function getUserDiveLogs(): Promise<any> {
@@ -34,6 +29,23 @@ export async function getUserNotifications(
   const data = await fetchData(
     `/user/${id}/notifications?page=${page}&limit=${limit}`,
     'Failed to fetch user notifications',
+  );
+  return data;
+}
+
+export async function getUserFollowingPosts(
+  id: string,
+  page: number,
+  filters: Filter[],
+  limit: number = 10,
+): Promise<any> {
+  const filterParam = filters
+    .map((filter) => filter.toLowerCase().toString())
+    .join(',');
+
+  const data = await fetchData(
+    `/user/${id}/followingPosts?page=${page}&limit=${limit}&filter=${filterParam}`,
+    'Failed to fetch user following posts',
   );
   return data;
 }
@@ -90,5 +102,17 @@ export async function toggleLikeDivelog(
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.error || 'Failed to like or unlike divelog');
+  }
+}
+
+export async function updateProfilePhoto(photo: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/user/actions/edit`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ profilePhoto: photo }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'failed to change profile pic');
   }
 }

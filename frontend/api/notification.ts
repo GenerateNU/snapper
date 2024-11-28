@@ -32,7 +32,6 @@ export const manageExpoToken = async (
       success: true,
     };
   } catch (error) {
-    console.error('Error registering token:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error occurred',

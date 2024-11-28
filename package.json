@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "nativewind": "^4.1.20"
+    "nativewind": "^4.1.20",
+    "expo-location": "~17.0.1"
   }
 }

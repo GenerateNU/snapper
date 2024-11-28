@@ -1,17 +1,29 @@
-import { View, Text, TouchableHighlight } from 'react-native';
+import { View, Text, TouchableHighlight, Pressable } from 'react-native';
 import User from '../user/components/user-profile';
 import { useAuthStore } from '../../../auth/authStore';
 import { Stack } from 'expo-router';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../components/icon-button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChangePFP } from './profileComponents/editProfileModal';
-import { useEffect } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { UpdateProfileFields } from '../../../types/userProfile';
 
 const Profile = () => {
-  const { mongoDBId } = useAuthStore();
+  const { mongoDBId, logout } = useAuthStore();
   const [isMenuOpen, setMenuOpened] = useState(false);
   const [isEditPFPOpen, setEditPFPOpen] = useState(false);
+  const methods = useForm<UpdateProfileFields>();
+
+  useEffect(() => {
+    if (isEditPFPOpen) {
+      setMenuOpened(false);
+    }
+  }, [isEditPFPOpen]);
+
+  const burgerClick = () => {
+    setMenuOpened(!isMenuOpen);
+  };
 
   if (!mongoDBId) {
     return (
@@ -21,18 +33,8 @@ const Profile = () => {
     );
   }
 
-  const burgerClick = () => {
-    setMenuOpened(!isMenuOpen);
-  };
-
-  useEffect(() => {
-    if (isEditPFPOpen) {
-      setMenuOpened(false);
-    }
-  }, [isEditPFPOpen]);
-
   return (
-    <>
+    <FormProvider {...methods}>
       <Stack.Screen
         options={{
           headerTitle: '',
@@ -77,6 +79,14 @@ const Profile = () => {
                   >
                     <Text>Edit Profile</Text>
                   </TouchableHighlight>
+                  <TouchableHighlight
+                    className="w-full p-2"
+                    onPress={logout}
+                    activeOpacity={0.6}
+                    underlayColor="#DDDDDD"
+                  >
+                    <Text>Log out</Text>
+                  </TouchableHighlight>
                 </View>
               )}
             </View>
@@ -84,10 +94,10 @@ const Profile = () => {
         }}
       />
       <View className="relative flex flex-1 items-center">
-        <User id={mongoDBId || ''} />
+        <User id={mongoDBId} />
         <ChangePFP visible={isEditPFPOpen} onClose={setEditPFPOpen} />
       </View>
-    </>
+    </FormProvider>
   );
 };
 

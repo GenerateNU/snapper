@@ -3,7 +3,6 @@ import Profile from './profile';
 import { PROFILE_PHOTO } from '../consts/profile';
 import { router } from 'expo-router';
 import PopulatedInfoPopupButton from './populated-info-popup';
-import SpeciesTag from '../app/(app)/user/components/species-tag';
 
 type UserResult = {
   profilePicture?: string;

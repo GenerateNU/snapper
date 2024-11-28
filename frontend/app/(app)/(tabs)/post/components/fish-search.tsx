@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { searchSpecies } from '../../../../api/species';
-import Tag from '../../../../components/tag';
-import { TagData } from '../../../../types/divelog';
-import { SpeciesContent } from '../../../../types/species';
+import { searchSpecies } from '../../../../../api/species';
+import Tag from '../../../../../components/tag';
+import { TagData } from '../../../../../types/divelog';
+import { SpeciesContent } from '../../../../../types/species';
 
 export default function FishSearch() {
   const { setValue, watch } = useFormContext();
@@ -96,7 +96,7 @@ export default function FishSearch() {
       <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center px-2 w-full min-h-[5vh] mb-5">
         <Image
           className="h-[2.5vh] w-[2.5vh]"
-          source={require('../../../../assets/search.png')}
+          source={require('../../../../../assets/search.png')}
         />
         <View className="flex h-full w-full flex-row items-center flex-wrap items-center gap-2 p-2">
           {tagData.map((item, index) => {

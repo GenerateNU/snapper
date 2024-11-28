@@ -1,10 +1,11 @@
-import { View, Text, Image, Pressable, Dimensions } from 'react-native';
+import { View, Text, Pressable, Dimensions } from 'react-native';
 import Profile from '../profile';
 import FollowButton from '../../app/(app)/user/components/follow-button';
 import { timeAgo } from '../../utils/profile';
 import { router } from 'expo-router';
 import useFollow from '../../hooks/following';
 import { PROFILE_PHOTO } from '../../consts/profile';
+import { Image } from 'expo-image';
 
 const { width } = Dimensions.get('window');
 
@@ -93,7 +94,7 @@ const FollowButtonWrapper = ({ actorId }: { actorId: string }) => {
     <FollowButton
       onPress={handleFollowToggle}
       isFollowing={isFollowing}
-      isPending={isPending}
+      isPending={isPending ?? false}
     />
   );
 };

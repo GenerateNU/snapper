@@ -3,14 +3,14 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Modal, Text, View } from 'react-native';
-import { postDiveLog } from '../../../../api/divelog';
-import BigText from '../../../../components/bigtext';
-import Button from '../../../../components/button';
-import IconButton from '../../../../components/icon-button';
-import ImagePicker from '../../../../components/image-picker';
-import Map from '../../../../components/map';
-import Tag from '../../../../components/tag';
-import { FormFields, Location, TagData } from '../../../../types/divelog';
+import { postDiveLog } from '../../../../../api/divelog';
+import BigText from '../../../../../components/bigtext';
+import Button from '../../../../../components/button';
+import IconButton from '../../../../../components/icon-button';
+import ImagePicker from '../../../../../components/image-picker';
+import Map from '../../../../../components/map';
+import Tag from '../../../../../components/tag';
+import { FormFields, Location, TagData } from '../../../../../types/divelog';
 import PageButton from './page-button';
 
 export default function PostCreationForm() {
@@ -140,7 +140,7 @@ export default function PostCreationForm() {
             outline="gray-400"
             text="Choose Fish"
             backgroundColor="white"
-            onPress={() => router.push('/tag-fish')}
+            onPress={() => router.push('/post/tag-fish')}
           />
         ) : (
           <View className="flex flex-row border border-[#d2d9e2] rounded-md items-center pl-2 w-full min-h-[5vh] mb-[2vh]">
@@ -173,6 +173,7 @@ export default function PostCreationForm() {
       </View>
       <View className="pb-2">
         <Button
+          disabled={submittingPost}
           text={submittingPost ? 'Posting ...' : 'Post'}
           onPress={handleSubmit(submitPost)}
         />

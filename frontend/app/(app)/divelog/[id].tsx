@@ -1,102 +1,80 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import {
-  Image,
-  Pressable,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { useAuthStore } from '../../../auth/authStore';
-import LikeAndShare from '../../../components/divelog/like-share';
-import InfoPopup from '../../../components/info-popup';
-import PopulatedInfoPopupButton from '../../../components/populated-info-popup';
-import Profile from '../../../components/profile';
-import { PROFILE_PHOTO } from '../../../consts/profile';
+import { useLocalSearchParams } from 'expo-router';
+import { Dimensions, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useDiveLog } from '../../../hooks/divelog';
-import useLike from '../../../hooks/like';
-import React from 'react';
+import React, { useState, useCallback } from 'react';
+import DiveLogSkeleton from './components/skeleton';
+import BigDiveLog from '../../../components/divelog/divelog';
+import { PROFILE_PHOTO } from '../../../consts/profile';
+import InfoPopup from '../../../components/info-popup';
 
 const DiveLog = () => {
-  const { mongoDBId } = useAuthStore();
   const { id: diveLogId } = useLocalSearchParams<{ id: string }>();
+  const { height } = Dimensions.get('window');
+  const [contentHeight, setContentHeight] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const [scrollEnabled, setScrollEnabled] = useState(true);
 
   const { data, isLoading, error } = useDiveLog(diveLogId);
 
-  const { isLiking, handleLikeToggle } = useLike(diveLogId);
+  const onContentSizeChange = useCallback(
+    (_: any, h: number) => {
+      setContentHeight(h);
+      setScrollEnabled(h > containerHeight);
+    },
+    [containerHeight],
+  );
 
-  const navigateUserProfile = () => router.push(`/user/${data?.user._id}`);
+  const onLayout = useCallback(
+    (event: any) => {
+      const { height } = event.nativeEvent.layout;
+      setContainerHeight(height);
+      setScrollEnabled(contentHeight > height);
+    },
+    [contentHeight],
+  );
 
-  const renderTag = (item: any) => {
+  if (isLoading) {
     return (
-      <PopulatedInfoPopupButton
-        key={`${item._id}`}
-        speciesId={item.scientificName}
-      >
-        <TouchableOpacity className="p-2 rounded-full border border-1">
-          <Text>{item.commonNames[0]}</Text>
-        </TouchableOpacity>
-      </PopulatedInfoPopupButton>
+      <SafeAreaView className="mx-[8%]">
+        <DiveLogSkeleton />
+      </SafeAreaView>
     );
-  };
+  }
 
-  const [lastTap, setLastTap] = React.useState(0);
-
-  const handleDoubleTap = () => {
-    const currentTime = Date.now();
-    const timeDifference = currentTime - lastTap;
-
-    if (timeDifference < 300 && !isLiking) {
-      handleLikeToggle();
-    }
-    setLastTap(currentTime);
-  };
-
-  return (
-    <Pressable onPress={handleDoubleTap}>
-      <SafeAreaView style={{ gap: 12 }} className="justify-center mx-[8%]">
-        <View style={{ gap: 12 }} className="w-full flex-row items-center">
-          <Pressable
-            style={{ gap: 12 }}
-            className="flex-row items-center"
-            onPress={navigateUserProfile}
-          >
-            <Profile
-              size="md"
-              image={data?.user.profilePicture || PROFILE_PHOTO}
-            />
-            <View className="flex flex-col items-start">
-              <Text className="font-bold text-md">{data?.user.username}</Text>
-              <Text className="text-gray-700">Western Reefs</Text>
-            </View>
-          </Pressable>
-        </View>
-
-        <Image
-          className="rounded-2xl w-full mb-2"
-          source={{ uri: data?.photos[0] }}
-          style={{ aspectRatio: 1 }}
-        />
-
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            gap: 8,
-          }}
-        >
-          {data?.speciesTags?.map((item: any) => renderTag(item))}
-        </View>
-
-        <LikeAndShare diveLogId={diveLogId} />
-
-        <Text className="text-md">
-          <Text className="font-bold">{data?.user.username + ' '}</Text>
-          <Text>{data?.description}</Text>
+  if (error) {
+    return (
+      <SafeAreaView className="flex justify-center items-center">
+        <Text className="text-xs text-slate-500">
+          Error loading dive log. Please try again later.
         </Text>
       </SafeAreaView>
+    );
+  }
+
+  return (
+    <View className="bg-white">
+      <SafeAreaView className="mx-[6%]" onLayout={onLayout} style={{ height }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          scrollEnabled={scrollEnabled}
+          onContentSizeChange={onContentSizeChange}
+          className="flex"
+        >
+          <BigDiveLog
+            location={data?.location.coords}
+            date={data?.date}
+            id={diveLogId}
+            profilePicture={data?.user.profilePicture || PROFILE_PHOTO}
+            photos={data?.photos}
+            description={data?.description}
+            username={data?.user.username}
+            userId={data?.user._id}
+            speciesTags={data?.speciesTags}
+          />
+        </ScrollView>
+      </SafeAreaView>
       <InfoPopup />
-    </Pressable>
+    </View>
   );
 };
 
