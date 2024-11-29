@@ -48,6 +48,7 @@ const Home = () => {
     isFetchingNextPage: isFetchingNextPageFollowing,
     refetch: refetchFollowingPosts,
     isRefetching: isRefetchingFollowingPosts,
+    error: errorFollowingPosts,
   } = useUserFollowingPosts(mongoDBId!, selectedFilters);
 
   // hooks call for nearby posts
@@ -58,6 +59,7 @@ const Home = () => {
     hasNextPage: hasNextPageNearby,
     refetch: refetchNearByPosts,
     isFetching: isFetchingNearbyPosts,
+    error: errorNearbyPosts,
   } = useNearbyDiveLogs(
     currentLocation.latitude,
     currentLocation.longitude,
@@ -128,11 +130,24 @@ const Home = () => {
   };
 
   // component to show no post found
-  const NoPostFound = () => (
+  const TextMessage = ({
+    message,
+    error = false,
+  }: {
+    message: string;
+    error?: boolean;
+  }) => (
     <View className="w-full items-center mt-5">
-      <Text className="text-gray-500">No posts found</Text>
+      <Text className={`${error ? 'text-red-500' : 'text-gray-500'}`}>
+        {message}
+      </Text>
     </View>
   );
+
+  const ErrorPost = () => (
+    <TextMessage message="Error loading posts" error={true} />
+  );
+  const NoPostFound = () => <TextMessage message="No posts found" />;
 
   // render posts based on category selected
   const renderPosts = () => {
@@ -159,6 +174,10 @@ const Home = () => {
 
     if (followingPosts?.pages.flatMap((page) => page).length === 0) {
       return <NoPostFound />;
+    }
+
+    if (errorFollowingPosts) {
+      return <ErrorPost />;
     }
 
     return (
@@ -202,6 +221,10 @@ const Home = () => {
 
     if (nearbyPosts?.pages.flatMap((page) => page).length === 0) {
       return <NoPostFound />;
+    }
+
+    if (errorNearbyPosts) {
+      return <ErrorPost />;
     }
 
     return (
