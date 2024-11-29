@@ -26,6 +26,8 @@ const Layout = () => {
             height: 80,
             justifyContent: 'center',
             alignItems: 'center',
+            paddingTop: 8,
+            paddingBottom: 0,
           },
         }}
       >
