@@ -1,5 +1,10 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import Input from '../../../components/input';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
 import { useState } from 'react';
@@ -8,12 +13,13 @@ import InfoPopup from '../../../components/info-popup';
 import HomeMenu from '../../../components/home/menu-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Map from '../../../components/map';
+import SearchIcon from '../../../assets/search.svg';
 
 type Toggle = 'Fish' | 'Users' | 'Posts';
 
 export default function Explore() {
   const options: Toggle[] = ['Users', 'Fish', 'Posts'];
-  const categories: string[] = ["Map", "Search"]
+  const categories: string[] = ['Map', 'Search'];
   const [search, setSearch] = useState('');
   const [toggle, setToggle] = useState<Toggle>(options[0]);
   const [selected, setSelected] = useState<Toggle>(options[0]);
@@ -21,8 +27,16 @@ export default function Explore() {
     categories[0],
   );
   const [coordinate, setCoordinate] = useState<number[]>([200, 200]);
+  const [mapSearch, setMapSearch] = useState('');
   const changeText = (input: string) => {
     setSearch(input);
+  };
+
+  const changeMapText = () => {
+    const delimeter = ' ';
+    const strings = mapSearch.split(delimeter);
+    const coordinates = strings.map((s) => parseFloat(s));
+    setCoordinate(coordinates);
   };
 
   /**
@@ -110,9 +124,11 @@ export default function Explore() {
 
   const renderSearchPage = () => {
     return (
-      <View className='w-full h-full'>
-        <Input border="black" onChangeText={changeText} value={search} />
-        <ToggleButtons />
+      <View className="w-full h-full">
+        <View className="mb-2">{renderCustomInput(changeText, search)}</View>
+        <View className="mb-2">
+          <ToggleButtons />
+        </View>
         <ScrollView className="w-96">
           {values.map((d: any) => (
             <View className="mb-4" key={d._id}>
@@ -121,30 +137,71 @@ export default function Explore() {
           ))}
         </ScrollView>
       </View>
-    )
-  }
+    );
+  };
+
+  const renderCustomInput = (
+    changeText: (s: string) => any,
+    search: string,
+    onSubmit?: () => void,
+    placeholder?: string,
+  ) => {
+    return (
+      <View
+        className="flex-row items-center bg-[#FFFFFF] rounded-full h-12 px-[5%] shadow-lg"
+        style={{
+          elevation: 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+        }}
+      >
+        <SearchIcon width={20} height={20} className="text-gray-400" />
+        <TextInput
+          className="flex-1 h-full py-[3%] ml-2"
+          onChangeText={changeText}
+          value={search}
+          placeholder={placeholder ? placeholder : ''}
+          onSubmitEditing={onSubmit}
+        />
+      </View>
+    );
+  };
 
   const renderMapPage = () => {
     return (
-      <View className='w-screen h-screen'>
+      <View className="absolute inset-0 z-0 w-screen h-screen">
         <Map coordinate={coordinate} setCoordinate={setCoordinate} />
       </View>
-    )
-  }
+    );
+  };
 
   return (
-    <SafeAreaView className="h-screen w-screen flex items-center">
-      <View className="w-full px-[5%]">
-        <View className='mb-2 bg-transparent'>
+    <SafeAreaView className="h-screen w-screen">
+      {selectedCategory === 'Map' && renderMapPage()}
+      <View className="w-full px-[5%] z-10">
+        <View className="mb-2 bg-[#FFFFFF] rounded-full">
           <HomeMenu
             categories={categories}
             selected={selectedCategory}
-            setSelected={setSelectedCategory}
+            setSelected={(s) => {
+              setMapSearch('');
+              setSearch('');
+              setToggle(options[0]);
+              setSelectedCategory(s);
+            }}
           />
         </View>
-        {selectedCategory === "Search" && renderSearchPage()}
+        {selectedCategory === 'Map' &&
+          renderCustomInput(
+            setMapSearch,
+            mapSearch,
+            changeMapText,
+            'Find Location',
+          )}
+        {selectedCategory === 'Search' && renderSearchPage()}
       </View>
-      {selectedCategory === "Map" && renderMapPage()}
       <InfoPopup />
     </SafeAreaView>
   );
