@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Snapper",
+    "name": "Snapper-Generate",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,7 +14,7 @@
     "scheme": "snapper",
     "ios": {
       "supportsTablet": true,
-      "bundlerIdentifier": "com.generate.snapper",
+      "bundleIdentifier": "com.generate.snapper",
       "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY",
       "infoPlist": {
         "NSUserNotificationUsageDescription": "Snapper would like to send you notifications."
@@ -30,7 +30,12 @@
           "apiKey": "process.env.GOOGLE_MAPS_API_KEY"
         }
       },
-      "permissions": ["android.permission.NOTIFICATIONS"]
+      "permissions": [
+        "android.permission.NOTIFICATIONS",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -55,9 +60,8 @@
     },
     "extra": {
       "eas": {
-        "projectId": "921eecab-3fe7-43c0-ae5a-79aa0ba93d62"
+        "projectId": "da152f8b-b3b5-4750-8beb-eb0d54c50b42"
       }
-    },
-    "owner": "generate-snapper"
+    }
   }
 }
