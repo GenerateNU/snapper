@@ -4,6 +4,8 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
@@ -98,13 +100,12 @@ export default function Explore() {
    */
   const ToggleButtons = () => {
     const onSelected = (selection: Toggle) => {
-      console.log(selection)
       setToggle(selection);
       setSelected(selection);
       setSearch('');
     };
     return (
-      <View className="w-full flex justify-between flex-row w-96">
+      <View className="w-full flex justify-between flex-row w-full">
         {options.map((option, key) => (
           <TouchableOpacity
             key={key}
@@ -130,21 +131,42 @@ export default function Explore() {
     );
   }
 
-  const renderDiveLogs = () => {
-    console.log(values)
-    return <ScrollView className="h-[100%]" showsVerticalScrollIndicator={false}>
-      <MasonryFlashList
-        data={values}
-        numColumns={2}
-        renderItem={(e) => SearchResult(e.item)}
-        estimatedItemSize={200}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: 100,
-        }}
-      />
-    </ScrollView>
-  }
+  const renderSearchResults = () => {
+    if (isPending && search.length > 0) {
+      return (
+        <KeyboardAvoidingView className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#0000ff" />
+        </KeyboardAvoidingView>
+      );
+    }
+
+    if (toggle === "Users" || toggle === "Fish") {
+      return (
+        <ScrollView className="w-96">
+          {values.map((d: any) => (
+            <View className="mb-4" key={d._id}>
+              <SearchResult {...d} />
+            </View>
+          ))}
+        </ScrollView>
+      );
+    }
+
+    return (
+      <ScrollView className="h-[100%]" showsVerticalScrollIndicator={false}>
+        <MasonryFlashList
+          data={values}
+          numColumns={2}
+          renderItem={(e) => SearchResult(e.item)}
+          estimatedItemSize={200}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 100,
+          }}
+        />
+      </ScrollView>
+    );
+  };
 
   const renderSearchPage = () => {
     return (
@@ -153,18 +175,11 @@ export default function Explore() {
         <View className="mb-2">
           <ToggleButtons />
         </View>
-        {toggle === "Users" || toggle === "Fish" ? <ScrollView className="w-96">
-          {values.map((d: any) => (
-            <View className="mb-4" key={d._id}>
-              <SearchResult {...d} />
-            </View>
-          ))}
-        </ScrollView> :
-          renderDiveLogs()
-        }
+        {renderSearchResults()}
       </View>
     );
   };
+
 
   const renderCustomInput = (
     changeText: (s: string) => any,
