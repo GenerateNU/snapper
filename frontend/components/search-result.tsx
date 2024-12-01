@@ -24,16 +24,16 @@ type PostResult = {
   _id: string;
   user: string;
   description: string;
-  photos : string[];
-  profilePhoto? : string
-}
+  photos: string[];
+  profilePhoto?: string;
+};
 
 const email = 'email';
 const username = 'username';
 const iconUrl = 'iconUrl';
 const species = 'species';
 const alphaId = 'aphiaId';
-const user = "user";
+const user = 'user';
 
 /**
  * Is that object of type UserResult?
@@ -66,10 +66,7 @@ function isDiveLog(obj: unknown): obj is PostResult {
   if (!obj || typeof obj !== 'object') {
     return false;
   }
-  return (
-    Object.hasOwn(obj, user)
-  );
-
+  return Object.hasOwn(obj, user);
 }
 
 function renderUserResult(props: UserResult) {
@@ -115,19 +112,23 @@ function renderFishResult(props: FishResult) {
   );
 }
 
-function renderDiveLogResult(props: PostResult, index : number) {
-  return <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
-    <NearbyDiveLog
-      profilePhoto={props.profilePhoto || PROFILE_PHOTO}
-      description={props.description}
-      divelogId={props._id}
-      coverPhoto={props?.photos[0]}
-    />
-  </View>
-
+function renderDiveLogResult(props: PostResult, index: number) {
+  return (
+    <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
+      <NearbyDiveLog
+        profilePhoto={props.profilePhoto || PROFILE_PHOTO}
+        description={props.description}
+        divelogId={props._id}
+        coverPhoto={props?.photos[0]}
+      />
+    </View>
+  );
 }
 
-export default function SearchResult(props: UserResult | FishResult | PostResult, index? : number) {
+export default function SearchResult(
+  props: UserResult | FishResult | PostResult,
+  index?: number,
+) {
   if (isFish(props)) {
     return renderFishResult(props);
   } else if (isUser(props)) {

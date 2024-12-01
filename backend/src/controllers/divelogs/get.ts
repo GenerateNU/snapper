@@ -53,10 +53,7 @@ export const getAllDiveLogsSortedPaginated = async (
   }
 };
 
-export const searchDivelogsPaginated = async (
-  req: Request,
-  res: Response,) => {
-
+export const searchDivelogsPaginated = async (req: Request, res: Response) => {
   try {
     const { text = '', page = DEFAULT_PAGE, limit = DEFAULT_LIMIT } = req.query;
     const pageSize = parseInt(page as string);
@@ -110,11 +107,15 @@ export const searchDivelogsPaginated = async (
       { $limit: limitSize },
     ];
 
-    const results = await DiveLog.aggregate(query)
+    const results = await DiveLog.aggregate(query);
 
     if (results.length > 0) {
       const user = async (id: string) => await UserModel.findById(id);
-      const more = results.map(async (divelog) => { const u = await user(divelog.user as string); const profilePhoto = u?.profilePicture; return { profilePhoto, ...divelog } });
+      const more = results.map(async (divelog) => {
+        const u = await user(divelog.user as string);
+        const profilePhoto = u?.profilePicture;
+        return { profilePhoto, ...divelog };
+      });
       const moreResults = await Promise.all(more);
       return res.status(200).json({
         page: pageSize,
@@ -134,5 +135,4 @@ export const searchDivelogsPaginated = async (
       error: 'An error occurred while fetching users.',
     });
   }
-
-}
+};

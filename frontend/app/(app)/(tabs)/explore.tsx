@@ -76,7 +76,7 @@ export default function Explore() {
         endpoint = `/species/search/${search}`;
         break;
       case 'Posts':
-        endpoint = `/divelogs/search?text=${search}`
+        endpoint = `/divelogs/search?text=${search}`;
         break;
       default:
         endpoint = `/users?text=${search}`;
@@ -140,7 +140,7 @@ export default function Explore() {
       );
     }
 
-    if (toggle === "Users" || toggle === "Fish") {
+    if (toggle === 'Users' || toggle === 'Fish') {
       return (
         <ScrollView className="w-96">
           {values.map((d: any) => (
@@ -179,7 +179,6 @@ export default function Explore() {
       </View>
     );
   };
-
 
   const renderCustomInput = (
     changeText: (s: string) => any,
@@ -230,18 +229,13 @@ export default function Explore() {
               setMapSearch('');
               setSearch('');
               setToggle(options[0]);
-              data
+              data;
               setSelectedCategory(s);
             }}
           />
         </View>
         {selectedCategory === 'Map' &&
-          renderCustomInput(
-            setMapSearch,
-            mapSearch,
-            changeMapText,
-            '20 20',
-          )}
+          renderCustomInput(setMapSearch, mapSearch, changeMapText, '20 20')}
         {selectedCategory === 'Search' && renderSearchPage()}
         <InfoPopup />
       </View>
