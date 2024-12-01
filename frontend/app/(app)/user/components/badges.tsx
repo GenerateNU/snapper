@@ -5,8 +5,8 @@ import DefaultBage from '../../../../assets/BadgeIcons/badge.svg';
 import FishCaught100 from '../../../../assets/BadgeIcons/100-fishes-badge.svg';
 import OceanExplorer from '../../../../assets/BadgeIcons/ocean-explorer-badge.svg';
 import RareFishCaught from '../../../../assets/BadgeIcons/rare-fishes-badge.svg';
-import FirstCatch from '../../../../assets/BadgeIcons/first-catch-badge.svg'
-import ReefGuardian from '../../../../assets/BadgeIcons/reef-gaurdian-badge.svg'
+import FirstCatch from '../../../../assets/BadgeIcons/first-catch-badge.svg';
+import ReefGuardian from '../../../../assets/BadgeIcons/reef-gaurdian-badge.svg';
 
 const Badges = ({ id }: { id: string }) => {
   const { data, isError, isLoading } = useUserById(id);
@@ -40,29 +40,28 @@ const Badges = ({ id }: { id: string }) => {
   );
 
   type RenderBadge = {
-    name: string,
-    width: number,
-    height: number
-  }
+    name: string;
+    width: number;
+    height: number;
+  };
 
   const RenderBagdeImage = ({ name, width, height }: RenderBadge) => {
     switch (name) {
-      case "100 Dives Logged":
-        return (<FishCaught100 width={width} height={height} />)
-      case "Rare Fish Find":
-        return (<RareFishCaught width={width} height={height} />)
-      case "Ocean Explorer":
-        return (<OceanExplorer width={width} height={height} />)
-      case "Reef Guardian":
-        return (<ReefGuardian width={width} height={height} />)
-      case "First Catch":
-        return (<FirstCatch width={width} height={height} />)
+      case '100 Dives Logged':
+        return <FishCaught100 width={width} height={height} />;
+      case 'Rare Fish Find':
+        return <RareFishCaught width={width} height={height} />;
+      case 'Ocean Explorer':
+        return <OceanExplorer width={width} height={height} />;
+      case 'Reef Guardian':
+        return <ReefGuardian width={width} height={height} />;
+      case 'First Catch':
+        return <FirstCatch width={width} height={height} />;
       default:
-        return (<DefaultBage width={width} height={height} />)
+        return <DefaultBage width={width} height={height} />;
     }
+  };
 
-  }
-  
   return (
     <View>
       <Text className="font-bold text-base sm:text-lg md:text-xl pb-[2%] text-darkblue">

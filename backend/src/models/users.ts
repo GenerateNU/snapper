@@ -8,7 +8,14 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String },
   badges: {
     type: [String],
-    enum: ['Deep Diver', 'First Catch', 'Ocean Explorer', '100 Dives Logged', 'Reef Guardian', 'Rare Fish Find'],
+    enum: [
+      'Deep Diver',
+      'First Catch',
+      'Ocean Explorer',
+      '100 Dives Logged',
+      'Reef Guardian',
+      'Rare Fish Find',
+    ],
   }, // badge is an array of enum
   diveLogs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DiveLog' }],
   speciesCollected: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Species' }],

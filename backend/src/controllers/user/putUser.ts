@@ -5,7 +5,7 @@ const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
 export const putUser = async (req: express.Request, res: express.Response) => {
-  console.log("Putting user!");
+  console.log('Putting user!');
   try {
     const userId = req.session.userId;
     if (!userId) {
