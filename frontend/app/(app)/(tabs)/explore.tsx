@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
-  KeyboardAvoidingView,
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
@@ -134,9 +133,9 @@ export default function Explore() {
   const renderSearchResults = () => {
     if (isPending && search.length > 0) {
       return (
-        <KeyboardAvoidingView className="flex-1 justify-center items-center">
+        <View className="flex-1 justify-center items-center mb-48">
           <ActivityIndicator size="large" color="#0000ff" />
-        </KeyboardAvoidingView>
+        </View>
       );
     }
 
@@ -229,13 +228,19 @@ export default function Explore() {
               setMapSearch('');
               setSearch('');
               setToggle(options[0]);
+              setSelected(options[0]);
               data;
               setSelectedCategory(s);
             }}
           />
         </View>
         {selectedCategory === 'Map' &&
-          renderCustomInput(setMapSearch, mapSearch, changeMapText, '20 20')}
+          renderCustomInput(
+            setMapSearch,
+            mapSearch,
+            changeMapText,
+            'Enter a coordinate i.e. "20 20"',
+          )}
         {selectedCategory === 'Search' && renderSearchPage()}
         <InfoPopup />
       </View>
