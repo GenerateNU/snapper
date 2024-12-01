@@ -1,7 +1,7 @@
 import { View, Text, TouchableHighlight, Pressable } from 'react-native';
 import User from '../user/components/user-profile';
 import { useAuthStore } from '../../../auth/authStore';
-import { Stack } from 'expo-router';
+import { Stack, router} from 'expo-router';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../components/icon-button';
 import { useState, useEffect } from 'react';
@@ -55,14 +55,7 @@ const Profile = () => {
                     flexDirection: 'column',
                   }}
                 >
-                  <TouchableHighlight
-                    className="w-full p-2"
-                    onPress={() => alert('Settings')}
-                    activeOpacity={0.6}
-                    underlayColor="#DDDDDD"
-                  >
-                    <Text>Settings</Text>
-                  </TouchableHighlight>
+                  <Text className='pl-2 pt-2 pb-1 font-semibold'>Settings</Text>
                   <TouchableHighlight
                     className="w-full p-2"
                     onPress={() => alert('Password')}
@@ -72,15 +65,15 @@ const Profile = () => {
                     <Text>Password</Text>
                   </TouchableHighlight>
                   <TouchableHighlight
-                    className="w-full p-2"
-                    onPress={() => setEditPFPOpen(true)}
+                    className="w-full p-2 pb-1"
+                    onPress={() => router.push("/profileComponents/edit-profile")}
                     activeOpacity={0.6}
                     underlayColor="#DDDDDD"
                   >
                     <Text>Edit Profile</Text>
                   </TouchableHighlight>
                   <TouchableHighlight
-                    className="w-full p-2"
+                    className="w-full p-2 pb-1"
                     onPress={logout}
                     activeOpacity={0.6}
                     underlayColor="#DDDDDD"

@@ -3,8 +3,9 @@ import { View, Image } from 'react-native';
 interface ProfileProps {
   image: string;
   outline?: boolean;
-  size: 'sm' | 'md' | 'lg';
+  size: 'sm' | 'md' | 'lg' | 'xl';
   borderColor?: string;
+  borderSize?: 0 | 2 | 4 | 8
 }
 
 const Profile: React.FC<ProfileProps> = ({
@@ -12,18 +13,20 @@ const Profile: React.FC<ProfileProps> = ({
   outline = false,
   size,
   borderColor = 'border-darkblue',
+  borderSize = 2
 }) => {
   const sizeMap = {
     sm: 35,
     md: 50,
     lg: 70,
+    xl: 100
   };
 
   const dimension = sizeMap[size];
 
   return (
     <View
-      className={`bg-water rounded-full ${outline ? 'border border-2' : ''} ${borderColor} overflow-hidden items-center justify-center`}
+      className={`bg-water rounded-full ${outline ? `border border-${borderSize}` : ''} ${borderColor} overflow-hidden items-center justify-center`}
     >
       <Image
         style={{ width: dimension, height: dimension }}

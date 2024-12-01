@@ -26,9 +26,6 @@ const Layout = () => {
             height: 80,
           },
         }}
-        sceneContainerStyle={{
-          backgroundColor: 'white',
-        }}
       >
         <Tabs.Screen
           name="index"
