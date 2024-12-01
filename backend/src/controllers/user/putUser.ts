@@ -5,6 +5,7 @@ const userService: UserService = new UserServiceImpl();
 
 //Will get the user by the given ID
 export const putUser = async (req: express.Request, res: express.Response) => {
+  console.log("Putting user!");
   try {
     const userId = req.session.userId;
     if (!userId) {
@@ -27,8 +28,6 @@ export const putUser = async (req: express.Request, res: express.Response) => {
       'lastName',
     ];
 
-    //TODO: Will not change with schema
-    //Check if each field is already present in the schema
     for (const key in req.body) {
       if (!userFields.includes(key)) {
         res
