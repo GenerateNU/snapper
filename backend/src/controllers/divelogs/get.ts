@@ -116,7 +116,6 @@ export const searchDivelogsPaginated = async (
       const user = async (id: string) => await UserModel.findById(id);
       const more = results.map(async (divelog) => { const u = await user(divelog.user as string); const profilePhoto = u?.profilePicture; return { profilePhoto, ...divelog } });
       const moreResults = await Promise.all(more);
-      console.log(more)
       return res.status(200).json({
         page: pageSize,
         limit: limitSize,

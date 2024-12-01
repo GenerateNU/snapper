@@ -230,6 +230,7 @@ export default function Explore() {
               setMapSearch('');
               setSearch('');
               setToggle(options[0]);
+              data
               setSelectedCategory(s);
             }}
           />
@@ -242,8 +243,8 @@ export default function Explore() {
             '20 20',
           )}
         {selectedCategory === 'Search' && renderSearchPage()}
+        <InfoPopup />
       </View>
-      <InfoPopup />
     </SafeAreaView>
   );
 }
