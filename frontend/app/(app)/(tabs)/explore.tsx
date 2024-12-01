@@ -1,21 +1,46 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import Input from '../../../components/input';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
 import { useState } from 'react';
 import SearchResult from '../../../components/search-result';
 import InfoPopup from '../../../components/info-popup';
+import HomeMenu from '../../../components/home/menu-bar';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Map from '../../../components/map';
+import SearchIcon from '../../../assets/search.svg';
+import { MasonryFlashList } from '@shopify/flash-list';
 
 type Toggle = 'Fish' | 'Users' | 'Posts';
+type Category = 'Map' | 'Search';
 
 export default function Explore() {
   const options: Toggle[] = ['Users', 'Fish', 'Posts'];
+  const categories: Category[] = ['Map', 'Search'];
   const [search, setSearch] = useState('');
   const [toggle, setToggle] = useState<Toggle>(options[0]);
   const [selected, setSelected] = useState<Toggle>(options[0]);
-
+  const [selectedCategory, setSelectedCategory] = useState<Category>(
+    categories[0],
+  );
+  const [coordinate, setCoordinate] = useState<number[]>([200, 200]);
+  const [mapSearch, setMapSearch] = useState('');
   const changeText = (input: string) => {
     setSearch(input);
+  };
+
+  const changeMapText = () => {
+    const delimeter = ' ';
+    const strings = mapSearch.split(delimeter);
+    const coordinates = strings.map((s) => parseFloat(s));
+    setCoordinate(coordinates);
   };
 
   /**
@@ -31,6 +56,8 @@ export default function Explore() {
       return data as any[];
     } else if (Array.isArray(data.results)) {
       return data.results as any[];
+    } else if (Array.isArray(data.moreResults)) {
+      return data.moreResults as any[];
     } else {
       throw new Error('Malformed Data');
     }
@@ -48,10 +75,13 @@ export default function Explore() {
       case 'Fish':
         endpoint = `/species/search/${search}`;
         break;
+      case 'Posts':
+        endpoint = `/divelogs/search?text=${search}`;
+        break;
       default:
         endpoint = `/users?text=${search}`;
     }
-    const res = await fetchData(endpoint, 'Failed to fetch users');
+    const res = await fetchData(endpoint, 'Failed to fetch data');
     return res;
   };
 
@@ -75,7 +105,7 @@ export default function Explore() {
       setSearch('');
     };
     return (
-      <View className="w-full flex justify-between flex-row w-96">
+      <View className="w-full flex justify-between flex-row w-full">
         {options.map((option, key) => (
           <TouchableOpacity
             key={key}
@@ -101,26 +131,114 @@ export default function Explore() {
     );
   }
 
-  return (
-    <View className="h-screen w-screen flex items-center">
-      <View className="w-96 pt-20 pb-4">
-        <Input border="black" onChangeText={changeText} value={search} />
-        <ToggleButtons />
+  const renderSearchResults = () => {
+    if (isPending && search.length > 0) {
+      return (
+        <KeyboardAvoidingView className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#0000ff" />
+        </KeyboardAvoidingView>
+      );
+    }
+
+    if (toggle === 'Users' || toggle === 'Fish') {
+      return (
+        <ScrollView className="w-96">
+          {values.map((d: any) => (
+            <View className="mb-4" key={d._id}>
+              <SearchResult {...d} />
+            </View>
+          ))}
+        </ScrollView>
+      );
+    }
+
+    return (
+      <ScrollView className="h-[100%]" showsVerticalScrollIndicator={false}>
+        <MasonryFlashList
+          data={values}
+          numColumns={2}
+          renderItem={(e) => SearchResult(e.item)}
+          estimatedItemSize={200}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 100,
+          }}
+        />
+      </ScrollView>
+    );
+  };
+
+  const renderSearchPage = () => {
+    return (
+      <View className="w-full h-full">
+        <View className="mb-2">{renderCustomInput(changeText, search)}</View>
+        <View className="mb-2">
+          <ToggleButtons />
+        </View>
+        {renderSearchResults()}
       </View>
-      {isPending ? (
-        <Text> Nothing to see here... </Text>
-      ) : (
-        values.length > 0 && (
-          <ScrollView className="w-96">
-            {values.map((d: any) => (
-              <View className="mb-4" key={d._id}>
-                <SearchResult {...d} />
-              </View>
-            ))}
-          </ScrollView>
-        )
-      )}
-      <InfoPopup />
-    </View>
+    );
+  };
+
+  const renderCustomInput = (
+    changeText: (s: string) => any,
+    search: string,
+    onSubmit?: () => void,
+    placeholder?: string,
+  ) => {
+    return (
+      <View
+        className="flex-row items-center bg-[#FFFFFF] rounded-full h-12 px-[5%] shadow-lg"
+        style={{
+          elevation: 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+        }}
+      >
+        <SearchIcon width={20} height={20} className="text-gray-400" />
+        <TextInput
+          className="flex-1 h-full py-[3%] ml-2"
+          onChangeText={changeText}
+          value={search}
+          placeholder={placeholder ? placeholder : ''}
+          onSubmitEditing={onSubmit}
+        />
+      </View>
+    );
+  };
+
+  const renderMapPage = () => {
+    return (
+      <View className="absolute inset-0 z-0 w-screen h-screen">
+        <Map coordinate={coordinate} setCoordinate={setCoordinate} />
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView className="h-screen w-screen">
+      {selectedCategory === 'Map' && renderMapPage()}
+      <View className="w-full px-[5%] z-10">
+        <View className="mb-2 bg-[#FFFFFF] rounded-full">
+          <HomeMenu
+            categories={categories}
+            selected={selectedCategory}
+            setSelected={(s) => {
+              setMapSearch('');
+              setSearch('');
+              setToggle(options[0]);
+              data;
+              setSelectedCategory(s);
+            }}
+          />
+        </View>
+        {selectedCategory === 'Map' &&
+          renderCustomInput(setMapSearch, mapSearch, changeMapText, '20 20')}
+        {selectedCategory === 'Search' && renderSearchPage()}
+        <InfoPopup />
+      </View>
+    </SafeAreaView>
   );
 }

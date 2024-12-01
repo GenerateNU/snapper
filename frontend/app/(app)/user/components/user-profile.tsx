@@ -27,7 +27,8 @@ const User = ({ id }: { id: string }) => {
   return (
     <LinearGradient
       colors={['#549ac7', '#ffffff', '#ffffff', '#ffffff']}
-      style={{ flex: 1 }}>
+      style={{ flex: 1 }}
+    >
       <Stack.Screen
         options={{
           headerTitle: '',
@@ -37,10 +38,12 @@ const User = ({ id }: { id: string }) => {
             !isViewingOwnProfile ? (
               <Arrow direction="left" onPress={() => router.back()} />
             ) : null,
-        }}/>
+        }}
+      />
       <SafeAreaView
         edges={['top', 'left', 'right']}
-        className="flex flex-1 mt-[10%]">
+        className="flex flex-1 mt-[10%]"
+      >
         <FlatList
           data={data}
           renderItem={renderItem}
