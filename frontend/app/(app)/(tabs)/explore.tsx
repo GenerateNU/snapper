@@ -14,16 +14,18 @@ import HomeMenu from '../../../components/home/menu-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Map from '../../../components/map';
 import SearchIcon from '../../../assets/search.svg';
+import { MasonryFlashList } from '@shopify/flash-list';
 
 type Toggle = 'Fish' | 'Users' | 'Posts';
+type Category = 'Map' | 'Search';
 
 export default function Explore() {
   const options: Toggle[] = ['Users', 'Fish', 'Posts'];
-  const categories: string[] = ['Map', 'Search'];
+  const categories: Category[] = ['Map', 'Search'];
   const [search, setSearch] = useState('');
   const [toggle, setToggle] = useState<Toggle>(options[0]);
   const [selected, setSelected] = useState<Toggle>(options[0]);
-  const [selectedCategory, setSelectedCategory] = useState<string>(
+  const [selectedCategory, setSelectedCategory] = useState<Category>(
     categories[0],
   );
   const [coordinate, setCoordinate] = useState<number[]>([200, 200]);
@@ -52,6 +54,8 @@ export default function Explore() {
       return data as any[];
     } else if (Array.isArray(data.results)) {
       return data.results as any[];
+    } else if (Array.isArray(data.moreResults)) {
+      return data.moreResults as any[];
     } else {
       throw new Error('Malformed Data');
     }
@@ -69,10 +73,13 @@ export default function Explore() {
       case 'Fish':
         endpoint = `/species/search/${search}`;
         break;
+      case 'Posts':
+        endpoint = `/divelogs/search?text=${search}`
+        break;
       default:
         endpoint = `/users?text=${search}`;
     }
-    const res = await fetchData(endpoint, 'Failed to fetch users');
+    const res = await fetchData(endpoint, 'Failed to fetch data');
     return res;
   };
 
@@ -91,6 +98,7 @@ export default function Explore() {
    */
   const ToggleButtons = () => {
     const onSelected = (selection: Toggle) => {
+      console.log(selection)
       setToggle(selection);
       setSelected(selection);
       setSearch('');
@@ -122,6 +130,22 @@ export default function Explore() {
     );
   }
 
+  const renderDiveLogs = () => {
+    console.log(values)
+    return <ScrollView className="h-[100%]" showsVerticalScrollIndicator={false}>
+      <MasonryFlashList
+        data={values}
+        numColumns={2}
+        renderItem={(e) => SearchResult(e.item)}
+        estimatedItemSize={200}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: 100,
+        }}
+      />
+    </ScrollView>
+  }
+
   const renderSearchPage = () => {
     return (
       <View className="w-full h-full">
@@ -129,13 +153,15 @@ export default function Explore() {
         <View className="mb-2">
           <ToggleButtons />
         </View>
-        <ScrollView className="w-96">
+        {toggle === "Users" || toggle === "Fish" ? <ScrollView className="w-96">
           {values.map((d: any) => (
             <View className="mb-4" key={d._id}>
               <SearchResult {...d} />
             </View>
           ))}
-        </ScrollView>
+        </ScrollView> :
+          renderDiveLogs()
+        }
       </View>
     );
   };
@@ -198,7 +224,7 @@ export default function Explore() {
             setMapSearch,
             mapSearch,
             changeMapText,
-            'Find Location',
+            '20 20',
           )}
         {selectedCategory === 'Search' && renderSearchPage()}
       </View>

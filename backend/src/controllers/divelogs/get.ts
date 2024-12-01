@@ -5,6 +5,8 @@ import {
   DiveLogServiceImpl,
 } from '../../services/divelogService';
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '../../consts/pagination';
+import { DiveLog } from '../../models/diveLog';
+import { UserModel } from '../../models/users';
 
 const userService: UserService = new UserServiceImpl();
 const divelogService: DiveLogService = new DiveLogServiceImpl();
@@ -50,3 +52,88 @@ export const getAllDiveLogsSortedPaginated = async (
     res.status(500).json({ message: 'Error fetching dive logs', error });
   }
 };
+
+export const searchDivelogsPaginated = async (
+  req: Request,
+  res: Response,) => {
+
+  try {
+    const { text = '', page = DEFAULT_PAGE, limit = DEFAULT_LIMIT } = req.query;
+    const pageSize = parseInt(page as string);
+    const limitSize = parseInt(limit as string);
+
+    if (pageSize < 1 || limitSize < 1) {
+      return res.status(400).json({
+        error:
+          'Invalid pagination parameters. Page and limit must be positive numbers.',
+      });
+    }
+
+    const skip = (pageSize - 1) * limitSize;
+
+    const query = [
+      {
+        $search: {
+          index: 'description',
+          compound: {
+            should: [
+              {
+                text: {
+                  query: text,
+                  path: 'description',
+                  fuzzy: {
+                    maxEdits: 2,
+                    prefixLength: 3,
+                  },
+                  score: {
+                    boost: { value: 3 },
+                  },
+                },
+              },
+              {
+                autocomplete: {
+                  query: text,
+                  path: 'description',
+                  fuzzy: {
+                    maxEdits: 2,
+                  },
+                  score: {
+                    boost: { value: 5 },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+      { $skip: skip },
+      { $limit: limitSize },
+    ];
+
+    const results = await DiveLog.aggregate(query)
+
+    if (results.length > 0) {
+      const user = async (id: string) => await UserModel.findById(id);
+      const more = results.map(async (divelog) => { const u = await user(divelog.user as string); const profilePhoto = u?.profilePicture; return { profilePhoto, ...divelog } });
+      const moreResults = await Promise.all(more);
+      console.log(more)
+      return res.status(200).json({
+        page: pageSize,
+        limit: limitSize,
+        moreResults,
+      });
+    }
+
+    return res.status(200).json({
+      page: pageSize,
+      limit: limitSize,
+      results,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: 'An error occurred while fetching users.',
+    });
+  }
+
+}
