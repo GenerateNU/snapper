@@ -114,7 +114,7 @@ const Home = () => {
 
   // render a nearby post
   const renderNearbyPost = ({ item, index }: { item: any; index: number }) => (
-    <View className={`mb-4 `} key ={index}>
+    <View className={`mb-4 `} key={index}>
       <NearbyDiveLog
         profilePhoto={item?.user.profilePicture || PROFILE_PHOTO}
         description={item?.description}
@@ -204,23 +204,22 @@ const Home = () => {
     );
   };
 
-  const split = (divelogs: any[]): any[]=> {
-    let array1 = []
-    let array2 = []
-    let whichArray = true
+  const split = (divelogs: any[]): any[] => {
+    let array1 = [];
+    let array2 = [];
+    let whichArray = true;
 
-    for(let i = 0; i < divelogs.length; i ++){
-      if(whichArray){
-        array1.push(divelogs[i])
+    for (let i = 0; i < divelogs.length; i++) {
+      if (whichArray) {
+        array1.push(divelogs[i]);
       } else {
-        array2.push(divelogs[i])
+        array2.push(divelogs[i]);
       }
-      whichArray = !whichArray
+      whichArray = !whichArray;
     }
 
-    return [array1, array2]
-
-  }
+    return [array1, array2];
+  };
 
   const renderNearbyPosts = () => {
     if (nearbyPosts?.pages.flatMap((page) => page).length === 0) {
@@ -232,37 +231,37 @@ const Home = () => {
     }
 
     return (
-        <ScrollView 
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         onScroll={(e) => {
           const contentHeight = e.nativeEvent.contentSize.height;
           const layoutHeight = e.nativeEvent.layoutMeasurement.height;
           const offsetY = e.nativeEvent.contentOffset.y;
           if (contentHeight - layoutHeight - offsetY <= 200) {
-            loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
+            loadMorePosts(fetchNextPageNearby, hasNextPageNearby);
           } else {
           }
-        } }
-        >
-          <View className = "flex flex-row">
-            <View className = "w-[48%] mr-[2%]">
-              {split(nearbyPosts?.pages.flatMap((page) => page) || [])[0].map((item:any, index:number)=> {
-                return (
-                  renderNearbyPost({item, index})
-                )
-              })}
-
-            </View>
-
-            <View className = "w-[48%] ml-[2%]">
-              {split(nearbyPosts?.pages.flatMap((page) => page) || [])[1].map((item:any, index:number)=> {
-                return (
-                  renderNearbyPost({item, index})
-                )
-            })}
-            </View>
+        }}
+      >
+        <View className="flex flex-row">
+          <View className="w-[48%] mr-[2%]">
+            {split(nearbyPosts?.pages.flatMap((page) => page) || [])[0].map(
+              (item: any, index: number) => {
+                return renderNearbyPost({ item, index });
+              },
+            )}
           </View>
-        </ScrollView>
-      );
+
+          <View className="w-[48%] ml-[2%]">
+            {split(nearbyPosts?.pages.flatMap((page) => page) || [])[1].map(
+              (item: any, index: number) => {
+                return renderNearbyPost({ item, index });
+              },
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    );
   };
 
   return (
