@@ -3,6 +3,7 @@ import Profile from './profile';
 import { PROFILE_PHOTO } from '../consts/profile';
 import { router } from 'expo-router';
 import PopulatedInfoPopupButton from './populated-info-popup';
+import NearbyDiveLog from './home/nearby-divelog';
 
 type UserResult = {
   profilePicture?: string;
@@ -19,11 +20,20 @@ type FishResult = {
   commonNames: string[];
 };
 
+type PostResult = {
+  _id: string;
+  user: string;
+  description: string;
+  photos: string[];
+  profilePhoto?: string;
+};
+
 const email = 'email';
 const username = 'username';
 const iconUrl = 'iconUrl';
 const species = 'species';
 const alphaId = 'aphiaId';
+const user = 'user';
 
 /**
  * Is that object of type UserResult?
@@ -50,6 +60,13 @@ function isFish(obj: unknown): obj is FishResult {
     (Object.hasOwn(obj, iconUrl) && Object.hasOwn(obj, species)) ||
     Object.hasOwn(obj, alphaId)
   );
+}
+
+function isDiveLog(obj: unknown): obj is PostResult {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  }
+  return Object.hasOwn(obj, user);
 }
 
 function renderUserResult(props: UserResult) {
@@ -95,11 +112,29 @@ function renderFishResult(props: FishResult) {
   );
 }
 
-export default function SearchResult(props: UserResult | FishResult) {
+function renderDiveLogResult(props: PostResult, index: number) {
+  return (
+    <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
+      <NearbyDiveLog
+        profilePhoto={props.profilePhoto || PROFILE_PHOTO}
+        description={props.description}
+        divelogId={props._id}
+        coverPhoto={props?.photos[0]}
+      />
+    </View>
+  );
+}
+
+export default function SearchResult(
+  props: UserResult | FishResult | PostResult,
+  index?: number,
+) {
   if (isFish(props)) {
     return renderFishResult(props);
   } else if (isUser(props)) {
     return renderUserResult(props);
+  } else if (isDiveLog(props)) {
+    return renderDiveLogResult(props, index!);
   } else {
     return <Text> Unknown Search Result... </Text>;
   }

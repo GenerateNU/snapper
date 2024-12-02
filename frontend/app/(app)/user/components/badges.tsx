@@ -1,7 +1,12 @@
 import { View, Text, FlatList } from 'react-native';
-import Badge from '../../../../assets/badge.svg';
 import { useUserById } from '../../../../hooks/user';
 import BadgeSkeleton from './skeleton/badge-skeleton';
+import DefaultBage from '../../../../assets/BadgeIcons/badge.svg';
+import FishCaught100 from '../../../../assets/BadgeIcons/100-fishes-badge.svg';
+import OceanExplorer from '../../../../assets/BadgeIcons/ocean-explorer-badge.svg';
+import RareFishCaught from '../../../../assets/BadgeIcons/rare-fishes-badge.svg';
+import FirstCatch from '../../../../assets/BadgeIcons/first-catch-badge.svg';
+import ReefGuardian from '../../../../assets/BadgeIcons/reef-gaurdian-badge.svg';
 
 const Badges = ({ id }: { id: string }) => {
   const { data, isError, isLoading } = useUserById(id);
@@ -27,12 +32,35 @@ const Badges = ({ id }: { id: string }) => {
 
   const renderItem = ({ item }: { item: any }) => (
     <View className="flex-col items-center ml-5">
-      <Badge width={60} height={60} />
+      <RenderBagdeImage name={item} width={60} height={60} />
       <Text className="text-center text-xs sm:text-sm md:text-base line-break pt-[2%] font-bold">
         {item}
       </Text>
     </View>
   );
+
+  type RenderBadge = {
+    name: string;
+    width: number;
+    height: number;
+  };
+
+  const RenderBagdeImage = ({ name, width, height }: RenderBadge) => {
+    switch (name) {
+      case '100 Dives Logged':
+        return <FishCaught100 width={width} height={height} />;
+      case 'Rare Fish Find':
+        return <RareFishCaught width={width} height={height} />;
+      case 'Ocean Explorer':
+        return <OceanExplorer width={width} height={height} />;
+      case 'Reef Guardian':
+        return <ReefGuardian width={width} height={height} />;
+      case 'First Catch':
+        return <FirstCatch width={width} height={height} />;
+      default:
+        return <DefaultBage width={width} height={height} />;
+    }
+  };
 
   return (
     <View>
@@ -48,7 +76,7 @@ const Badges = ({ id }: { id: string }) => {
                 key={key}
                 style={{ flex: 1 }}
               >
-                <Badge width={60} height={60} />
+                <RenderBagdeImage name={badge} width={60} height={60} />
                 <Text className="text-center text-xs sm:text-sm md:text-base line-break font-bold">
                   {badge}
                 </Text>
