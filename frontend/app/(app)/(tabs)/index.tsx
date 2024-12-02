@@ -23,6 +23,7 @@ import FilterMenu from '../../../components/home/filter';
 import usePulsingAnimation from '../../../utils/skeleton';
 import { useInfoPopup } from '../../../contexts/info-popup-context';
 import InfoPopup from '../../../components/info-popup';
+import { InfiniteData } from '@tanstack/react-query';
 
 const Home = () => {
   const { setClose } = useInfoPopup();
@@ -92,7 +93,7 @@ const Home = () => {
     } else {
       refetchFollowingPosts();
     }
-  }, [selectedFilters, selectedCategory]);
+  }, [selectedFilters, selectedCategory, nearbyPosts]);
 
   // render a following post
   const renderFollowingPost = ({ item }: { item: any }) => (
@@ -113,7 +114,7 @@ const Home = () => {
 
   // render a nearby post
   const renderNearbyPost = ({ item, index }: { item: any; index: number }) => (
-    <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
+    <View className={`mb-4 `} key ={index}>
       <NearbyDiveLog
         profilePhoto={item?.user.profilePicture || PROFILE_PHOTO}
         description={item?.description}
@@ -203,22 +204,25 @@ const Home = () => {
     );
   };
 
-  const renderNearbyPosts = () => {
-    if (isFetchingNearbyPosts) {
-      return (
-        <FlatList
-          data={[1, 2, 3, 4]}
-          numColumns={2}
-          renderItem={({ item, index }: { item: any; index: number }) => (
-            <Animated.View
-              className={`w-[48%] h-32 bg-slate-200 mb-4 rounded-xl ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}
-              style={{ opacity: opacity }}
-            />
-          )}
-        />
-      );
+  const split = (divelogs: any[]): any[]=> {
+    let array1 = []
+    let array2 = []
+    let whichArray = true
+
+    for(let i = 0; i < divelogs.length; i ++){
+      if(whichArray){
+        array1.push(divelogs[i])
+      } else {
+        array2.push(divelogs[i])
+      }
+      whichArray = !whichArray
     }
 
+    return [array1, array2]
+
+  }
+
+  const renderNearbyPosts = () => {
     if (nearbyPosts?.pages.flatMap((page) => page).length === 0) {
       return <NoPostFound />;
     }
@@ -228,23 +232,37 @@ const Home = () => {
     }
 
     return (
-      <ScrollView className="h-[100%]" showsVerticalScrollIndicator={false}>
-        <MasonryFlashList
-          data={nearbyPosts?.pages.flatMap((page) => page) || []}
-          numColumns={2}
-          renderItem={renderNearbyPost}
-          estimatedItemSize={200}
-          // onEndReachedThreshold={0}
-          // onEndReached={() =>
-          //   loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
-          // }
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 100,
-          }}
-        />
-      </ScrollView>
-    );
+        <ScrollView 
+        onScroll={(e) => {
+          const contentHeight = e.nativeEvent.contentSize.height;
+          const layoutHeight = e.nativeEvent.layoutMeasurement.height;
+          const offsetY = e.nativeEvent.contentOffset.y;
+          if (contentHeight - layoutHeight - offsetY <= 200) {
+            loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
+          } else {
+          }
+        } }
+        >
+          <View className = "flex flex-row">
+            <View className = "w-[48%] mr-[2%]">
+              {split(nearbyPosts?.pages.flatMap((page) => page) || [])[0].map((item:any, index:number)=> {
+                return (
+                  renderNearbyPost({item, index})
+                )
+              })}
+
+            </View>
+
+            <View className = "w-[48%] ml-[2%]">
+              {split(nearbyPosts?.pages.flatMap((page) => page) || [])[1].map((item:any, index:number)=> {
+                return (
+                  renderNearbyPost({item, index})
+                )
+            })}
+            </View>
+          </View>
+        </ScrollView>
+      );
   };
 
   return (

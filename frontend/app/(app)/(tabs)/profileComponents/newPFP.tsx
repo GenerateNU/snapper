@@ -96,7 +96,9 @@ async function pickImage(setValue: UseFormSetValue<UpdateProfileFields>) {
     const base64s = await Promise.all([fs]);
 
     //console.log(base64s[0].base64);
+
     setValue('profilePicture', base64s[0].base64);
+
     return result.assets[0].uri;
   }
 }
