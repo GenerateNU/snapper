@@ -107,7 +107,12 @@ const Menu = ({ id }: { id: string }) => {
 
   const renderDiveLogFooter = () => {
     if (!diveLogIsFetchingNextPage) return null;
-    return <DiveLogSkeleton />;
+
+    return (
+      <View className="mt-4 mb-8">
+        <DiveLogSkeleton />
+      </View>
+    );
   };
 
   const renderSpeciesFooter = () => {
@@ -163,7 +168,11 @@ const Menu = ({ id }: { id: string }) => {
         (diveLogIsLoading ? (
           <FlatList
             data={[1, 2]}
-            renderItem={() => <DiveLogSkeleton />}
+            renderItem={() => (
+              <View className="mt-5">
+                <DiveLogSkeleton />
+              </View>
+            )}
             keyExtractor={(item) => item.toString()}
           />
         ) : diveLogError ? (
