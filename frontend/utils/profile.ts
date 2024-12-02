@@ -39,7 +39,10 @@ export const categorizeTime = (time: string) => {
   if (diffInDays < 1) return 'New';
   if (diffInDays < 2) return '1 day ago';
   if (diffInDays < 7) return `${Math.floor(diffInDays)} days ago`;
+  if (diffInDays < 14) return '1 week ago';
   if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+  if (diffInDays < 60) return '1 month ago';
   if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
-  return `${Math.floor(diffInDays / 365)} years Ago`;
+  if (diffInDays < 730) return '1 year ago';
+  return `${Math.floor(diffInDays / 365)} years ago`;
 };

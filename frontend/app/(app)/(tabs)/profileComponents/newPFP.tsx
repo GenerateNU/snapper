@@ -14,7 +14,6 @@ import {
   useFormState,
 } from 'react-hook-form';
 import { Photo } from '../../../../types/divelog';
-import { User } from '../../../../types/auth';
 import { useUserById } from '../../../../hooks/user';
 import { UpdateProfileFields } from '../../../../types/userProfile';
 
@@ -97,7 +96,9 @@ async function pickImage(setValue: UseFormSetValue<UpdateProfileFields>) {
     const base64s = await Promise.all([fs]);
 
     //console.log(base64s[0].base64);
+
     setValue('profilePicture', base64s[0].base64);
+
     return result.assets[0].uri;
   }
 }

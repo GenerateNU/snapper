@@ -75,6 +75,7 @@ export const useAuthStore = create<AuthState>(
             return; // Token is still valid; no need to refresh
           }
 
+          console.log('Refreshing session...');
           const refreshedSession = await refreshSession(storedRefreshToken);
           if (refreshedSession) {
             await AsyncStorage.setItem('token', refreshedSession.access_token);

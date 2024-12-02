@@ -23,48 +23,7 @@ import FilterMenu from '../../../components/home/filter';
 import usePulsingAnimation from '../../../utils/skeleton';
 import { useInfoPopup } from '../../../contexts/info-popup-context';
 import InfoPopup from '../../../components/info-popup';
-import SpeciesInfo from '../../../components/species-info';
-
-const speciesData = {
-  _id: '6746410540c040de1093b6a2',
-  domain: 'Q19088',
-  kingdom: 'Q729',
-  phylum: 'Q10915',
-  class: 'Q127282',
-  order: 'Q127595',
-  family: 'Q465563',
-  genus: 'Q1515467',
-  species: 'Q674381',
-  aphiaId: '219665',
-  scientificName: 'Naso lituratus',
-  articleUrl: 'https://en.wikipedia.org/wiki/Naso_lituratus',
-  articleTitle: 'Naso lituratus',
-  commonNames: [
-    'Naso trang',
-    'Pacific orange-spine Unicorn',
-    'Striped Unicornfish',
-    'Orange-spine Unicornfish',
-    'Clown Tang',
-    'Poll Unicornfish',
-    'Redlip Surgeonfish',
-    'Masked Unicornfish',
-    'Striped-faced Unicornfish',
-    'Smooth-head Unicornfish',
-    'Barcheek Unicornfish',
-    'Orange Spine Surgeonfish',
-  ],
-  imageUrls: [
-    'http://commons.wikimedia.org/wiki/Special:FilePath/Orangespine%20Unicornfish%20-%20Naso%20lituratus.jpg',
-    'http://commons.wikimedia.org/wiki/Special:FilePath/Orangespine%20unicornfish%20Naso%20lituratus.jpg',
-  ],
-  locations: ['South China Sea'],
-  visibility: true,
-  introduction: `Naso lituratus, the clown unicornfish, orangespined unicornfish, black-finned unicornfish, Pacific orangespined unicornfish, blackfinned unicornfish or stripefaced unicornfish, is a species of marine ray-finned fish belonging to the family Acanthuridae, the surgeonfishes, unicornfishes and tangs. This fish is found in the eastern Indian Ocean and western Pacific Ocean. 
-Unique to members of Acanthuridae, including Naso lituratus, are the Epulopiscium bacteria. These bacteria influence the digestion of Naso lituratus, helping them process the algae in their diet.
-Naso lituratus can be found in the Indian Ocean and the Pacific Ocean. This species can be easily recognised by two bright orange forward-hooked spines on the caudal peduncle (the tail base), its orange lips and black face mask. The body is brownish grey with yellow nape and there is a broad black band on the dorsal fin. It reaches about 45 cm (18 in) in length.
-It can be found on coral reefs, often in pairs.`,
-  iconUrl: 'https://dodo.ac/np/images/0/00/Black_Bass_NH_Icon.png',
-};
+import { InfiniteData } from '@tanstack/react-query';
 
 const Home = () => {
   const { setClose } = useInfoPopup();
@@ -90,6 +49,7 @@ const Home = () => {
     isFetchingNextPage: isFetchingNextPageFollowing,
     refetch: refetchFollowingPosts,
     isRefetching: isRefetchingFollowingPosts,
+    error: errorFollowingPosts,
   } = useUserFollowingPosts(mongoDBId!, selectedFilters);
 
   // hooks call for nearby posts
@@ -100,6 +60,7 @@ const Home = () => {
     hasNextPage: hasNextPageNearby,
     refetch: refetchNearByPosts,
     isFetching: isFetchingNearbyPosts,
+    error: errorNearbyPosts,
   } = useNearbyDiveLogs(
     currentLocation.latitude,
     currentLocation.longitude,
@@ -132,7 +93,7 @@ const Home = () => {
     } else {
       refetchFollowingPosts();
     }
-  }, [selectedFilters, selectedCategory]);
+  }, [selectedFilters, selectedCategory, nearbyPosts]);
 
   // render a following post
   const renderFollowingPost = ({ item }: { item: any }) => (
@@ -153,7 +114,7 @@ const Home = () => {
 
   // render a nearby post
   const renderNearbyPost = ({ item, index }: { item: any; index: number }) => (
-    <View className={`mb-4 ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}>
+    <View className={`mb-4 `} key={index}>
       <NearbyDiveLog
         profilePhoto={item?.user.profilePicture || PROFILE_PHOTO}
         description={item?.description}
@@ -170,11 +131,24 @@ const Home = () => {
   };
 
   // component to show no post found
-  const NoPostFound = () => (
+  const TextMessage = ({
+    message,
+    error = false,
+  }: {
+    message: string;
+    error?: boolean;
+  }) => (
     <View className="w-full items-center mt-5">
-      <Text className="text-gray-500">No posts found</Text>
+      <Text className={`${error ? 'text-red-500' : 'text-gray-500'}`}>
+        {message}
+      </Text>
     </View>
   );
+
+  const ErrorPost = () => (
+    <TextMessage message="Error loading posts" error={true} />
+  );
+  const NoPostFound = () => <TextMessage message="No posts found" />;
 
   // render posts based on category selected
   const renderPosts = () => {
@@ -203,6 +177,10 @@ const Home = () => {
       return <NoPostFound />;
     }
 
+    if (errorFollowingPosts) {
+      return <ErrorPost />;
+    }
+
     return (
       <FlatList
         data={followingPosts?.pages.flatMap((page) => page) || []}
@@ -226,49 +204,72 @@ const Home = () => {
     );
   };
 
-  const renderNearbyPosts = () => {
-    if (isFetchingNearbyPosts) {
-      return (
-        <FlatList
-          data={[1, 2, 3, 4]}
-          numColumns={2}
-          renderItem={({ item, index }: { item: any; index: number }) => (
-            <Animated.View
-              className={`w-[48%] h-32 bg-slate-200 mb-4 rounded-xl ${index % 2 === 0 ? 'mr-2' : 'ml-2'}`}
-              style={{ opacity: opacity }}
-            />
-          )}
-        />
-      );
+  const split = (divelogs: any[]): any[] => {
+    let array1 = [];
+    let array2 = [];
+    let whichArray = true;
+
+    for (let i = 0; i < divelogs.length; i++) {
+      if (whichArray) {
+        array1.push(divelogs[i]);
+      } else {
+        array2.push(divelogs[i]);
+      }
+      whichArray = !whichArray;
     }
 
+    return [array1, array2];
+  };
+
+  const renderNearbyPosts = () => {
     if (nearbyPosts?.pages.flatMap((page) => page).length === 0) {
       return <NoPostFound />;
     }
 
+    if (errorNearbyPosts) {
+      return <ErrorPost />;
+    }
+
     return (
-      <ScrollView className="h-[100%]" showsVerticalScrollIndicator={false}>
-        <MasonryFlashList
-          data={nearbyPosts?.pages.flatMap((page) => page) || []}
-          numColumns={2}
-          renderItem={renderNearbyPost}
-          estimatedItemSize={200}
-          // onEndReachedThreshold={0}
-          // onEndReached={() =>
-          //   loadMorePosts(fetchNextPageNearby, hasNextPageNearby)
-          // }
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 100,
-          }}
-        />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={(e) => {
+          const contentHeight = e.nativeEvent.contentSize.height;
+          const layoutHeight = e.nativeEvent.layoutMeasurement.height;
+          const offsetY = e.nativeEvent.contentOffset.y;
+          if (contentHeight - layoutHeight - offsetY <= 200) {
+            loadMorePosts(fetchNextPageNearby, hasNextPageNearby);
+          } else {
+          }
+        }}
+      >
+        <View className="flex flex-row">
+          <View className="w-[48%] mr-[2%]">
+            {split(nearbyPosts?.pages.flatMap((page) => page) || [])[0].map(
+              (item: any, index: number) => {
+                return renderNearbyPost({ item, index });
+              },
+            )}
+          </View>
+
+          <View className="w-[48%] ml-[2%]">
+            {split(nearbyPosts?.pages.flatMap((page) => page) || [])[1].map(
+              (item: any, index: number) => {
+                return renderNearbyPost({ item, index });
+              },
+            )}
+          </View>
+        </View>
       </ScrollView>
     );
   };
 
   return (
     <>
-      <SafeAreaView className="flex-1 justify-start" style={{ gap: 15 }}>
+      <SafeAreaView
+        className="flex-1 justify-start bg-white"
+        style={{ gap: 15 }}
+      >
         <View className="flex-col" style={{ gap: 10 }}>
           <View className="px-[5%]">
             <HomeMenu

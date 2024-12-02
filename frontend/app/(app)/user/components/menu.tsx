@@ -17,11 +17,11 @@ import {
   useUserDiveLogs,
   useUserSpecies,
 } from '../../../../hooks/user';
-import DiveLogSkeleton from './skeleton/divelog-skeleton';
 import SpeciesSkeleton from './skeleton/species-skeleton';
 import Species from './species';
 import BigDiveLog from '../../../../components/divelog/divelog';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
+import DiveLogSkeleton from '../../divelog/components/skeleton';
 
 const Menu = ({ id }: { id: string }) => {
   const { width } = Dimensions.get('window');
@@ -107,7 +107,12 @@ const Menu = ({ id }: { id: string }) => {
 
   const renderDiveLogFooter = () => {
     if (!diveLogIsFetchingNextPage) return null;
-    return <DiveLogSkeleton />;
+
+    return (
+      <View className="mt-4 mb-8">
+        <DiveLogSkeleton />
+      </View>
+    );
   };
 
   const renderSpeciesFooter = () => {
@@ -163,7 +168,11 @@ const Menu = ({ id }: { id: string }) => {
         (diveLogIsLoading ? (
           <FlatList
             data={[1, 2]}
-            renderItem={() => <DiveLogSkeleton />}
+            renderItem={() => (
+              <View className="mt-5">
+                <DiveLogSkeleton />
+              </View>
+            )}
             keyExtractor={(item) => item.toString()}
           />
         ) : diveLogError ? (
