@@ -31,6 +31,7 @@ export const DiveLogController = {
 
     const photos: any[] = req.body.photos;
     if (photos.length > 0) {
+      console.log(photos);
       const links = await sendFilesToS3(photos);
       Object.defineProperty(req.body, 'photos', {
         value: links,

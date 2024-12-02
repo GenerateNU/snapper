@@ -14,17 +14,15 @@ import {
   useFormState,
 } from 'react-hook-form';
 import { Photo } from '../../../../types/divelog';
-import { User } from '../../../../types/auth';
 import { useUserById } from '../../../../hooks/user';
-import { UpdateProfileFields } from '../../../../types/userProfile';
+import { UpdateUser } from '../../../../types/userProfile';
 
 export function NewPFP(id: any): JSX.Element {
   const { data, isError, isLoading } = useUserById(id);
   const { register, setValue, formState } =
-    useFormContext<UpdateProfileFields>();
+    useFormContext<UpdateUser>();
   const { isSubmitted, isDirty } = formState;
   const [image, setImage] = useState<string>();
-  register('profilePicture');
 
   const PFPSelector = () => {
     return (
@@ -54,7 +52,7 @@ export function NewPFP(id: any): JSX.Element {
   return PFPSelector();
 }
 
-async function pickImage(setValue: UseFormSetValue<UpdateProfileFields>) {
+async function pickImage(setValue: UseFormSetValue<UpdateUser>) {
   let result = await ExpoImagePicker.launchImageLibraryAsync({
     mediaTypes: ExpoImagePicker.MediaTypeOptions.All,
     allowsEditing: true,
@@ -96,7 +94,6 @@ async function pickImage(setValue: UseFormSetValue<UpdateProfileFields>) {
 
     const base64s = await Promise.all([fs]);
 
-    //console.log(base64s[0].base64);
     setValue('profilePicture', base64s[0].base64);
     return result.assets[0].uri;
   }

@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   View,
   Text,
-  InputAccessoryView,
 } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import { useFormContext } from 'react-hook-form';
@@ -132,9 +131,8 @@ export default function ImagePicker() {
 
   return (
     <View
-      className={`h-[15vh] w-full rounded-md relative flex justify-center items-center ${
-        image.length == 0 ? 'border border-gray-400 border-dashed' : ''
-      }`}
+      className={`h-[15vh] w-full rounded-md relative flex justify-center items-center ${image.length == 0 ? 'border border-gray-400 border-dashed' : ''
+        }`}
     >
       <TouchableOpacity
         className="w-fit h-full flex items-center justify-center rounded-lg absolute"

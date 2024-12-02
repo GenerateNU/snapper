@@ -1,5 +1,4 @@
 import { S3ServiceImpl } from './s3Service';
-import { promises as fs } from 'fs';
 
 /**
  * Will send the list of files to the s3 bucket and return the urls in a list with the same index.
@@ -11,6 +10,12 @@ export default async function sendFilesToS3(
 ): Promise<(string | null)[]> {
   let outListURLs = [];
   const s3Service = new S3ServiceImpl();
+
+  // console.log(base64s);
+  // if(!base64s[0].base64) {
+  //   base64s = JSON.stringify(base64s);
+  // }
+
   const pending = base64s.map(async (pd) =>
     base64ToFile(pd.base64, pd.name, pd.fileType),
   );
@@ -28,6 +33,7 @@ export function base64ToFile(
   fileName: string,
   fileType: string,
 ): File {
+  // console.log(base64String);
   const base64Data = base64String.split(',')[1];
   const byteCharacters = atob(base64Data);
   const byteNumbers = new Array(byteCharacters.length);

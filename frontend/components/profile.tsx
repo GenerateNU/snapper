@@ -12,21 +12,21 @@ const Profile: React.FC<ProfileProps> = ({
   image,
   outline = false,
   size,
-  borderColor = 'border-darkblue',
+  borderColor = 'darkblue',
   borderSize = 2
 }) => {
   const sizeMap = {
     sm: 35,
     md: 50,
     lg: 70,
-    xl: 100
+    xl: 80
   };
 
   const dimension = sizeMap[size];
 
   return (
     <View
-      className={`bg-water rounded-full ${outline ? `border border-${borderSize}` : ''} ${borderColor} overflow-hidden items-center justify-center`}
+      className={`bg-water rounded-full ${outline ? `border border-${borderSize}` : ''} border-${borderColor} overflow-hidden items-center justify-center`}
     >
       <Image
         style={{ width: dimension, height: dimension }}

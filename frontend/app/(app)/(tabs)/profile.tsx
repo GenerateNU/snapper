@@ -7,13 +7,13 @@ import IconButton from '../../../components/icon-button';
 import { useState, useEffect } from 'react';
 import { ChangePFP } from './profileComponents/editProfileModal';
 import { useForm, FormProvider } from 'react-hook-form';
-import { UpdateProfileFields } from '../../../types/userProfile';
+import { UpdateUser } from '../../../types/userProfile';
 
 const Profile = () => {
   const { mongoDBId, logout } = useAuthStore();
   const [isMenuOpen, setMenuOpened] = useState(false);
   const [isEditPFPOpen, setEditPFPOpen] = useState(false);
-  const methods = useForm<UpdateProfileFields>();
+  const methods = useForm<UpdateUser>();
 
   useEffect(() => {
     if (isEditPFPOpen) {
@@ -35,6 +35,7 @@ const Profile = () => {
 
   return (
     <FormProvider {...methods}>
+      {/* <></> */}
       <Stack.Screen
         options={{
           headerTitle: '',
@@ -88,7 +89,6 @@ const Profile = () => {
       />
       <View className="relative flex flex-1 items-center">
         <User id={mongoDBId} />
-        <ChangePFP visible={isEditPFPOpen} onClose={setEditPFPOpen} />
       </View>
     </FormProvider>
   );
