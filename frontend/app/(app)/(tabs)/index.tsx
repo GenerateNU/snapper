@@ -245,7 +245,6 @@ const Home = () => {
         }}
         */
       >
-
         <View className="flex flex-row">
           <View className="w-[48%] mr-[2%]">
             {split(nearbyPosts?.pages.flatMap((page) => page) || [])[0].map(

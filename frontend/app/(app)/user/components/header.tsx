@@ -8,6 +8,7 @@ import { PROFILE_PHOTO } from '../../../../consts/profile';
 import { formatNumber } from '../../../../utils/profile';
 import FollowButton from './follow-button';
 import useFollow from '../../../../hooks/following';
+import { router } from 'expo-router';
 
 const Header = ({ id }: { id: string }) => {
   const { mongoDBId } = useAuthStore();
@@ -37,7 +38,15 @@ const Header = ({ id }: { id: string }) => {
           image={data?.user.profilePicture || PROFILE_PHOTO}
         />
         <View className="flex flex-row ml-[5%] justify-around w-3/4">
-          <TouchableOpacity className="flex-col justify-center items-center flex-1">
+          <TouchableOpacity
+            className="flex-col justify-center items-center flex-1"
+            onPress={() => {
+              router.push({
+                pathname: '/user/follower_following',
+                params: { id: id, option: 'followers' },
+              });
+            }}
+          >
             <Text className="font-bold text-darkblue text-md sm:text-lg md:text-xl">
               {formatNumber(data?.user.followers.length)}
             </Text>
@@ -45,7 +54,15 @@ const Header = ({ id }: { id: string }) => {
               Followers
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-col justify-center items-center flex-1">
+          <TouchableOpacity
+            className="flex-col justify-center items-center flex-1"
+            onPress={() => {
+              router.push({
+                pathname: '/user/follower_following',
+                params: { id: id, option: 'following' },
+              });
+            }}
+          >
             <Text className="font-bold text-darkblue text-md sm:text-lg md:text-xl">
               {formatNumber(data?.user.following.length)}
             </Text>
