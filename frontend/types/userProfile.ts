@@ -5,5 +5,5 @@ export type UpdateProfileFields = {
 export type UserType = {
   _id: string;
   profilePicture: string;
-  username: string
-}
+  username: string;
+};

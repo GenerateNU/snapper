@@ -117,6 +117,4 @@ export async function updateProfilePhoto(photo: string): Promise<void> {
   }
 }
 
-export function searchUserData(userlist: string[]): User[] {
-  
-}
+export function searchUserData(userlist: string[]): User[] {}
