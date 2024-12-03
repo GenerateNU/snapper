@@ -12,7 +12,7 @@ const Species: React.FC<SpeciesProps> = React.memo(
     return (
       <TouchableOpacity
         onPress={onPress}
-        className="bg-water mb-3 rounded-md flex flex-col w-[32%] justify-center items-center pt-[2%] pb-[5%]"
+        className="bg-water mb-3 rounded-md flex flex-col w-[31.5%] justify-center items-center pt-[2%] pb-[5%]"
       >
         <Image
           height={80}

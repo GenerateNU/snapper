@@ -68,7 +68,7 @@ const Badges = ({ id }: { id: string }) => {
         Badges
       </Text>
       <View className="flex flex-row w-full">
-        <View className="flex flex-row items-start w-full bg-water rounded-xl justify-between shadow-md p-[4%] flex-wrap">
+        <View className="flex flex-row items-start w-full bg-water rounded-xl justify-between shadow-md py-[4%] flex-wrap">
           {badges.length <= 3 ? (
             badges.map((badge: string, key: number) => (
               <View
@@ -88,8 +88,9 @@ const Badges = ({ id }: { id: string }) => {
               horizontal
               data={badges}
               contentContainerStyle={{
-                paddingLeft: 10,
+                paddingLeft: 0,
                 paddingRight: 20,
+                paddingBottom: 5,
               }}
               renderItem={renderItem}
               keyExtractor={(item, index) => `badge-${index}`}

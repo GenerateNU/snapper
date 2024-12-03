@@ -99,37 +99,42 @@ const Notification = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 mt-[30%] justify-start mx-[8%]">
-      {isLoading ? (
-        <FlatList
-          data={[1, 2, 3, 4, 5]}
-          renderItem={() => <NotificationSkeleton />}
-          keyExtractor={(item) => item.toString()}
-        />
-      ) : error ? (
-        <Text className="text-gray-500 text-md">
-          Error loading notifications. Please try again later.
-        </Text>
-      ) : (
-        <SectionList
-          showsVerticalScrollIndicator={false}
-          sections={sections}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.9}
-          stickySectionHeadersEnabled={false}
-          renderItem={renderNotification}
-          renderSectionHeader={renderSectionHeader}
-          ListFooterComponent={renderFooter}
-          ItemSeparatorComponent={() => <View className="h-5" />}
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'flex-start',
-            paddingBottom: 30,
-          }}
-          keyExtractor={(_, index) => index.toString()}
-        />
-      )}
-    </SafeAreaView>
+    <View className="flex-1 bg-white px-[8%]">
+      <SafeAreaView className="flex-1 mt-[30%] justify-start">
+        {isLoading ? (
+          <FlatList
+            data={[1, 2, 3, 4, 5]}
+            renderItem={() => <NotificationSkeleton />}
+            keyExtractor={(item) => item.toString()}
+            contentContainerStyle={{
+              marginTop: 20,
+            }}
+          />
+        ) : error ? (
+          <Text className="text-gray-500 text-md">
+            Error loading notifications. Please try again later.
+          </Text>
+        ) : (
+          <SectionList
+            showsVerticalScrollIndicator={false}
+            sections={sections}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.9}
+            stickySectionHeadersEnabled={false}
+            renderItem={renderNotification}
+            renderSectionHeader={renderSectionHeader}
+            ListFooterComponent={renderFooter}
+            ItemSeparatorComponent={() => <View className="h-5" />}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'flex-start',
+              paddingBottom: 30,
+            }}
+            keyExtractor={(_, index) => index.toString()}
+          />
+        )}
+      </SafeAreaView>
+    </View>
   );
 };
 

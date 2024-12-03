@@ -19,4 +19,6 @@ const SpeciesSchema = new mongoose.Schema({
   domain: { type: String },
 });
 
+SpeciesSchema.index({ commonNames: 'text', scientificName: 'text' });
+
 export const Species = mongoose.model('Species', SpeciesSchema);

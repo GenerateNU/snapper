@@ -7,11 +7,10 @@ export const useQueryBase = (key: string[], queryFn: () => Promise<any>) => {
     queryFn: async () => {
       return queryFn();
     },
-    refetchOnWindowFocus: true,
-    staleTime: 15000,
+    refetchOnWindowFocus: false,
     refetchInterval: false,
-    refetchOnReconnect: true,
-    refetchOnMount: true,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
   });
 };
 
@@ -50,8 +49,8 @@ export const useInfiniteScrollQuery = (
       return allPages.length + 1;
     },
     refetchOnWindowFocus: false,
-    refetchOnReconnect: true,
-    refetchOnMount: true,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
   });
 };
 
@@ -70,10 +69,9 @@ export const useQueryPagination = (
     getNextPageParam: (lastPage, allPages) => {
       return lastPage?.length ? allPages.length + 1 : undefined;
     },
-    refetchInterval: 10000,
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
-    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
   });
 };
 
