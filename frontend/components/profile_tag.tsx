@@ -4,15 +4,15 @@ import { router } from 'expo-router';
 import { PROFILE_PHOTO } from '../consts/profile';
 import FollowButton from '../app/(app)/user/components/follow-button';
 import useFollow from '../hooks/following';
-import { UserType } from '../types/userProfile';
 import { useUserById } from '../hooks/user';
 import { useAuthStore } from '../auth/authStore';
+import FollowSkeleton from './follow-skeleton';
 
 interface ProfileTagProps {
   id: string;
 }
 const ProfileTags: React.FC<ProfileTagProps> = ({ id }) => {
-  const { data, isLoading, isError } = useUserById(id);
+  const { data } = useUserById(id);
   const { handleFollowToggle, isFollowing, isPending } = useFollow(
     data?.user._id,
   );
@@ -26,23 +26,23 @@ const ProfileTags: React.FC<ProfileTagProps> = ({ id }) => {
       onPress={() => {
         router.push(`/user/${data?.user._id}`);
       }}
-      className="flex w-full flex-row items-center h-[8vh] bg-white shadow-sm rounded-lg pl-2"
+      className="flex justify-between w-full flex-row items-center h-[8vh] bg-white shadow-sm rounded-lg px-2"
     >
-      <Profile image={uri} size="md" />
-      <View className="flex flex-col pl-2">
-        <Text>{data?.user.username}</Text>
+      <View className="flex flex-row items-center">
+        <Profile image={uri} size="md" />
+        <View className="flex flex-col pl-3">
+          <Text>{data?.user.username}</Text>
+        </View>
       </View>
 
       {isViewingOwnProfile ? (
         <></>
       ) : (
-        <View className="absolute left-[58vw] w-[60vw]">
-          <FollowButton
-            onPress={handleFollowToggle}
-            isPending={isPending!}
-            isFollowing={isFollowing}
-          />
-        </View>
+        <FollowButton
+          onPress={handleFollowToggle}
+          isPending={isPending!}
+          isFollowing={isFollowing}
+        />
       )}
     </TouchableOpacity>
   );

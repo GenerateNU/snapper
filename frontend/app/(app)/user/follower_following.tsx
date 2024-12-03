@@ -7,8 +7,6 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  TextInput,
-  Image,
   FlatList,
 } from 'react-native';
 import Animated, {
@@ -16,8 +14,8 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { UserType } from '../../../types/userProfile';
 import ProfileTags from '../../../components/profile_tag';
+import FollowSkeleton from '../../../components/follow-skeleton';
 
 const FollowerFollowing = () => {
   const { width } = Dimensions.get('window');
@@ -39,8 +37,14 @@ const FollowerFollowing = () => {
   }, [category]);
 
   const renderUser = ({ item }: { item: any }) => (
-    <View className="mb-2 w-[80vw]">
+    <View className="mb-3 px-[5%]">
       <ProfileTags id={item} />
+    </View>
+  );
+
+  const renderSkeleton = () => (
+    <View className="mb-2 px-[5%]">
+      <FollowSkeleton />
     </View>
   );
 
@@ -105,8 +109,16 @@ const FollowerFollowing = () => {
             </Text>
           </TouchableOpacity>
         </View>
-
-        <FlatList data={userData} renderItem={renderUser}></FlatList>
+        {isError ? (
+          <View className="flex justify-center items-center">
+            <Text className="text-red-400">Failed to fetch data.</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={userData}
+            renderItem={isLoading ? renderSkeleton : renderUser}
+          ></FlatList>
+        )}
       </View>
     </LinearGradient>
   );
