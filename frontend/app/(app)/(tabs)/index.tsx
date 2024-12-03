@@ -9,7 +9,7 @@ import {
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category, Filter } from '../../../consts/home-menu';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useUserFollowingPosts } from '../../../hooks/user';
 import BigDiveLog from '../../../components/divelog/divelog';
 import NearbyDiveLog from '../../../components/home/nearby-divelog';
@@ -19,10 +19,8 @@ import { DEFAULT_SHERM_LOCATION } from '../../../consts/location';
 import { PROFILE_PHOTO } from '../../../consts/profile';
 import { useNearbyDiveLogs } from '../../../hooks/divelog';
 import FilterMenu from '../../../components/home/filter';
-import usePulsingAnimation from '../../../utils/skeleton';
 import { useInfoPopup } from '../../../contexts/info-popup-context';
 import InfoPopup from '../../../components/info-popup';
-import { useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
 
 const Home = () => {
@@ -38,7 +36,45 @@ const Home = () => {
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>([
     Filter.ALL,
   ]);
-  const opacity = usePulsingAnimation();
+
+  const memoizeUserFollowingPosts = () => {
+    const queryResult = useUserFollowingPosts(mongoDBId!, selectedFilters);
+  
+    return useMemo(() => ({
+      data: queryResult.data,
+      isLoading: queryResult.isLoading,
+      fetchNextPage: queryResult.fetchNextPage,
+      hasNextPage: queryResult.hasNextPage,
+      isFetchingNextPage: queryResult.isFetchingNextPage,
+      refetch: queryResult.refetch,
+      isRefetching: queryResult.isRefetching,
+      error: queryResult.error
+    }), [
+      queryResult.data
+    ]);
+
+  }
+
+  const memoizeNearbyDiveLogs = () => {
+    const queryResult = useNearbyDiveLogs(
+      currentLocation.latitude,
+      currentLocation.longitude,
+      selectedFilters,
+    );
+
+    return useMemo(() => ({
+      data: queryResult.data,
+      isLoading: queryResult.isLoading,
+      fetchNextPage: queryResult.fetchNextPage,
+      hasNextPage: queryResult.hasNextPage,
+      refetch: queryResult.refetch,
+      isFetching: queryResult.isFetching,
+      error: queryResult.error,
+    }), [
+      queryResult.data
+    ])
+
+  }
 
   // hooks call for following posts
   const {
@@ -50,7 +86,7 @@ const Home = () => {
     refetch: refetchFollowingPosts,
     isRefetching: isRefetchingFollowingPosts,
     error: errorFollowingPosts,
-  } = useUserFollowingPosts(mongoDBId!, selectedFilters);
+  } =  memoizeUserFollowingPosts()
 
   // hooks call for nearby posts
   const {
@@ -61,11 +97,7 @@ const Home = () => {
     refetch: refetchNearByPosts,
     isFetching: isFetchingNearbyPosts,
     error: errorNearbyPosts,
-  } = useNearbyDiveLogs(
-    currentLocation.latitude,
-    currentLocation.longitude,
-    selectedFilters,
-  );
+  } = memoizeNearbyDiveLogs()
 
   // fetch the current location of user
   useEffect(() => {
