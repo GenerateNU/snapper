@@ -4,7 +4,6 @@ import { useUserById } from '../../../hooks/user';
 import { LinearGradient } from 'expo-linear-gradient';
 import { View, Text, Dimensions, TouchableOpacity, TextInput, Image, FlatList} from 'react-native';
 import Animated, { useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
-import Fuse from 'fuse.js';
 import { UserType } from '../../../types/userProfile';
 import ProfileTags from '../../../components/profile_tag';
 

@@ -30,7 +30,7 @@ const ProfileTags: React.FC<ProfileTagProps> = ({
                 <Text>{data?.user.username}</Text>
             </View>
             
-            {isViewingOwnProfile? <></>: <View className="absolute left-60 w-[60vw]">
+            {isViewingOwnProfile? <></>: <View className="absolute left-[58vw] w-[60vw]">
                 <FollowButton
                     onPress={handleFollowToggle}
                     isPending={isPending!}
