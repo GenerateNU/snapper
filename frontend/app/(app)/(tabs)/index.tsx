@@ -233,16 +233,19 @@ const Home = () => {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
+        /*
         onScroll={(e) => {
           const contentHeight = e.nativeEvent.contentSize.height;
           const layoutHeight = e.nativeEvent.layoutMeasurement.height;
           const offsetY = e.nativeEvent.contentOffset.y;
-          if (contentHeight - layoutHeight - offsetY <= 200) {
+          if (contentHeight - layoutHeight - offsetY <= 0) {
             loadMorePosts(fetchNextPageNearby, hasNextPageNearby);
           } else {
           }
         }}
+        */
       >
+
         <View className="flex flex-row">
           <View className="w-[48%] mr-[2%]">
             {split(nearbyPosts?.pages.flatMap((page) => page) || [])[0].map(
