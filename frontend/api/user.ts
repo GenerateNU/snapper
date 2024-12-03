@@ -116,3 +116,7 @@ export async function updateProfilePhoto(photo: string): Promise<void> {
     throw new Error(errorData.error || 'failed to change profile pic');
   }
 }
+
+export function searchUserData(userlist: string[]): User[] {
+  
+}

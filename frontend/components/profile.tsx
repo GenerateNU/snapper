@@ -32,6 +32,7 @@ const Profile: React.FC<ProfileProps> = ({
           uri: image,
         }}
       />
+
     </View>
   );
 };
