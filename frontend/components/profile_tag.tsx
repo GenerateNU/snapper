@@ -36,7 +36,7 @@ const ProfileTags: React.FC<ProfileTagProps> = ({ id }) => {
       </View>
 
       {isViewingOwnProfile ? (
-        <></>
+        <View />
       ) : (
         <FollowButton
           onPress={handleFollowToggle}
