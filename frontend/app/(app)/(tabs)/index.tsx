@@ -9,11 +9,10 @@ import {
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category, Filter } from '../../../consts/home-menu';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUserFollowingPosts } from '../../../hooks/user';
 import BigDiveLog from '../../../components/divelog/divelog';
 import NearbyDiveLog from '../../../components/home/nearby-divelog';
-import { MasonryFlashList } from '@shopify/flash-list';
 import DiveLogSkeleton from '../divelog/components/skeleton';
 import * as Location from 'expo-location';
 import { DEFAULT_SHERM_LOCATION } from '../../../consts/location';
@@ -23,7 +22,8 @@ import FilterMenu from '../../../components/home/filter';
 import usePulsingAnimation from '../../../utils/skeleton';
 import { useInfoPopup } from '../../../contexts/info-popup-context';
 import InfoPopup from '../../../components/info-popup';
-import { InfiniteData } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { useFocusEffect } from 'expo-router';
 
 const Home = () => {
   const { setClose } = useInfoPopup();
@@ -94,6 +94,16 @@ const Home = () => {
       refetchFollowingPosts();
     }
   }, [selectedFilters, selectedCategory, nearbyPosts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (selectedCategory === Category.NEARBY) {
+        refetchNearByPosts();
+      } else {
+        refetchFollowingPosts();
+      }
+    }, []),
+  );
 
   // render a following post
   const renderFollowingPost = ({ item }: { item: any }) => (
@@ -245,7 +255,6 @@ const Home = () => {
         }}
         */
       >
-
         <View className="flex flex-row">
           <View className="w-[48%] mr-[2%]">
             {split(nearbyPosts?.pages.flatMap((page) => page) || [])[0].map(

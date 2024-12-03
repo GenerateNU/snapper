@@ -1,5 +1,5 @@
 import { useFocusEffect } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, SafeAreaView, SectionList, Text, View } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import NotificationEntry from '../../../components/notification/notification';
@@ -22,6 +22,12 @@ const Notification = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useUserNotification(mongoDBId || '');
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   const groupNotificationsAndSetSections = (pages: any) => {
     if (!pages) return;

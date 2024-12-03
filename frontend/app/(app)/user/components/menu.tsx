@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -22,6 +22,7 @@ import Species from './species';
 import BigDiveLog from '../../../../components/divelog/divelog';
 import PopulatedInfoPopupButton from '../../../../components/populated-info-popup';
 import DiveLogSkeleton from '../../divelog/components/skeleton';
+import { useFocusEffect } from 'expo-router';
 
 const Menu = ({ id }: { id: string }) => {
   const { width } = Dimensions.get('window');
@@ -51,6 +52,8 @@ const Menu = ({ id }: { id: string }) => {
     fetchNextPage: diveLogFetchNextPage,
     hasNextPage: diveLogHasNextPage,
     isFetchingNextPage: diveLogIsFetchingNextPage,
+    refetch: refetchDivelog,
+    isRefetching: isRefetchingDivelog,
   } = useUserDiveLogs(id);
 
   const {
@@ -60,7 +63,19 @@ const Menu = ({ id }: { id: string }) => {
     fetchNextPage: speciesFetchNextPage,
     hasNextPage: speciesHasNextPage,
     isFetchingNextPage: speciesIsFetchingNextPage,
+    refetch: refetchSpecies,
   } = useUserSpecies(id);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log(`Refetching ${category} data`);
+      if (category === 'Dives') {
+        refetchDivelog();
+      } else if (category === 'Species') {
+        refetchSpecies();
+      }
+    }, [refetchDivelog, refetchSpecies, category]),
+  );
 
   const diveLogData = diveLogPages?.pages.flatMap((page) => page) ?? [];
   const speciesData = speciesPages?.pages.flatMap((page) => page) ?? [];
@@ -165,7 +180,7 @@ const Menu = ({ id }: { id: string }) => {
       </View>
 
       {category === 'Dives' &&
-        (diveLogIsLoading ? (
+        (diveLogIsLoading || isRefetchingDivelog ? (
           <FlatList
             data={[1, 2]}
             renderItem={() => (

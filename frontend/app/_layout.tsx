@@ -12,10 +12,19 @@ import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
+import * as Notifications from 'expo-notifications';
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
   strict: false,
+});
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
 });
 
 const queryClient = new QueryClient();
