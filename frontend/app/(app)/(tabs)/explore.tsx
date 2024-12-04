@@ -84,7 +84,7 @@ export default function Explore() {
   };
 
   const { isPending, error, data } = useQuery({
-    queryKey: ['search', search],
+    queryKey: ['search', search, toggle],
     queryFn: () => onQueryFunction(),
     enabled: search.length > 0,
   });
