@@ -60,7 +60,7 @@ export class S3ServiceImpl implements S3Service {
     try {
       await this.client.send(command);
       const url = encodeURI(
-        `https://${this.name}.s3.${this.region}.amazonaws.com/${fileKey}`,
+        config.imagekit.key + fileKey
       );
       return url;
     } catch (error) {

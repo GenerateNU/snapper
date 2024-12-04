@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   View,
   Text,
-  InputAccessoryView,
 } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import { useFormContext } from 'react-hook-form';
