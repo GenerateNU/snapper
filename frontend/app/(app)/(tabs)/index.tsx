@@ -229,8 +229,8 @@ const Home = () => {
         renderItem={renderFollowingPost}
         key="following-divelogs"
         showsVerticalScrollIndicator={false}
-        onEndReached={() =>
-          loadMorePosts(fetchNextPageFollowing, hasNextPageFollowing)
+        onEndReached={() => {
+          loadMorePosts(fetchNextPageFollowing, hasNextPageFollowing)}
         }
         onEndReachedThreshold={0.3}
         ListFooterComponent={
@@ -274,8 +274,8 @@ const Home = () => {
 
     return (
       <ScrollView
+        className = "mb-20"
         showsVerticalScrollIndicator={false}
-        /*
         onScroll={(e) => {
           const contentHeight = e.nativeEvent.contentSize.height;
           const layoutHeight = e.nativeEvent.layoutMeasurement.height;
@@ -285,7 +285,6 @@ const Home = () => {
           } else {
           }
         }}
-        */
       >
         <View className="flex flex-row">
           <View className="w-[48%] mr-[2%]">
