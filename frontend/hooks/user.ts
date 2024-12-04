@@ -14,7 +14,11 @@ import {
   useQueryBase,
   useQueryPagination,
 } from './base';
-import { keepPreviousData, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 export const useUserData = () => {
   return useQueryBase(['user'], getMe);

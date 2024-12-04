@@ -2,6 +2,7 @@ import express from 'express';
 import {
   getById,
   getByScientificName,
+  searchAndPaginatedSpecies,
   searchSpecies,
 } from '../controllers/species/get';
 import { isAuthenticated } from '../middlewares/authMiddleware';
@@ -53,4 +54,5 @@ export default (router: express.Router) => {
     getByScientificName,
   );
   router.get('/species/search/:searchRequest', isAuthenticated, searchSpecies);
+  router.get('/species/paginated', isAuthenticated, searchAndPaginatedSpecies);
 };

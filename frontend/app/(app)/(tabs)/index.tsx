@@ -39,21 +39,21 @@ const Home = () => {
 
   const memoizeUserFollowingPosts = () => {
     const queryResult = useUserFollowingPosts(mongoDBId!, selectedFilters);
-  
-    return useMemo(() => ({
-      data: queryResult.data,
-      isLoading: queryResult.isLoading,
-      fetchNextPage: queryResult.fetchNextPage,
-      hasNextPage: queryResult.hasNextPage,
-      isFetchingNextPage: queryResult.isFetchingNextPage,
-      refetch: queryResult.refetch,
-      isRefetching: queryResult.isRefetching,
-      error: queryResult.error
-    }), [
-      queryResult.data
-    ]);
 
-  }
+    return useMemo(
+      () => ({
+        data: queryResult.data,
+        isLoading: queryResult.isLoading,
+        fetchNextPage: queryResult.fetchNextPage,
+        hasNextPage: queryResult.hasNextPage,
+        isFetchingNextPage: queryResult.isFetchingNextPage,
+        refetch: queryResult.refetch,
+        isRefetching: queryResult.isRefetching,
+        error: queryResult.error,
+      }),
+      [queryResult.data],
+    );
+  };
 
   const memoizeNearbyDiveLogs = () => {
     const queryResult = useNearbyDiveLogs(
@@ -62,19 +62,19 @@ const Home = () => {
       selectedFilters,
     );
 
-    return useMemo(() => ({
-      data: queryResult.data,
-      isLoading: queryResult.isLoading,
-      fetchNextPage: queryResult.fetchNextPage,
-      hasNextPage: queryResult.hasNextPage,
-      refetch: queryResult.refetch,
-      isFetching: queryResult.isFetching,
-      error: queryResult.error,
-    }), [
-      queryResult.data
-    ])
-
-  }
+    return useMemo(
+      () => ({
+        data: queryResult.data,
+        isLoading: queryResult.isLoading,
+        fetchNextPage: queryResult.fetchNextPage,
+        hasNextPage: queryResult.hasNextPage,
+        refetch: queryResult.refetch,
+        isFetching: queryResult.isFetching,
+        error: queryResult.error,
+      }),
+      [queryResult.data],
+    );
+  };
 
   // hooks call for following posts
   const {
@@ -86,7 +86,7 @@ const Home = () => {
     refetch: refetchFollowingPosts,
     isRefetching: isRefetchingFollowingPosts,
     error: errorFollowingPosts,
-  } =  memoizeUserFollowingPosts()
+  } = memoizeUserFollowingPosts();
 
   // hooks call for nearby posts
   const {
@@ -97,7 +97,7 @@ const Home = () => {
     refetch: refetchNearByPosts,
     isFetching: isFetchingNearbyPosts,
     error: errorNearbyPosts,
-  } = memoizeNearbyDiveLogs()
+  } = memoizeNearbyDiveLogs();
 
   // fetch the current location of user
   useEffect(() => {

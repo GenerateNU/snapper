@@ -69,7 +69,7 @@ export default function Explore() {
     let endpoint;
     switch (toggle) {
       case 'Fish':
-        endpoint = `/species/search/${search}`;
+        endpoint = `/species/paginated?text=${search}`;
         break;
       case 'Posts':
         endpoint = `/divelogs/search?text=${search}`;
