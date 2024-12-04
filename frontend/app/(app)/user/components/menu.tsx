@@ -121,7 +121,7 @@ const Menu = ({ id }: { id: string }) => {
   };
 
   const renderDiveLogFooter = () => {
-    if (!diveLogIsFetchingNextPage) return null;
+    // if (!diveLogIsFetchingNextPage) return null;
 
     return (
       <View className="mt-4 mb-8">

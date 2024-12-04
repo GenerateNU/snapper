@@ -44,6 +44,11 @@ const InitialLayout = () => {
     refresh();
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    const permission = async () => await Notifications.requestPermissionsAsync();
+    permission();
+  }, []);
+
   useNotificationPermission({ isAuthenticated, mongoDBId });
 
   useLocationPermission();
