@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -66,15 +66,15 @@ const Menu = ({ id }: { id: string }) => {
     refetch: refetchSpecies,
   } = useUserSpecies(id);
 
+  const memoizedRefetch = useMemo(() => {
+    return category === 'Dives' ? refetchDivelog : refetchSpecies;
+  }, [category, refetchDivelog, refetchSpecies]);
+
   useFocusEffect(
     useCallback(() => {
       console.log(`Refetching ${category} data`);
-      if (category === 'Dives') {
-        refetchDivelog();
-      } else if (category === 'Species') {
-        refetchSpecies();
-      }
-    }, [refetchDivelog, refetchSpecies, category]),
+      memoizedRefetch();
+    }, [memoizedRefetch, category]),
   );
 
   const diveLogData = diveLogPages?.pages.flatMap((page) => page) ?? [];

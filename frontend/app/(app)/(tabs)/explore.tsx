@@ -216,7 +216,7 @@ export default function Explore() {
   };
 
   return (
-    <SafeAreaView className="h-screen w-screen">
+    <SafeAreaView className="h-screen w-screen bg-white">
       {selectedCategory === 'Map' && renderMapPage()}
       <View className="w-full px-[5%] z-10">
         <View className="mb-2 bg-[#FFFFFF] rounded-full">
