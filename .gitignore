@@ -52,3 +52,4 @@ build/
 
 # MongoDB data directory
 /data/
+.vercel
