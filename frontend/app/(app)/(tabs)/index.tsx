@@ -234,11 +234,9 @@ const Home = () => {
         }
         onEndReachedThreshold={0.3}
         ListFooterComponent={
-          isFetchingNextPageFollowing ? (
-            <View className="mt-10">
+          <View className="mt-10">
               <DiveLogSkeleton />
             </View>
-          ) : null
         }
         contentContainerStyle={{ paddingBottom: 150 }}
         ItemSeparatorComponent={() => <View className="h-12" />}
