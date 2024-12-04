@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import SearchResult from '../../../components/search-result';
 import InfoPopup from '../../../components/info-popup';
 import HomeMenu from '../../../components/home/menu-bar';
@@ -58,6 +58,8 @@ export default function Explore() {
       throw new Error('Malformed Data');
     }
   };
+
+  //These should be hooks but oh well.
 
   /**
    * On Query, will pattern match against the toggle options which will
