@@ -9,7 +9,7 @@ import {
 import { useAuthStore } from '../../../auth/authStore';
 import HomeMenu from '../../../components/home/menu-bar';
 import { Category, Filter } from '../../../consts/home-menu';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserFollowingPosts } from '../../../hooks/user';
 import BigDiveLog from '../../../components/divelog/divelog';
 import NearbyDiveLog from '../../../components/home/nearby-divelog';

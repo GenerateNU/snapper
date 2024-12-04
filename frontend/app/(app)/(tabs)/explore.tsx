@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchData } from '../../../api/base';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import SearchResult from '../../../components/search-result';
 import InfoPopup from '../../../components/info-popup';
 import HomeMenu from '../../../components/home/menu-bar';
@@ -31,9 +31,6 @@ export default function Explore() {
   );
   const [coordinate, setCoordinate] = useState<number[]>([200, 200]);
   const [mapSearch, setMapSearch] = useState('');
-  const changeText = (input: string) => {
-    setSearch(input);
-  };
 
   const changeMapText = () => {
     const delimeter = ' ';
@@ -170,7 +167,7 @@ export default function Explore() {
   const renderSearchPage = () => {
     return (
       <View className="w-full h-full">
-        <View className="mb-2">{renderCustomInput(changeText, search)}</View>
+        <View className="mb-2">{renderCustomInput(setSearch, search)}</View>
         <View className="mb-2">
           <ToggleButtons />
         </View>
