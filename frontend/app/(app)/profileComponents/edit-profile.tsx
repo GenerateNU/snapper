@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable, Keyboard, TouchableOpacity } from 'react-native';
-import { useAuthStore } from '../../../../auth/authStore';
-import Profile from '../../../../components/profile';
-import { PROFILE_PHOTO } from '../../../../consts/profile';
-import { useUserById } from '../../../../hooks/user';
-import Input from '../../../../components/input';
-import Button from '../../../../components/button';
-import Pencil from '../../../../assets/edit-pencil.svg';
+import { useAuthStore } from '../../../auth/authStore';
+import Profile from '../../../components/profile';
+import { PROFILE_PHOTO } from '../../../consts/profile';
+import { useUserById } from '../../../hooks/user';
+import Input from '../../../components/input';
+import Button from '../../../components/button';
+import Pencil from '../../../assets/edit-pencil.svg';
 import * as ExpoImagePicker from 'expo-image-picker';
-import { Photo } from '../../../../types/divelog';
+import { Photo } from '../../../types/divelog';
 import { SetStateAction } from 'react';
 import { Dispatch } from 'react';
 import { router } from 'expo-router';
-import { UpdateUser } from '../../../../types/userProfile';
-import { apiConfig } from '../../../../api/apiContext';
+import { UpdateUser } from '../../../types/userProfile';
+import { apiConfig } from '../../../api/apiContext';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 export default function EditCurrentUser() {
     const { mongoDBId } = useAuthStore();
+    const queryClient = useQueryClient();
 
     const [firstName, setFirstName] = useState<string | undefined>(undefined);
     const [lastName, setLastName] = useState<string>('');
@@ -109,7 +111,9 @@ export default function EditCurrentUser() {
                 <View className='pl-8 pr-8 pb-2 w-full'>
                     <Button text='Save Changes'
                         onPress={() => {
+                            router.push('/(tabs)/profile');
                             onSubmit();
+                            queryClient.invalidateQueries({ queryKey: ["user", mongoDBId] });
                         }} />
                 </View>
                 <View className='p-2 pl-8 pr-8 w-full'>

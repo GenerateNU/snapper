@@ -5,7 +5,6 @@ import { Stack, router} from 'expo-router';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../components/icon-button';
 import { useState, useEffect } from 'react';
-import { ChangePFP } from './profileComponents/editProfileModal';
 import { useForm, FormProvider } from 'react-hook-form';
 import { UpdateUser } from '../../../types/userProfile';
 
@@ -67,7 +66,7 @@ const Profile = () => {
                   </TouchableHighlight>
                   <TouchableHighlight
                     className="w-full p-2 pb-1"
-                    onPress={() => router.push("/profileComponents/edit-profile")}
+                    onPress={() => router.push("../profileComponents/edit-profile")}
                     activeOpacity={0.6}
                     underlayColor="#DDDDDD"
                   >
