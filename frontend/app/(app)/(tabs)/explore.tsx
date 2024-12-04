@@ -31,9 +31,6 @@ export default function Explore() {
   );
   const [coordinate, setCoordinate] = useState<number[]>([200, 200]);
   const [mapSearch, setMapSearch] = useState('');
-  const changeText = (input: string) => {
-    setSearch(input);
-  };
 
   const changeMapText = () => {
     const delimeter = ' ';
@@ -62,6 +59,8 @@ export default function Explore() {
     }
   };
 
+  //These should be hooks but oh well.
+
   /**
    * On Query, will pattern match against the toggle options which will
    * trigger different endpoints
@@ -72,7 +71,7 @@ export default function Explore() {
     let endpoint;
     switch (toggle) {
       case 'Fish':
-        endpoint = `/species/search/${search}`;
+        endpoint = `/species/paginated?text=${search}`;
         break;
       case 'Posts':
         endpoint = `/divelogs/search?text=${search}`;
@@ -85,7 +84,7 @@ export default function Explore() {
   };
 
   const { isPending, error, data } = useQuery({
-    queryKey: ['search', search],
+    queryKey: ['search', search, toggle],
     queryFn: () => onQueryFunction(),
     enabled: search.length > 0,
   });
@@ -170,7 +169,7 @@ export default function Explore() {
   const renderSearchPage = () => {
     return (
       <View className="w-full h-full">
-        <View className="mb-2">{renderCustomInput(changeText, search)}</View>
+        <View className="mb-2">{renderCustomInput(setSearch, search)}</View>
         <View className="mb-2">
           <ToggleButtons />
         </View>
@@ -217,7 +216,7 @@ export default function Explore() {
   };
 
   return (
-    <SafeAreaView className="h-screen w-screen">
+    <SafeAreaView className="h-screen w-screen bg-white">
       {selectedCategory === 'Map' && renderMapPage()}
       <View className="w-full px-[5%] z-10">
         <View className="mb-2 bg-[#FFFFFF] rounded-full">

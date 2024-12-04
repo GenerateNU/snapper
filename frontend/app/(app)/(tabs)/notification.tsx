@@ -1,5 +1,5 @@
 import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, SafeAreaView, SectionList, Text, View } from 'react-native';
 import { useAuthStore } from '../../../auth/authStore';
 import NotificationEntry from '../../../components/notification/notification';
@@ -17,11 +17,15 @@ const Notification = () => {
     data,
     isLoading,
     error,
-    refetch,
+    refetch: originalRefetch,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useUserNotification(mongoDBId || '');
+
+  const refetch = useCallback(() => {
+    originalRefetch();
+  }, [originalRefetch]);
 
   useFocusEffect(
     useCallback(() => {

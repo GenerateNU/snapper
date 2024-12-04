@@ -11,6 +11,7 @@ const AWS_PUBLIC_KEY = process.env.PUBLIC_KEY_AWS || '';
 const AWS_PRIVATE_KEY = process.env.SECRET_KEY_AWS || '';
 const AWS_BUCKET_NAME = process.env.S3BUCKETNAME || '';
 const AWS_BUCKET_REGION = process.env.S3BUCKETREGION || '';
+const IMAGE_KIT = process.env.IMAGE_KIT_ID || '';
 
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
@@ -38,4 +39,7 @@ export const config = {
     name: AWS_BUCKET_NAME,
     region: AWS_BUCKET_REGION,
   },
+  imagekit : {
+    key : IMAGE_KIT
+  }
 };

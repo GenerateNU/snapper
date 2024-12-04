@@ -331,9 +331,9 @@ export class UserServiceImpl implements UserService {
           ],
         },
       },
+      { $sort: { date: -1 } },
       { $skip: (page - 1) * limit },
       { $limit: limit },
-      { $sort: { date: -1 } },
       {
         $lookup: {
           from: 'users',

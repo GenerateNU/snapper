@@ -29,17 +29,6 @@ const User = ({ id }: { id: string }) => {
       colors={['#549ac7', '#ffffff', '#ffffff', '#ffffff']}
       style={{ flex: 1 }}
     >
-      <Stack.Screen
-        options={{
-          headerTitle: '',
-          headerTransparent: true,
-          headerShown: true,
-          headerLeft: () =>
-            !isViewingOwnProfile ? (
-              <Arrow direction="left" onPress={() => router.back()} />
-            ) : null,
-        }}
-      />
       <SafeAreaView
         edges={['top', 'left', 'right']}
         className="flex flex-1 mt-[10%]"
