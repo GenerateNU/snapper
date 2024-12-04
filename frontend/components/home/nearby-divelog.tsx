@@ -1,10 +1,15 @@
-import { View, Text, Pressable, Animated } from 'react-native';
-import Profile from '../profile';
-import { useEffect, useState } from 'react';
-import { router } from 'expo-router';
 import { Image } from 'expo-image';
-import ImageSize from 'react-native-image-size';
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+import {
+  Animated,
+  Pressable,
+  Image as ReactNativeImage,
+  Text,
+  View,
+} from 'react-native';
 import usePulsingAnimation from '../../utils/skeleton';
+import Profile from '../profile';
 
 interface NearbyDivelogProps {
   profilePhoto: string;
@@ -31,7 +36,7 @@ const NearbyDiveLog: React.FC<NearbyDivelogProps> = ({
           Image.prefetch(profilePhoto),
         ]);
 
-        const { width, height } = await ImageSize.getSize(coverPhoto);
+        const { width, height } = await ReactNativeImage.getSize(coverPhoto);
         setAspectRatio(width / height);
         setIsLoading(false);
       } catch (error) {
