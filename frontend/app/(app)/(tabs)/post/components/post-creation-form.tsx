@@ -157,7 +157,7 @@ export default function PostCreationForm() {
                   backgroundColor="white"
                   color="ocean"
                   text="+ Add More Fish"
-                  onPress={() => router.push('/tag-fish')}
+                  onPress={() => router.push('/post/tag-fish')}
                 ></Button>
               </View>
             </View>

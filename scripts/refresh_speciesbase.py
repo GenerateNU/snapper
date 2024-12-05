@@ -129,7 +129,7 @@ def add_icons():
 
 
 def main():
-    #populate_wikidata()
+    populate_wikidata()
     populate_wikipedia_intros()
     add_icons()
 
