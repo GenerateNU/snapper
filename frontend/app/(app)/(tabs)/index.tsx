@@ -230,13 +230,13 @@ const Home = () => {
         key="following-divelogs"
         showsVerticalScrollIndicator={false}
         onEndReached={() => {
-          loadMorePosts(fetchNextPageFollowing, hasNextPageFollowing)}
-        }
+          loadMorePosts(fetchNextPageFollowing, hasNextPageFollowing);
+        }}
         onEndReachedThreshold={0.3}
         ListFooterComponent={
           <View className="mt-10">
-              <DiveLogSkeleton />
-            </View>
+            <DiveLogSkeleton />
+          </View>
         }
         contentContainerStyle={{ paddingBottom: 150 }}
         ItemSeparatorComponent={() => <View className="h-12" />}
@@ -272,7 +272,7 @@ const Home = () => {
 
     return (
       <ScrollView
-        className = "mb-20"
+        className="mb-20"
         showsVerticalScrollIndicator={false}
         onScroll={(e) => {
           const contentHeight = e.nativeEvent.contentSize.height;

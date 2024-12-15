@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Image,
-  TouchableOpacity,
-  View,
-  Text,
-} from 'react-native';
+import { Image, TouchableOpacity, View, Text } from 'react-native';
 import * as ExpoImagePicker from 'expo-image-picker';
 import { useFormContext } from 'react-hook-form';
 import { Photo } from '../types/divelog';

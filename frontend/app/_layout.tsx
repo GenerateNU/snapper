@@ -45,7 +45,8 @@ const InitialLayout = () => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    const permission = async () => await Notifications.requestPermissionsAsync();
+    const permission = async () =>
+      await Notifications.requestPermissionsAsync();
     permission();
   }, []);
 

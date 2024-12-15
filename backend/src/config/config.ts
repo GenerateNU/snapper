@@ -39,7 +39,7 @@ export const config = {
     name: AWS_BUCKET_NAME,
     region: AWS_BUCKET_REGION,
   },
-  imagekit : {
-    key : IMAGE_KIT
-  }
+  imagekit: {
+    key: IMAGE_KIT,
+  },
 };

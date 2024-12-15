@@ -59,9 +59,7 @@ export class S3ServiceImpl implements S3Service {
     });
     try {
       await this.client.send(command);
-      const url = encodeURI(
-        config.imagekit.key + fileKey
-      );
+      const url = encodeURI(config.imagekit.key + fileKey);
       return url;
     } catch (error) {
       console.error('Error uploading file:', error);
