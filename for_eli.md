@@ -25,6 +25,8 @@ Ensure that you have `Node` v20 or greater, as well as `npm` and `task`
 
 Authorization is handled via `Supabase`, you can setup and configure each one by creating your own Supabase account and linking the necessary API_KEYS to the .env file
 
+Sign up or login here : https://supabase.com
+
 ```env
 SUPABASE_PASSWORD=<insert>
 SUPABASE_URL=<insert>
@@ -32,6 +34,8 @@ SUPABASE_KEY=<insert>
 ```
 
 Our backend talks to a NoSQL database called MongoDB, and we utilize Mongoose to develop structured Schema for our collections. To get started, create a MongoDB Atlas account or spin up a docker container to create a local database
+
+Sign up or login here : https://www.mongodb.com/atlas
 
 ```env
 MONGO_URL=<insert>
@@ -41,6 +45,8 @@ MONGO_PASSWORD=<insert>
 
 Another service we utilize is Amazon S3 as well as ImageKit for image optimization. Since Snapper is a highly visual application, we need to be smart about fetching images of the right size. To get started, we need to create a S3 Bucket and generate the public and secret keys.
 
+Sign up or login here : https://aws.amazon.com/s3/
+
 ```env 
 S3BUCKETNAME=<insert>
 S3BUCKETREGION=<insert>
@@ -49,6 +55,8 @@ SECRET_KEY_AWS=<insert>
 ```
 
 Optionally, we can also include ImageKit to wrap every single AWS S3 URL in a more performant and mobile friendly view.
+
+Sign up or login here : https://imagekit.io
 
 ```env
 IMAGE_KIT_ID=<insert>
