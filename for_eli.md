@@ -74,6 +74,14 @@ The structure of Snapper is based off a MVC or Model View Controller architectur
 
 The backend is structured into 3 specific layers
 - Handlers which expose our API to 3rd parties.
-- Controllers which deal with business logic and transactions with the Model and Database. 
+- Controllers which deal with transactions with the Model and Database. 
+- Services which deal with business logic.
 - Models which are our internal data interpretations for Fish, Users, and DiveLogs. 
 
+The entry point can be viewed in `server.ts`, which initializes all of our route handlers in the `/route` folder.
+
+Route handlers delegate to the controllers which handle delegation to services and talking to our database, which can be found in our `/controllers`
+
+Services are where the actual business logic of our application lie, this includes S3 protocols and pagination and sorting, this can be found in our `/services`
+
+Models are translated and directly talk to our database, they can be found here `/models`
