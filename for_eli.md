@@ -72,7 +72,7 @@ SERVER_PORT=3000
 ### Software Archiecture and Design Choices
 The structure of Snapper is based off a MVC or Model View Controller architecture. The view is our frontend directory which talks to our backend REST API.
 
-The backend is structured into 3 specific layers
+The backend is structured into 4 specific layers
 - Handlers which expose our API to 3rd parties.
 - Controllers which deal with transactions with the Model and Database. 
 - Services which deal with business logic.
@@ -84,4 +84,4 @@ Route handlers delegate to the controllers which handle delegation to services a
 
 Services are where the actual business logic of our application lie, this includes S3 protocols and pagination and sorting, this can be found in our `/services`
 
-Models are translated and directly talk to our database, they can be found here `/models`
+Models directly talk to our database, they can be found here `/models`
